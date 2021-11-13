@@ -7,6 +7,8 @@ use App\Models\Genre;
 use App\Models\Artiste;
 use Illuminate\Database\Seeder;
 
+use function Psy\debug;
+
 class AlbumSeeder extends Seeder
 {
     /**
@@ -19,10 +21,10 @@ class AlbumSeeder extends Seeder
         $genres = [];
         $genresDir = array_diff(scandir('./resources/sources/artistes/'),array(".",".."));
         foreach($genresDir as $genreDir) {
-            $genres[str_replace('-',' ',$genreDir)] = [];
+            $genres[str_replace(' - ',' ',$genreDir)] = [];
                 $artistes = array_diff(scandir('./resources/sources/artistes/'.$genreDir),array(".",".."));
                 foreach($artistes as $artiste){
-                    array_push($genres[str_replace('-',' ',$genreDir)], strToLower(str_replace('.jpg','',$artiste)));
+                    array_push($genres[str_replace(' - ',' ',$genreDir)], strToLower(str_replace('.jpg','',$artiste)));
                 }
         }
 
@@ -43,7 +45,7 @@ class AlbumSeeder extends Seeder
                                     'picture' => $album . ".jpg",
                                     'duration' => '77',
                                     'artiste_id' => '1',
-                                    'genre_id' => $g ? $g->id : 9
+                                    'genre_id' => $g->id
                                 ]);   
                             }
                         }
