@@ -22,6 +22,12 @@ class CreateTitresTable extends Migration
                     ->on('artistes')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
+            $table->unsignedBigInteger('album_id');
+            $table->foreign('album_id')
+                    ->references('id')
+                    ->on('artistes')
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
             $table->timestamps();
         });
     }

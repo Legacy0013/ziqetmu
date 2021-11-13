@@ -6,8 +6,7 @@ use App\Models\Album;
 use App\Models\Genre;
 use App\Models\Artiste;
 use Illuminate\Database\Seeder;
-
-use function Psy\debug;
+use Illuminate\Support\Facades\File;
 
 class AlbumSeeder extends Seeder
 {
@@ -30,27 +29,50 @@ class AlbumSeeder extends Seeder
 
         // $pistes = array_diff(scandir('./resources/sources/music-20s/'),array(".",".."));
 
+        // $albums = array_diff(scandir('./resources/sources/albums/'.$aut.'/'),array(".",".."));
+        
         $auteurs = array_diff(scandir('./resources/sources/albums/'),array(".",".."));
         foreach($auteurs as $aut){
             foreach ($genres as $key => $value){
                 foreach($value as $art){
-                        if(strToLower($art) == strToLower($aut)){
-                        $albums = array_diff(scandir('./resources/sources/albums/'.$aut.'/'),array(".",".."));
-                            foreach($albums as $album){
-                                $album = str_replace('.jpg', '', $album);
-                                $g = Genre::where('name', $key)->first();
-                                Album::create([
-                                    'name' => ucfirst(str_replace('-', ' ', $album)), 
-                                    'date' => '1985',
-                                    'picture' => $album . ".jpg",
-                                    'duration' => '77',
-                                    'artiste_id' => '1',
-                                    'genre_id' => $g->id
-                                ]);   
-                            }
-                        }
+                    if(strToLower($art) == strToLower($aut)){
                     }
                 }
+            }
+        }
+        $albums = array_diff(scandir('./resources/sources/music-20s/'), array('.','..'));
+        foreach($albums as $k => $album){
+            $titres = array_diff(scandir("./resources/sources/music-20s/$album"), array('.','..'));
+            $ex = explode(' - ', $album);
+            $ar = [
+                'year' => $ex[0],
+                'duration' => $ex[1],
+                'artist' => $ex[2],
+                'name' => $ex[3],
+            ];
+            
+            $g = Genre::where('name', $key)->first();
+            $a = Artiste::where('name', str_replace('-', ' ', $ar['artist']))->first();
+            $alb = Album::firstOrCreate([
+                'name' => $ar['name'], 
+                'date' => $ar['year'],
+                // 'picture' -> set after the file move
+                'duration' => $ar['duration'],
+                'artiste_id' => $a->id ?? '156465465465',
+                'genre_id' => $g->id ?? '1'
+            ]);   
+            
+            foreach($titres as $t => $titre){
+                if($titre == 'cover.jpg'){
+                    if(!File::exists(storage_path("albums\\covers\\{$alb->id}"))){
+                        File::makeDirectory(storage_path("albums\\covers\\{$alb->id}\\"));
+                    }
+                    File::move(".\\resources\\sources\\music-20s\\$album\\cover.jpg", storage_path("albums\\covers\\{$alb->id}\\cover.jpg"));
+                }
+            }
+
+            $alb->picture = "\\albums\\covers\\{$alb->id}";
+            $alb->save();
         }
     }
 }
