@@ -15,6 +15,12 @@ class TitreSeeder extends Seeder
      */
     public function run()
     {
+        if(!File::exists(storage_path('app\\public\\albums'))){
+            File::makeDirectory(storage_path('app\\public\\albums'));
+        }
+        if(!File::exists(storage_path('app\\public\\albums\\covers'))){
+            File::makeDirectory(storage_path('app\\public\\albums\\titres'));
+        }
         $albums = array_diff(scandir("./resources/sources/music-20s/"), array('.', '..'));
         foreach ($albums as $key => $album) {
             $ex = explode(' - ', $album);

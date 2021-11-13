@@ -17,28 +17,36 @@ class AlbumSeeder extends Seeder
      */
     public function run()
     {
-        $genres = [];
-        $genresDir = array_diff(scandir('./resources/sources/artistes/'),array(".",".."));
-        foreach($genresDir as $genreDir) {
-            $genres[str_replace(' - ',' ',$genreDir)] = [];
-                $artistes = array_diff(scandir('./resources/sources/artistes/'.$genreDir),array(".",".."));
-                foreach($artistes as $artiste){
-                    array_push($genres[str_replace(' - ',' ',$genreDir)], strToLower(str_replace('.jpg','',$artiste)));
-                }
-        }
+        // $genres = [];
+        // $genresDir = array_diff(scandir('./resources/sources/artistes/'),array(".",".."));
+        // foreach($genresDir as $genreDir) {
+        //     $genres[str_replace(' - ',' ',$genreDir)] = [];
+        //         $artistes = array_diff(scandir('./resources/sources/artistes/'.$genreDir),array(".",".."));
+        //         foreach($artistes as $artiste){
+        //             array_push($genres[str_replace(' - ',' ',$genreDir)], strToLower(str_replace('.jpg','',$artiste)));
+        //         }
+        // }
 
         // $pistes = array_diff(scandir('./resources/sources/music-20s/'),array(".",".."));
 
         // $albums = array_diff(scandir('./resources/sources/albums/'.$aut.'/'),array(".",".."));
         
-        $auteurs = array_diff(scandir('./resources/sources/albums/'),array(".",".."));
-        foreach($auteurs as $aut){
-            foreach ($genres as $key => $value){
-                foreach($value as $art){
-                    if(strToLower($art) == strToLower($aut)){
-                    }
-                }
-            }
+        // $auteurs = array_diff(scandir('./resources/sources/albums/'),array(".",".."));
+        // foreach($auteurs as $aut){
+        //     foreach ($genres as $key => $value){
+        //         foreach($value as $art){
+        //             if(strToLower($art) == strToLower($aut)){
+        //             }
+        //         }
+        //     }
+        // }
+
+
+        if(!File::exists(storage_path('app\\public\\albums'))){
+            File::makeDirectory(storage_path('app\\public\\albums'));
+        }
+        if(!File::exists(storage_path('app\\public\\albums\\covers'))){
+            File::makeDirectory(storage_path('app\\public\\albums\\covers'));
         }
         $albums = array_diff(scandir('./resources/sources/music-20s/'), array('.','..'));
         foreach($albums as $k => $album){
@@ -53,6 +61,9 @@ class AlbumSeeder extends Seeder
             ];
             
             $g = Genre::where('name', $ar['genre'])->first();
+            if(!$g){
+                dd($g, $ar['genre']);
+            }
             $a = Artiste::where('name', str_replace('-', ' ', $ar['artist']))->first();
             $alb = Album::firstOrCreate([
                 'name' => $ar['name'], 
