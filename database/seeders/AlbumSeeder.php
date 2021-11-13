@@ -49,25 +49,27 @@ class AlbumSeeder extends Seeder
                 'duration' => $ex[1],
                 'artist' => $ex[2],
                 'name' => $ex[3],
+                'genre' => $ex[4]
             ];
             
-            $g = Genre::where('name', $key)->first();
+            $g = Genre::where('name', $ar['genre'])->first();
             $a = Artiste::where('name', str_replace('-', ' ', $ar['artist']))->first();
             $alb = Album::firstOrCreate([
                 'name' => $ar['name'], 
                 'date' => $ar['year'],
-                // 'picture' -> set after the file move
                 'duration' => $ar['duration'],
                 'artiste_id' => $a->id ?? '156465465465',
-                'genre_id' => $g->id ?? '1'
+                'genre_id' => $g->id
             ]);   
             
             foreach($titres as $t => $titre){
                 if($titre == 'cover.jpg'){
-                    if(!File::exists(storage_path("albums\\covers\\{$alb->id}"))){
-                        File::makeDirectory(storage_path("albums\\covers\\{$alb->id}\\"));
+                    if(!File::exists(storage_path("app\\public\\albums\\covers\\{$alb->id}"))){
+                        File::makeDirectory(storage_path("app\\public\\albums\\covers\\{$alb->id}\\"));
                     }
-                    File::move(".\\resources\\sources\\music-20s\\$album\\cover.jpg", storage_path("albums\\covers\\{$alb->id}\\cover.jpg"));
+                    if(storage_path("app\\public\\albums\\covers\\{$alb->id}\\cover.jpg")){
+                        File::copy(".\\resources\\sources\\music-20s\\$album\\cover.jpg", storage_path("app\\public\\albums\\covers\\{$alb->id}\\cover.jpg"));
+                    }
                 }
             }
 

@@ -28,10 +28,12 @@ class TitreSeeder extends Seeder
             foreach ($titres as $t => $titre) {
                 if ($titre != 'cover.jpg') {
                     $a = Album::where('name', $ar['name'])->first();
-                    if(!File::exists(storage_path("albums\\titres\\{$a->id}"))){
-                        File::makeDirectory(storage_path("albums\\titres\\{$a->id}\\"));
+                    if(!File::exists(storage_path("app\\public\\albums\\titres\\{$a->id}"))){
+                        File::makeDirectory(storage_path("app\\public\\albums\\titres\\{$a->id}\\"));
                     }
-                    File::move("./resources/sources/music-20s/$album/$titre", storage_path("albums/titres/{$a->id}/$titre"));
+                    if(!File::exists(storage_path("app\\public\\albums/titres/{$a->id}/$titre"))){
+                        File::copy("./resources/sources/music-20s/$album/$titre", storage_path("app\\public\\albums/titres/{$a->id}/$titre"));
+                    }
                 }
             }
         }
