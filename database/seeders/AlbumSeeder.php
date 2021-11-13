@@ -35,11 +35,12 @@ class AlbumSeeder extends Seeder
                         if(strToLower($art) == strToLower($aut)){
                         $albums = array_diff(scandir('./resources/sources/albums/'.$aut.'/'),array(".",".."));
                             foreach($albums as $album){
+                                $album = str_replace('.jpg', '', $album);
                                 $g = Genre::where('name', $key)->first();
                                 Album::create([
-                                    'name' => ucfirst(str_replace(array('-', ' '), array('.jpg', ''), $album)), 
+                                    'name' => ucfirst(str_replace('-', ' ', $album)), 
                                     'date' => '1985',
-                                    'picture' => $album ,
+                                    'picture' => $album . ".jpg",
                                     'duration' => '77',
                                     'artiste_id' => '1',
                                     'genre_id' => $g ? $g->id : 9
