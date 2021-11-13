@@ -37,14 +37,13 @@ class AlbumSeeder extends Seeder
                             foreach($albums as $album){
                                 $g = Genre::where('name', $key)->first();
                                 Album::create([
-                                    'name' => str_replace('.jpg', '', $album), 
+                                    'name' => ucfirst(str_replace(array('-', ' '), array('.jpg', ''), $album)), 
                                     'date' => '1985',
                                     'picture' => $album ,
                                     'duration' => '77',
                                     'artiste_id' => '1',
                                     'genre_id' => $g ? $g->id : 9
                                 ]);   
-                                // dd($g);
                             }
                         }
                     }

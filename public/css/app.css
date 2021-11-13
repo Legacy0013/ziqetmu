@@ -61,4 +61,10 @@ img, video {
   vertical-align: bottom;
 }
 
+h1 {
+  font-size: 60px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
 /*# sourceMappingURL=app.css.map*/
