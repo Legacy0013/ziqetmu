@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\Album;
 use App\Models\Artiste;
+use App\Models\Genre;
 use App\Models\Titre;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class TitreSeeder extends Seeder
 {
@@ -17,47 +19,75 @@ class TitreSeeder extends Seeder
      */
     public function run()
     {
-        if(!File::exists(storage_path('app\\public\\albums'))){
-            File::makeDirectory(storage_path('app\\public\\albums'));
+        if(!File::exists(storage_path('app/public/albums'))){
+            File::makeDirectory(storage_path('app/public/albums'));
         }
-        if(!File::exists(storage_path('app\\public\\albums\\covers'))){
-            File::makeDirectory(storage_path('app\\public\\albums\\titres'));
+        if(!File::exists(storage_path('app/public/albums/titres'))){
+            File::makeDirectory(storage_path('app/public/albums/titres'));
         }
-        $albums = array_diff(scandir("./resources/sources/music-20s/"), array('.', '..'));
+        
+        $albums = Storage::disk('sources')->allFiles('music-20s');
         foreach ($albums as $key => $album) {
-            $ex = explode(' - ', $album);
-            $ar = [
-                'artist' => $ex[2],
-                'name' => $ex[3],
-                'genre' => $ex[4]
+            $slashed = explode('/', $album);
+            $albu = explode(' - ', $slashed[1]);
+            $al = [
+                'year' => $albu[0],
+                'duration' => $albu[1],
+                "artist" => $albu[2],
+                'name' => $albu[3],
+                'genre' => $albu[4],
             ];
-            $titres = array_diff(scandir("./resources/sources/music-20s/$album"), array('.', '..'));
-            foreach ($titres as $t => $titre) {
-                if ($titre != 'cover.jpg') {
-                    $a = Album::where('name', $ar['name'])->first();
-                    if(!File::exists(storage_path("app\\public\\albums\\titres\\{$a->id}"))){
-                        File::makeDirectory(storage_path("app\\public\\albums\\titres\\{$a->id}\\"));
-                    }
-                    if(!File::exists(storage_path("app\\public\\albums/titres/{$a->id}/$titre"))){
-                        File::copy("./resources/sources/music-20s/$album/$titre", storage_path("app\\public\\albums/titres/{$a->id}/$titre"));
-                    }
-                    $art = Artiste::where('name', str_replace('-', ' ', $ar['artist']))->first();
-                    $alb = Album::where('name', $ar['name'])->first();
-                    if(!$art){
-                        dd(str_replace('-', ' ', $ar['artist']));
-                    }
-                    $ex = explode(' - ', $titre);
-                    $ti = [
-                        'order' => $ex[0],
-                        'name' => str_replace('.mp3', '', $ex[1]),
-                    ];
-                    Titre::firstOrCreate([
-                        'name' => $ti['name'],
-                        'order' => $ti['order'],
-                        'album_id' => $alb->id,
-                        'artiste_id' => $art->id
-                    ]);
+
+            $ge = Genre::firstOrCreate([
+                'name' => str_replace('-', ' ', $al['genre']),
+            ]);
+
+            $ar = Artiste::where('name', str_replace('-', ' ',$al['artist']))->first();
+
+            $alb = Album::firstOrCreate([
+                'duration' => $al['duration'],
+                'date' => $al['year'],
+                'artiste_id' => $ar->id,
+                'genre_id' => $ge->id,
+                'name' => $al['name'],
+            ]);
+
+            if($slashed[2] == 'cover.jpg'){
+                // var_dump($album);
+                if(!File::exists(storage_path("app/public/albums/covers/{$alb->id}"))){
+                    File::makeDirectory(storage_path("app/public/albums/covers/{$alb->id}/"));
                 }
+                if(storage_path("app/public/albums/covers/{$alb->id}/cover.jpg")){
+                    File::copy("./storage/sources/".$album, storage_path("app/public/albums/covers/{$alb->id}/cover.jpg"));
+                }
+                
+                $alb->picture = "/albums/covers/{$alb->id}/cover.jpg";
+                $alb->save();
+
+            }else{
+                $titl = explode(' - ', $slashed[2]);
+                if(!isset($titl[1])){
+                    dd($titl);
+                }
+                $title = [
+                    'order' => $titl[0],
+                    'title' => $titl[1],
+                ];
+    
+                
+                if(!File::exists(storage_path("app/public/albums/titres/{$alb->id}"))){
+                    File::makeDirectory(storage_path("app/public/albums/titres/{$alb->id}/"));
+                }
+                if(!File::exists(storage_path("app/public/albums/titres/{$alb->id}/{$title['title']}"))){
+                    File::copy("./storage/sources/$album", storage_path("app/public/albums/titres/{$alb->id}/{$title['title']}"));
+                }
+    
+                Titre::firstOrCreate([
+                    'name' => str_replace('.mp3', '', $title['title']),
+                    'order'=> $title['order'],
+                    'artiste_id' => $ar->id,
+                    'album_id' => $alb->id,
+                ]);
             }
         }
     }
