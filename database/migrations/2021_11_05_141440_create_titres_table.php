@@ -16,6 +16,7 @@ class CreateTitresTable extends Migration
         Schema::create('titres', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('order');
             $table->unsignedBigInteger('artiste_id');
             $table->foreign('artiste_id')
                     ->references('id')
@@ -25,7 +26,7 @@ class CreateTitresTable extends Migration
             $table->unsignedBigInteger('album_id');
             $table->foreign('album_id')
                     ->references('id')
-                    ->on('artistes')
+                    ->on('albums')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
             $table->timestamps();

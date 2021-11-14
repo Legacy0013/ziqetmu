@@ -84,7 +84,7 @@ class AlbumSeeder extends Seeder
                 }
             }
 
-            $alb->picture = "\\albums\\covers\\{$alb->id}";
+            $alb->picture = "\\albums\\covers\\{$alb->id}\\cover.jpg";
             $alb->save();
         }
     }

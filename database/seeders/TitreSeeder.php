@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Album;
+use App\Models\Artiste;
+use App\Models\Titre;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 
@@ -25,10 +27,9 @@ class TitreSeeder extends Seeder
         foreach ($albums as $key => $album) {
             $ex = explode(' - ', $album);
             $ar = [
-                'year' => $ex[0],
-                'duration' => $ex[1],
                 'artist' => $ex[2],
                 'name' => $ex[3],
+                'genre' => $ex[4]
             ];
             $titres = array_diff(scandir("./resources/sources/music-20s/$album"), array('.', '..'));
             foreach ($titres as $t => $titre) {
@@ -40,6 +41,22 @@ class TitreSeeder extends Seeder
                     if(!File::exists(storage_path("app\\public\\albums/titres/{$a->id}/$titre"))){
                         File::copy("./resources/sources/music-20s/$album/$titre", storage_path("app\\public\\albums/titres/{$a->id}/$titre"));
                     }
+                    $art = Artiste::where('name', str_replace('-', ' ', $ar['artist']))->first();
+                    $alb = Album::where('name', $ar['name'])->first();
+                    if(!$art){
+                        dd(str_replace('-', ' ', $ar['artist']));
+                    }
+                    $ex = explode(' - ', $titre);
+                    $ti = [
+                        'order' => $ex[0],
+                        'name' => str_replace('.mp3', '', $ex[1]),
+                    ];
+                    Titre::firstOrCreate([
+                        'name' => $ti['name'],
+                        'order' => $ti['order'],
+                        'album_id' => $alb->id,
+                        'artiste_id' => $art->id
+                    ]);
                 }
             }
         }

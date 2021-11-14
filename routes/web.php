@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Artiste;
+use App\Models\Titre;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('pages.home');
+    $titres = Titre::all();
+    return view('pages.home', ['titres' => $titres]);
 });
 
 Route::get('/dashboard', function () {
