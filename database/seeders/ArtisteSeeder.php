@@ -42,7 +42,7 @@ class ArtisteSeeder extends Seeder
             if(!File::exists(storage_path("app/public/artists/covers/{$art->id}"))){
                 File::makeDirectory(storage_path("app/public/artists/covers/{$art->id}/"));
             }
-            File::copy("./storage/sources/artistes/{$g['name']}/{$ar['cover']}", storage_path("app/public/albums/titres/{$art->id}/cover.jpg"));
+            File::copy("./storage/sources/artistes/{$g['name']}/{$ar['cover']}", storage_path("app/public/artists/covers/{$art->id}/cover.jpg"));
 
             $art->picture = "/albums/titres/{$art->id}/cover.jpg";
             $art->save();
