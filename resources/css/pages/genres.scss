@@ -1,0 +1,39 @@
+.container-genres {
+    padding: 0 2em 1em;
+    min-height: 100vh;
+    h2 {
+        color: $white;
+        font-family: $righteous;
+        font-size: 24px;
+        margin-bottom: 0.5em;
+        text-transform: capitalize;
+        text-align: center;
+        margin-bottom: 1em;
+    }
+    h3 {
+        color: $white;
+        font-size: 18px;
+        font-family: $righteous;
+        margin-bottom: 1em;
+    }
+    .wrap-cards {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .card {
+            background: $pourpre url('../img/fond-genre.svg');
+            background-position: top 15px center;
+            background-repeat: no-repeat;
+            width: 150px;
+            height: 63px;
+            padding: .5em;
+            margin: .5em 0;
+            .name {
+                color: $white;
+                text-transform: uppercase;
+                font-family: $righteous;
+                font-size: 12px;
+            }
+        }
+    }
+}

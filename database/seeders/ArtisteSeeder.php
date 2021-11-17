@@ -36,7 +36,7 @@ class ArtisteSeeder extends Seeder
             ];
 
             $art = Artiste::create([
-                "name" => ucwords(str_replace('-', ' ', $ar['name'])), 
+                "name" => ucwords(str_replace('-', ' ', $ar['name'])),
             ]);
 
             if(!File::exists(storage_path("app/public/artists/covers/{$art->id}"))){
@@ -44,7 +44,7 @@ class ArtisteSeeder extends Seeder
             }
             File::copy("./storage/sources/artistes/{$g['name']}/{$ar['cover']}", storage_path("app/public/artists/covers/{$art->id}/cover.jpg"));
 
-            $art->picture = "/albums/titres/{$art->id}/cover.jpg";
+            $art->picture = "/artists/covers/{$art->id}/cover.jpg";
             $art->save();
         }
     }

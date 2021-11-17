@@ -1,7 +1,9 @@
 <?php
 
-use App\Models\Artiste;
-use App\Models\Titre;
+use App\Http\Controllers\AlbumController;
+use App\Http\Controllers\ArtisteController;
+use App\Http\Controllers\GenreController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    $titres = Titre::all();
-    return view('pages.home', ['titres' => $titres]);
-});
+Route::get('/', [HomeController::class, 'showHomepage'])->name('home');
+
+Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
+
+Route::get('/album/{album}', [AlbumController::class, 'show'])->name('album');
+
+Route::get('/genres', [GenreController::class, 'index'])->name('genres');
+Route::get('/genre/{genre}', [GenreController::class, 'show'])->name('genre');
+
+Route::get('/player/{album}', [AlbumController::class, 'player'])->name('player');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

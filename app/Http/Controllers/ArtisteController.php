@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
 use App\Models\Artiste;
 use Illuminate\Http\Request;
 
@@ -46,7 +47,8 @@ class ArtisteController extends Controller
      */
     public function show(Artiste $artiste)
     {
-        //
+        $albums = Album::where('artiste_id', $artiste->id)->get();
+        return view('pages.artiste', compact('artiste', 'albums'));
     }
 
     /**

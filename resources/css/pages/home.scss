@@ -1,5 +1,150 @@
-h1 {
-    font-size: 60px;
-    text-align: center;
-    text-transform: uppercase;
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 1em;
+    nav {
+        a:nth-child(1) {
+            margin-right: .5em;
+        }
+    }
+}
+.container-home {
+    padding-bottom: 1em;
+    margin-top: 1em;
+    main {
+        padding-left: 2em;
+        h2 {
+            position: relative;
+            color: $white;
+            font-family: $righteous;
+            font-size: 18px;
+            margin-bottom: .5em;
+            text-transform: capitalize;
+            span {
+                position: absolute;
+                font-size: 20px;
+                padding-left: 10px;
+            }
+        }
+        .recents {
+            margin-bottom: 1em;
+            .wrap-cards {
+                display: flex;
+                overflow-x: scroll;
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+                &::-webkit-scrollbar { /* Chrome, Safari and Opera  */
+                    display: none;
+                }
+                scroll-behavior: smooth;
+                .card {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: flex-start;
+                    max-width: 116px;
+                    height: auto;
+                    margin: .5em 1em .5em 0;
+                    img {
+                        width: 116px;
+                        height: 116px;
+                        margin-bottom: .5em;
+                        object-fit: cover;
+                    }
+                    .titre_name {
+                        color: $white;
+                        font-family: $robotoRegular;
+                        font-size: 14px;
+                    }
+                    .album_name {
+                        color: $white;
+                        font-family: $robotoLight;
+                        font-size: 14px;
+                    }
+                    .play {
+                        position: absolute;
+                        background: $noir url('../img/play.svg');
+                        background-repeat: no-repeat;
+                        background-size: 35%;
+                        background-position: 60% center;
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 50%;
+                        top: 75px;
+                        left: 5px;
+                    }
+                }
+            }
+        }
+        .genres {
+            margin-bottom: 1em;
+            a {
+                color: $white;
+            }
+            .wrap-cards {
+                display: flex;
+                overflow-x: scroll;
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+                &::-webkit-scrollbar { /* Chrome, Safari and Opera  */
+                    display: none;
+                }
+                scroll-behavior: smooth;
+                .two-card {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .card {
+                    background: $pourpre url('../img/fond-genre.svg');
+                    background-position: top 15px center;
+                    background-repeat: no-repeat;
+                    min-width: 150px;
+                    min-height: 63px;
+                    padding: .5em;
+                    margin: .5em .5em .5em 0;
+                    .name {
+                        color: $white;
+                        text-transform: uppercase;
+                        font-family: $righteous;
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+        .artistes {
+            .wrap-cards {
+                display: flex;
+                overflow-x: scroll;
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+                &::-webkit-scrollbar { /* Chrome, Safari and Opera  */
+                    display: none;
+                }
+                scroll-behavior: smooth;
+                .card {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                    align-items: center;
+                    min-width: 116px;
+                    height: auto;
+                    margin: .5em 1em .5em 0;
+                    img {
+                        width: 116px;
+                        height: 116px;
+                        margin-bottom: .5em;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+                    .artiste_name {
+                        color: $white;
+                        font-family: $robotoRegular;
+                        font-size: 14px;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Recent;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Album extends Model
 {
@@ -20,5 +21,8 @@ class Album extends Model
     }
     public function genre() {
         return $this->belongsTo(Genre::class);
+    }
+    public function recents() {
+        return $this->hasMany(Recent::class);
     }
 }

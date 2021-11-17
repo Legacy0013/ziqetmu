@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
 use App\Models\Genre;
+use App\Models\Artiste;
 use Illuminate\Http\Request;
 
 class GenreController extends Controller
@@ -14,7 +16,8 @@ class GenreController extends Controller
      */
     public function index()
     {
-        //
+        $genres = Genre::all();
+        return view('pages.genres', compact('genres'));
     }
 
     /**
@@ -46,7 +49,14 @@ class GenreController extends Controller
      */
     public function show(Genre $genre)
     {
-        //
+        $albums = Album::where('genre_id', $genre->id)->get();
+        $artistes = [];
+
+        foreach ($albums as $key => $album) {
+           $artistes[] = $album->artiste;
+        }
+
+        return view('pages.genre', compact('genre', 'albums', 'artistes'));
     }
 
     /**

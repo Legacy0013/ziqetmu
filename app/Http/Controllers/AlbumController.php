@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use App\Models\Titre;
+use App\Models\Artiste;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
@@ -46,9 +48,18 @@ class AlbumController extends Controller
      */
     public function show(Album $album)
     {
-        //
+        $titres = Titre::where('album_id', $album->id)->get();
+        $artiste = Artiste::where('id', $album->artiste_id)->get();
+        return view('pages.album', compact('album', 'artiste', 'titres'));
     }
 
+    public function player(Album $album)
+    {
+        // $album = Titre::where('album_id', $album->id)->first();
+        $titres = Titre::all();
+        $artiste = Artiste::where('id', $album->artiste_id)->get();
+        return view('pages.player', compact('album', 'artiste', 'titres'));
+    }
     /**
      * Show the form for editing the specified resource.
      *

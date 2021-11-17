@@ -1,0 +1,122 @@
+.container-album {
+    padding: 0 2em 1em;
+    min-height: 100vh;
+    .top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: $white;
+        img {
+            width: 180px;
+            height: 180px;
+            margin-bottom: .5em;
+            object-fit: cover;
+        }
+        .album_name {
+            font-size: 24px;
+            font-family: $robotoMedium;
+            margin-bottom: .5em;
+            text-align: center;
+        }
+        .artiste_name {
+            font-size: 18px;
+            font-family: $robotoLight;
+            margin-bottom: .5em;
+            text-align: center;
+
+        }
+        .album_genre {
+            font-size: 18px;
+            font-family: $righteous;
+            margin-bottom: .5em;
+            text-align: center;
+
+        }
+        p {
+            font-size: 14px;
+            font-family: $robotoLight;
+            margin-bottom: 1em;
+            text-align: center;
+
+        }
+        .wrap-forms {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1em;
+            form {
+                .wrap {
+                    position: relative;
+                    &::before {
+                        position: absolute;
+                        content: "";
+                        background: url('../img/favori-active.svg') no-repeat;
+                        background-position: center;
+                        background-size: contain;
+                        width: 16px;
+                        height: 16px;
+                        left: 30px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
+                    input[type=submit] {
+                        background: transparent;
+                        border: 1px solid $white;
+                        padding: 1em 3em 1em 4em;
+                        color: $white;
+                        text-transform: uppercase;
+                        border-radius: 30px;
+                        font-family: $robotoBold;
+                    }
+                }
+                &:nth-child(1) {
+                    input[type=submit] {
+                        margin-right: 2em;
+                    }
+                }
+                &:nth-child(2) {
+                    .wrap {
+                        &::before {
+                            background: url('../img/play.svg') no-repeat;
+                            background-position: center;
+                            background-size: contain;
+                        }
+                        input[type=submit] {
+                            background: $rose;
+                            border: 1px solid $rose;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .bottom {
+        color: $white;
+        font-size: 14px;
+        .titre {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border-bottom: 1px solid rgba($color: $white, $alpha: .5);
+            padding: 1em 0;
+            .number {
+                font-family: $robotoBold;
+                margin-right: 1em;
+            }
+            .titre_name {
+                font-family: $robotoLight;
+                font-weight: 600;
+            }
+            .like {
+                flex-grow: 1;
+                text-align: right;
+            }
+        }
+        h2 {
+
+            font-family: $righteous;
+            font-size: 18px;
+            margin-bottom: 0.5em;
+            text-transform: capitalize;
+        }
+    }
+}

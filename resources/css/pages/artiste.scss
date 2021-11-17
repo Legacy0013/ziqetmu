@@ -1,0 +1,128 @@
+.container-artiste {
+    padding: 0 2em 1em;
+    min-height: 100vh;
+    header {
+        // margin-bottom: 2em;
+        padding-left: 2em;
+        h1 {
+            padding-top: 1em;
+        }
+    }
+    .top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1em;
+        img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin-bottom: .5em;
+            object-fit: cover;
+        }
+        h2 {
+            color: $white;
+            font-size: 14px;
+            font-family: $robotoMedium;
+            margin-bottom: .5em;
+        }
+        .like {
+            color: $white;
+            position: relative;
+            font-size: 12px;
+            font-family: $robotoLight;
+            padding-left: 1.5em;
+            margin-bottom: 1em;
+            &::before {
+                position: absolute;
+                content: "";
+                background: url('../img/favori-active.svg') no-repeat;
+                background-position: center;
+                background-size: contain;
+                width: 9px;
+                height: 9px;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+        form {
+            .wrap {
+                position: relative;
+                &::before {
+                    position: absolute;
+                    content: "";
+                    background: url('../img/favori-active.svg') no-repeat;
+                    background-position: center;
+                    background-size: contain;
+                    width: 16px;
+                    height: 16px;
+                    left: 30px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+                input[type=submit] {
+                    background: transparent;
+                    border: 1px solid $white;
+                    padding: 1em 3em 1em 4em;
+                    color: $white;
+                    text-transform: uppercase;
+                    border-radius: 30px;
+                    font-family: $robotoBold;
+                }
+            }
+        }
+    }
+    .bottom {
+        h2 {
+            color: $white;
+            font-family: $righteous;
+            font-size: 18px;
+            margin-bottom: 0.5em;
+            text-transform: capitalize;
+        }
+        .wrap-cards {
+            display: flex;
+            flex-wrap: wrap;
+            a {
+                width: 47%;
+                .card {
+                    position: relative;
+                    margin-bottom: .5em;
+                    img {
+                        width: 147px;
+                        height: 155px;
+                        margin-bottom: .5em;
+                        object-fit: cover;
+                    }
+                    .titre_name {
+                        color: $white;
+                        font-family: $robotoRegular;
+                        font-size: 14px;
+                        margin-bottom: .2em;
+                    }
+                    .album_name {
+                        color: $white;
+                        font-family: $robotoLight;
+                        font-size: 14px;
+                    }
+                    .play {
+                        position: absolute;
+                        background: $noir url('../img/play.svg');
+                        background-repeat: no-repeat;
+                        background-size: 35%;
+                        background-position: 60% center;
+                        width: 34px;
+                        height: 34px;
+                        border-radius: 50%;
+                        top: 116px;
+                        left: 5px;
+                    }
+                }
+                &:nth-child(odd) {
+                    margin-right: 1em;
+                }
+            }
+        }
+    }
+}

@@ -25,7 +25,9 @@ class TitreSeeder extends Seeder
         if(!File::exists(storage_path('app/public/albums/titres'))){
             File::makeDirectory(storage_path('app/public/albums/titres'));
         }
-        
+        if(!File::exists(storage_path('app/public/albums/covers'))){
+            File::makeDirectory(storage_path('app/public/albums/covers'));
+        }
         $albums = Storage::disk('sources')->allFiles('music-20s');
         foreach ($albums as $key => $album) {
             $slashed = explode('/', $album);
@@ -51,37 +53,33 @@ class TitreSeeder extends Seeder
                 'genre_id' => $ge->id,
                 'name' => $al['name'],
             ]);
-
+            if(!File::exists(storage_path("app/public/albums/covers/{$alb->id}"))){
+                                File::makeDirectory(storage_path("app/public/albums/covers/{$alb->id}/"));
+                            }
+                            if(storage_path("app/public/albums/covers/{$alb->id}/cover.jpg")){
+                                File::copy("./storage/sources/".$album, storage_path("app/public/albums/covers/{$alb->id}/cover.jpg"));
+                            }
             if($slashed[2] == 'cover.jpg'){
-                // var_dump($album);
-                if(!File::exists(storage_path("app/public/albums/covers/{$alb->id}"))){
-                    File::makeDirectory(storage_path("app/public/albums/covers/{$alb->id}/"));
-                }
-                if(storage_path("app/public/albums/covers/{$alb->id}/cover.jpg")){
-                    File::copy("./storage/sources/".$album, storage_path("app/public/albums/covers/{$alb->id}/cover.jpg"));
-                }
-                
+
+
                 $alb->picture = "/albums/covers/{$alb->id}/cover.jpg";
                 $alb->save();
 
             }else{
                 $titl = explode(' - ', $slashed[2]);
-                if(!isset($titl[1])){
-                    dd($titl);
-                }
+
                 $title = [
                     'order' => $titl[0],
                     'title' => $titl[1],
                 ];
-    
-                
+
                 if(!File::exists(storage_path("app/public/albums/titres/{$alb->id}"))){
                     File::makeDirectory(storage_path("app/public/albums/titres/{$alb->id}/"));
                 }
                 if(!File::exists(storage_path("app/public/albums/titres/{$alb->id}/{$title['title']}"))){
                     File::copy("./storage/sources/$album", storage_path("app/public/albums/titres/{$alb->id}/{$title['title']}"));
                 }
-    
+
                 Titre::firstOrCreate([
                     'name' => str_replace('.mp3', '', $title['title']),
                     'order'=> $title['order'],

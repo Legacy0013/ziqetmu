@@ -1,6 +1,46 @@
+//Fonts
+$robotoLight: 'roboto light';
+@font-face {
+    font-family: $robotoLight;
+    src: url(fonts/Roboto/Roboto-Light.ttf) format('truetype');
+    font-weight: 200;
+}
+$robotoRegular: 'roboto regular';
+@font-face {
+    font-family: $robotoRegular;
+    src: url(fonts/Roboto/Roboto-Black.ttf) format('truetype');
+    font-weight: 400;
+}
+$robotoMedium: 'roboto medium';
+@font-face {
+    font-family: $robotoMedium;
+    src: url(fonts/Roboto/Roboto-Medium.ttf) format('truetype');
+    font-weight: 700;
+}
+$robotoBold: 'roboto bold';
+@font-face {
+    font-family: $robotoBold;
+    src: url(fonts/Roboto/Roboto-Bold.ttf) format('truetype');
+    font-weight: 900;
+}
+$righteous: 'righteous';
+@font-face {
+    font-family: $righteous;
+    src: url(fonts/Righteous/Righteous-Regular.ttf) format('truetype');
+}
+
 @import 'modules/reset.scss';
 
 @import 'variables/colors.scss';
 @import 'variables/texts.scss';
 
 @import 'pages/home.scss';
+@import 'pages/artiste.scss';
+@import 'pages/album.scss';
+@import 'pages/genres.scss';
+@import 'pages/genre.scss';
+@import 'pages/player.scss';
+
+body {
+    background: $linearBg no-repeat;
+}

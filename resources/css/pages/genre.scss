@@ -1,0 +1,92 @@
+.container-genre {
+    padding: 0 2em 1em;
+
+    h2 {
+        color: $white;
+        font-family: $righteous;
+        font-size: 24px;
+        margin-bottom: 0.5em;
+        text-transform: capitalize;
+        text-align: center;
+        margin-bottom: 1.5em;
+    }
+    h3 {
+        color: $white;
+        font-size: 18px;
+        font-family: $righteous;
+        margin-bottom: .5em;
+    }
+    .top {
+        margin-bottom: 3em;
+        .wrap-cards {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            .card {
+                margin: .5em 0;
+                img {
+                    width: 149px;
+                    height: 155px;
+                    margin-bottom: .5em;
+                    object-fit: cover;
+                }
+                .album_name {
+                    color: $white;
+                    font-family: $robotoMedium;
+                    font-size: 14px;
+                    text-align: left;
+                    margin-bottom: .5em;
+                    max-width: 149px;
+                }
+                .artiste_name{
+                    color: $white;
+                    font-family: $robotoLight;
+                    font-size: 14px;
+                    text-align: left;
+                    margin-bottom: 0;
+                    max-width: 149px;
+                }
+                .date {
+                    color: $white;
+                    font-family: $robotoLight;
+                    font-size: 12px;
+                    text-align: left;
+                    margin-bottom: .5em;
+                }
+            }
+        }
+    }
+    .bottom {
+        a {
+            color: $white;
+            width: 50%;
+        }
+        .wrap-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            .card {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                min-width: 116px;
+                height: auto;
+                margin: .5em 0;
+                img {
+                    width: 149px;
+                    height: 149px;
+                    margin-bottom: .5em;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                .artiste_name {
+                    color: $white;
+                    font-family: $robotoRegular;
+                    font-size: 14px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
