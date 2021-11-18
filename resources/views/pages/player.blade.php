@@ -3,7 +3,7 @@
 @section('content')
     <div class="container-player">
         <h2>{{ $album->name }}</h2>
-        <img src="../storage/albums/covers/{{ $album->id }}/cover.jpg" alt="">
+        <img class="cover" src="../storage/albums/covers/{{ $album->id }}/cover.jpg" alt="">
         <form action="" method="post">
             @csrf
             <div class="wrap">
@@ -31,27 +31,40 @@
                     <div class="toggle-play play"></div>
                 </div>
                 <div class="next"></div>
-                <div class="volume-container">
-                    <div class="volume-button">
-                        <div class="volume icono-volumeMedium"></div>
-                    </div>
-                    <div class="volume-slider">
-                        <div class="volume-percentage"></div>
-                    </div>
-                </div>
+                <div class="shuffle"></div>
             </div>
+            <div class="queue"><span>File d'attente</span></div>
         </div>
-        <ul class="titres-list">
+        <div class="titres-list">
+            <h2>à l'écoute</h2>
+            <div class="infos">
+                <div class="titres_count">
+                    <p>{{ count($titreCount) }} titres</p>
+                </div>
+                <div class="separator"></div>
+                <div class="duration">{{ $album->duration }} min</div>
+            </div>
+            <div class="currentSong">
+
+            </div>
             @for($i=0; $i<count($titres); $i++)
                 @if ($album->id == $titres[$i]->album_id)
-                    <li class="track">{{$titres[$i]['name']}}</li>
+                    <div class="titre">
+                        <span class="number">
+                            {{ str_pad($titres[$i]['order'], 2, '0', STR_PAD_LEFT) }}
+                        </span>
+                        <span class="track">
+                            {{$titres[$i]['name']}}
+                        </span>
+                        <span class="like">
+                            {{-- @if (si le titre est liké ou non)
+
+                            @endif --}}
+                            <img src="../img/favori-active.svg" alt="">
+                        </span>
+                    </div>
                 @endif
             @endfor
-        </ul>
+        </div>
     </div>
-{{-- <figure>
-    <audio class="player" controls
-        src="../storage/albums/titres/{{ $album->id }}/{{$titres[0]['name']}}.mp3" type="audio/mp3">
-    </audio>
-</figure> --}}
 @endsection

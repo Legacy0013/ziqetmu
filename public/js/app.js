@@ -5337,131 +5337,264 @@ module.exports = {
   \*****************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
+var _require = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"),
+    round = _require.round,
+    indexOf = _require.indexOf;
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-__webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js"); // let src = document.querySelector('.player').src;
+__webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
 
+if (document.querySelector('.audio-player')) {
+  //turn 128 seconds into 2:08
+  var getTimeCodeFromNum = function getTimeCodeFromNum(num) {
+    var seconds = parseInt(num);
+    var minutes = parseInt(seconds / 60);
+    seconds -= minutes * 60;
+    var hours = parseInt(minutes / 60);
+    minutes -= hours * 60;
+    if (hours === 0) return "".concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
+    return "".concat(String(hours).padStart(2, 0), ":").concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
+  };
 
-var tracks = document.querySelectorAll('.track');
-console.log(tracks.length);
-var audioPlayer = document.querySelector('.audio-player'); //récuperer une piste de l'album
+  var tracks = document.querySelectorAll('.track');
+  var audioPlayer = document.querySelector('.audio-player'); //récuperer une piste de l'album
 
-var currentSong = document.querySelector('.titre_name');
-var link = currentSong.textContent; //récuprérer l'id de l'album pour construire le lien de la piste
+  var currentSong = document.querySelector('.titre_name');
+  var trackName = currentSong.textContent; //récuprérer l'id de l'album pour construire le lien de la piste
 
-var url = window.location.href;
-var searchIndex = url.split('/');
-var index = searchIndex.length - 1;
-var albumId = searchIndex.splice(index, 1, link); //create track link
+  var url = window.location.href;
+  var searchIndex = url.split('/');
+  var index = searchIndex.length - 1;
+  var albumId = searchIndex.splice(index, 1, trackName); //create track trackName
 
-var audio = new Audio('../storage/albums/titres/' + albumId + '/' + link + '.mp3');
-console.dir(audio);
-audio.addEventListener("loadeddata", function () {
-  audioPlayer.querySelector(".time .length").textContent = getTimeCodeFromNum(audio.duration);
-  audio.volume = .75;
-}, false); //click on button to change track
+  var audio = new Audio('../storage/albums/titres/' + albumId + '/' + trackName + '.mp3');
+  audio.setAttribute('preload', 'metadata');
+  audio.addEventListener("loadeddata", function () {
+    audioPlayer.querySelector(".time .length").textContent = getTimeCodeFromNum(audio.duration);
+    audio.volume = .75;
+  }, false); //click on button to change track
 
-var newTrack = Array.prototype.indexOf.call(tracks, link) + 1;
-console.log(newTrack); //prev track
+  var trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1; //prev track
 
-var prev = audioPlayer.querySelector('.prev');
-prev.addEventListener("click", function (e) {
-  var track = tracks[newTrack].textContent;
+  var prev = audioPlayer.querySelector('.prev');
+  prev.addEventListener("click", function (e) {
+    if (shuffle.classList.contains('active')) {
+      var tracksArray = Array.prototype.slice.call(tracks);
+      tracksArray.sort(function () {
+        return 0.5 - Math.random();
+      }); // let trackIndexShuffle = Array.prototype.indexOf.call(tracks, trackName)+1;
 
-  if (newTrack == 0) {
-    track = tracks[tracks.length].textContent;
-    audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
-    currentSong.innerText = track;
-    playBtn.classList.remove("play");
-    playBtn.classList.add("pause");
-    audio.play();
-    newTrack = tracks.length;
-  } else {
-    audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
-    currentSong.innerText = track;
-    playBtn.classList.remove("play");
-    playBtn.classList.add("pause");
-    audio.play();
-    newTrack--;
-  }
-}, false); //next track
+      if (trackIndex == 0) {
+        var track = tracksArray[tracksArray.length - 1].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = track;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex = tracksArray.length - 1;
+      } else {
+        var _track = tracksArray[trackIndex - 1].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = _track;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex--;
+      }
+    } else {
+      if (trackIndex == 0) {
+        var _track2 = tracks[tracks.length - 1].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track2.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = _track2;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex = tracks.length - 1;
+      } else {
+        var _track3 = tracks[trackIndex - 1].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track3.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = _track3;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex--;
+      }
+    }
+  }, false); //next track
 
-var next = audioPlayer.querySelector('.next');
-next.addEventListener("click", function (e) {
-  var track = tracks[newTrack].textContent;
+  var next = audioPlayer.querySelector('.next');
+  next.addEventListener("click", function (e) {
+    if (shuffle.classList.contains('active')) {
+      var tracksArray = Array.prototype.slice.call(tracks);
+      tracksArray.sort(function () {
+        return 0.5 - Math.random();
+      });
 
-  if (newTrack == tracks.length - 1) {
-    track = tracks[0].textContent;
-    audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
-    currentSong.innerText = track;
-    playBtn.classList.remove("play");
-    playBtn.classList.add("pause");
-    audio.play();
-    newTrack = 0;
-  } else {
-    audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
-    currentSong.innerText = track;
-    playBtn.classList.remove("play");
-    playBtn.classList.add("pause");
-    audio.play();
-    newTrack++;
-  }
-}, false); //click on timeline to skip around
+      if (trackIndex == tracks.length - 1) {
+        var track = tracks[0].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = track;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex = 0;
+      } else {
+        var _track4 = tracks[trackIndex + 1].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track4.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = _track4;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex++;
+      }
+    } else {
+      if (trackIndex == tracks.length - 1) {
+        var _track5 = tracks[0].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track5.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = _track5;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex = 0;
+      } else {
+        var _track6 = tracks[trackIndex + 1].textContent;
+        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track6.replace('%20', ' ') + '.mp3');
+        currentSong.innerText = _track6;
+        playBtn.classList.remove("play");
+        playBtn.classList.add("pause");
+        audio.play();
+        trackIndex++;
+      }
+    }
+  }, false); //autoplay next track & loop
 
-var timeline = audioPlayer.querySelector(".timeline");
-timeline.addEventListener("click", function (e) {
-  var timelineWidth = window.getComputedStyle(timeline).width;
-  var timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
-  audio.currentTime = timeToSeek;
-}, false); //click volume slider to change volume
+  var loop = document.querySelector('.loop');
+  loop.addEventListener('click', function (e) {
+    this.classList.toggle('active');
+  }); //shuffle random track
 
-var volumeSlider = audioPlayer.querySelector(".controls .volume-slider");
-volumeSlider.addEventListener('click', function (e) {
-  var sliderWidth = window.getComputedStyle(volumeSlider).width;
-  var newVolume = e.offsetX / parseInt(sliderWidth);
-  audio.volume = newVolume;
-  audioPlayer.querySelector(".controls .volume-percentage").style.width = newVolume * 100 + '%';
-}, false); //check audio percentage and update time accordingly
+  var shuffle = document.querySelector('.shuffle');
+  shuffle.addEventListener('click', function (e) {
+    this.classList.toggle('active');
+  }); //in queue tracks
 
-setInterval(function () {
-  var progressBar = audioPlayer.querySelector(".progress");
-  progressBar.style.width = audio.currentTime / audio.duration * 100 + "%";
-  audioPlayer.querySelector(".time .current").textContent = getTimeCodeFromNum(audio.currentTime);
-}, 500); //toggle between playing and pausing on button click
+  var queue = document.querySelector('.queue');
+  var titreList = document.querySelector('.titres-list');
+  queue.addEventListener('click', function (e) {
+    titreList.classList.toggle('active');
+  });
+  audio.addEventListener("timeupdate", function () {
+    if (this.currentTime == this.duration) {
+      if (shuffle.classList.contains('active')) {
+        var tracksArray = Array.prototype.slice.call(tracks);
+        tracksArray.sort(function () {
+          return 0.5 - Math.random();
+        });
 
-var playBtn = audioPlayer.querySelector(".controls .toggle-play");
-playBtn.addEventListener("click", function () {
-  if (audio.paused) {
-    playBtn.classList.remove("play");
-    playBtn.classList.add("pause");
-    audio.play();
-  } else {
-    playBtn.classList.remove("pause");
-    playBtn.classList.add("play");
-    audio.pause();
-  }
-}, false);
-audioPlayer.querySelector(".volume-button").addEventListener("click", function () {
-  var volumeEl = audioPlayer.querySelector(".volume-container .volume");
-  audio.muted = !audio.muted;
+        if (loop.classList.contains('active')) {
+          if (trackIndex == tracksArray.length - 1) {
+            var track = tracksArray[0].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = track;
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+            trackIndex = 0;
+          } else {
+            var _track7 = tracksArray[trackIndex + 1].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track7.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track7;
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+            trackIndex++;
+          }
+        } else {
+          if (trackIndex == tracksArray.length - 1) {
+            var _track8 = tracksArray[0].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track8.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track8;
+            playBtn.classList.remove("pause");
+            playBtn.classList.add("play");
+            audio.pause();
+          } else {
+            var _track9 = tracksArray[trackIndex + 1].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track9.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track9;
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+            trackIndex++;
+          }
+        }
+      } else {
+        if (loop.classList.contains('active')) {
+          if (trackIndex == tracks.length - 1) {
+            var _track10 = tracks[0].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track10.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track10;
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+            trackIndex = 0;
+          } else {
+            var _track11 = tracks[trackIndex + 1].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track11.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track11;
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+            trackIndex++;
+          }
+        } else {
+          if (trackIndex == tracks.length - 1) {
+            var _track12 = tracks[0].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track12.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track12;
+            playBtn.classList.remove("pause");
+            playBtn.classList.add("play");
+            audio.pause();
+          } else {
+            var _track13 = tracks[trackIndex + 1].textContent;
+            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track13.replace('%20', ' ') + '.mp3');
+            currentSong.innerText = _track13;
+            playBtn.classList.remove("play");
+            playBtn.classList.add("pause");
+            audio.play();
+            trackIndex++;
+          }
+        }
+      }
+    }
+  }); //click on timeline to skip around
 
-  if (audio.muted) {
-    volumeEl.classList.remove("icono-volumeMedium");
-    volumeEl.classList.add("icono-volumeMute");
-  } else {
-    volumeEl.classList.add("icono-volumeMedium");
-    volumeEl.classList.remove("icono-volumeMute");
-  }
-}); //turn 128 seconds into 2:08
+  var timeline = audioPlayer.querySelector(".timeline");
+  timeline.addEventListener("click", function (e) {
+    var timelineWidth = window.getComputedStyle(timeline).width;
+    var timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
+    audio.currentTime = timeToSeek;
+    console.dir(audio);
+  }, false); //check audio percentage and update time accordingly
 
-function getTimeCodeFromNum(num) {
-  var seconds = parseInt(num);
-  var minutes = parseInt(seconds / 60);
-  seconds -= minutes * 60;
-  var hours = parseInt(minutes / 60);
-  minutes -= hours * 60;
-  if (hours === 0) return "".concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
-  return "".concat(String(hours).padStart(2, 0), ":").concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
+  setInterval(function () {
+    var progressBar = audioPlayer.querySelector(".progress");
+    progressBar.style.width = audio.currentTime / audio.duration * 100 + "%";
+    audioPlayer.querySelector(".time .current").textContent = getTimeCodeFromNum(audio.currentTime);
+  }, 500); //toggle between playing and pausing on button click
+
+  var playBtn = audioPlayer.querySelector(".controls .toggle-play");
+  playBtn.addEventListener("click", function () {
+    if (audio.paused) {
+      playBtn.classList.remove("play");
+      playBtn.classList.add("pause");
+      audio.play();
+    } else {
+      playBtn.classList.remove("pause");
+      playBtn.classList.add("play");
+      audio.pause();
+    }
+  }, false);
 }
 
 /***/ }),

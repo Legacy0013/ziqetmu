@@ -1,9 +1,11 @@
 .container-player {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 0 2em 1em;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-y: hidden;
     h2 {
         color: $white;
         font-family: $robotoMedium;
@@ -13,7 +15,7 @@
         text-align: center;
         margin-bottom: 1em;
     }
-    img {
+    .cover {
         width: 100%;
         margin-bottom: 1em;
     }
@@ -43,7 +45,7 @@
         }
     }
     .audio-player {
-        height: 125px;
+        height: auto;
         width: 100%;
         font-family: $robotoMedium;
         color: white;
@@ -77,7 +79,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 1em;
+            margin: 1em 0;
             &>* {
                 display: flex;
                 justify-content: center;
@@ -90,8 +92,15 @@
                 background-repeat: no-repeat !important;
                 background-size: contain !important;
                 background:  url('../img/repeat.svg');
+                background-position: center;
                 &:hover {
                     transform: scale(1.1) rotate(180deg);
+                }
+                &.active {
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background:  url('../img/repeat-active.svg');
+                    background-position: center;
                 }
             }
             .prev {
@@ -100,6 +109,7 @@
                 width: 30px;
                 background-repeat: no-repeat !important;
                 background-size: contain !important;
+                background-position: center;
                 background:  url('../img/next.svg');
                 transform: rotate(180deg);
                 &:hover {
@@ -112,6 +122,7 @@
                 width: 30px;
                 background-repeat: no-repeat !important;
                 background-size: contain !important;
+                background-position: center;
                 background:  url('../img/next.svg');
                 &:hover {
                     transform: scale(1.1);
@@ -124,7 +135,7 @@
                 background-repeat: no-repeat !important;
                 background-size: contain !important;
                 background:  url('../img/play.svg');
-                margin-left: 12px;
+                background-position: 5px center;
                 &:hover {
                     transform: scale(1.1);
                 }
@@ -136,79 +147,44 @@
                 background-repeat: no-repeat !important;
                 background-size: contain !important;
                 background:  url('../img/pause.svg');
-                margin-left: 12px;
+                background-position: center;
                 &:hover {
                     transform: scale(1.1);
                 }
             }
-            .volume-container {
+            .shuffle {
                 cursor: pointer;
-                position: relative;
-                z-index: 2;
-                .volume-button {
-                    height: 26px;
-                    display: flex;
-                    align-items: center;
-                    .volume {
-                        transform: scale(0.7);
-                    }
-                }
-                .volume-slider {
-                    position: absolute;
-                    left: -3px;
-                    top: 6px;
-                    z-index: -1;
-                    width: 0;
-                    height: 15px;
-                    background: white;
-                    box-shadow: 0 0 20px #000a;
-                    transition: 0.25s;
-                    .volume-percentage {
-                        background: $rose;
-                        height: 100%;
-                        width: 75%;
-                    }
-                }
+                height: 20px;
+                width: 30px;
+                background-repeat: no-repeat !important;
+                background-size: contain !important;
+                background:  url('../img/shuffle.svg');
+                background-position: center;
                 &:hover {
-                    .volume-slider {
-                        left: -123px;
-                        width: 120px;
-                    }
+                    transform: scale(1.1);
                 }
-                .icono-volumeMedium {
-                    width: 0;
-                    height: 0;
-                    border: 7px solid;
-                    border-left: none;
-                    border-top-color: transparent;
-                    border-bottom-color: transparent;
-                    padding: 6px 3px;
-                    box-shadow: inset 4px 0;
-                    margin: 4px 10px 4px 11px;
+                &.active {
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background:  url('../img/shuffle-active.svg');
+                    background-position: center;
                 }
-                .icono-volumeMute {
-                    position: relative;
-                    width: 0;
-                    height: 0;
-                    border: 7px solid;
-                    border-left: none;
-                    border-top-color: transparent;
-                    border-bottom-color: transparent;
-                    padding: 6px 3px;
-                    box-shadow: inset 4px 0;
-                    margin: 4px 10px 4px 11px;
-                    &::after {
-                        position: absolute;
-                        content: "";
-                        background: #fff;
-                        height: 2px;
-                        width: 30px;
-                        transform: rotate(45deg) translateY(-50%);
-                        top: 50%;
-                        left: -6px;
-                        right: 0;
-                    }
-                }
+            }
+        }
+        .queue {
+            display: flex;
+            align-items: center;
+            justify-self: flex-end;
+            cursor: pointer;
+            height: 20px;
+            width: 100px;
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+            background:  url('../img/playlist.svg');
+            background-position: right center;
+            z-index: 999;
+            span {
+                margin-right: 30px;
             }
         }
     }.titre_name {
@@ -234,6 +210,59 @@
         }
     }
     .titres-list {
-        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 3.5em;
+        height: 0;
+        color: $white;
+        font-size: 14px;
+        background: linear-gradient(to bottom, $linearRose 10%, $linearViolet);
+        overflow-y: scroll;
+        padding: 0 1em;
+        transition: height .25s ease-in-out;
+        .titre {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            border-bottom: 1px solid rgba($color: $white, $alpha: .5);
+            padding: 1em 0;
+            .number {
+                font-family: $robotoBold;
+                margin-right: 1em;
+            }
+            .titre_name {
+                font-family: $robotoLight;
+                font-weight: 600;
+            }
+            .like {
+                flex-grow: 1;
+                text-align: right;
+                margin-left: 1em;
+            }
+        }
+        h2 {
+            font-family: $righteous;
+            font-size: 24px;
+            margin-bottom: 1em;
+            text-transform: capitalize;
+        }
+        &.active {
+            height: 100%;
+            padding: 4em 1em 0;
+        }
+        .infos {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .separator {
+                background: #fff;
+                width: 3px;
+                height: 3px;
+                border-radius: 50%;
+                margin: 0 0.5em;
+            }
+        }
     }
 }
+

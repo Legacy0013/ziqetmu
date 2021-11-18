@@ -50,15 +50,17 @@ class AlbumController extends Controller
     {
         $titres = Titre::where('album_id', $album->id)->get();
         $artiste = Artiste::where('id', $album->artiste_id)->get();
+
         return view('pages.album', compact('album', 'artiste', 'titres'));
     }
 
     public function player(Album $album)
     {
-        // $album = Titre::where('album_id', $album->id)->first();
+        $titreCount = Titre::where('album_id', $album->id)->get();
         $titres = Titre::all();
         $artiste = Artiste::where('id', $album->artiste_id)->get();
-        return view('pages.player', compact('album', 'artiste', 'titres'));
+
+        return view('pages.player', compact('album', 'artiste', 'titres', 'titreCount'));
     }
     /**
      * Show the form for editing the specified resource.
