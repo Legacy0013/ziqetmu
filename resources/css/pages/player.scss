@@ -4,7 +4,6 @@
     flex-direction: column;
     align-items: center;
     padding: 0 2em 1em;
-    height: 100vh;
     overflow-y: hidden;
     h2 {
         color: $white;
@@ -69,10 +68,22 @@
             position: relative;
             cursor: pointer;
             .progress {
+                position: relative;
                 background: $white;
                 width: 0%;
                 height: 100%;
-                transition: 0.25s;
+                transition: 0.25s linear;
+                &::after {
+                    position: absolute;
+                    content: "";
+                    right: -10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: $white;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                }
               }
         }
         .controls {
@@ -182,17 +193,20 @@
             background-size: contain !important;
             background:  url('../img/playlist.svg');
             background-position: right center;
-            z-index: 999;
             span {
                 margin-right: 30px;
             }
         }
-    }.titre_name {
-        text-align: center;
-        color: $white;
-        font-family: $robotoBold;
-        font-size: 14px;
-        margin: .5em 0 0;
+    }
+    .titre_name_container {
+        margin: .5em auto .3em;
+        overflow:hidden;
+        .titre_name {
+            text-align: center;
+            color: $white;
+            font-family: $robotoBold;
+            font-size: 14px;
+        }
     }
     .wrap-name {
         display: flex;
@@ -213,14 +227,25 @@
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 3.5em;
+        bottom: 3em;
         height: 0;
         color: $white;
         font-size: 14px;
-        background: linear-gradient(to bottom, $linearRose 10%, $linearViolet);
+        background: linear-gradient(to bottom, $linearRose, $linearViolet);
         overflow-y: scroll;
         padding: 0 1em;
         transition: height .25s ease-in-out;
+        .close {
+            cursor: pointer;
+            height: 20px;
+            width: 20px;
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+            background:  url('../img/play.svg');
+            background-position: center;
+            transform: rotate(90deg);
+            float: right;
+        }
         .titre {
             display: flex;
             align-items: center;
@@ -255,14 +280,83 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            .separator {
-                background: #fff;
-                width: 3px;
-                height: 3px;
-                border-radius: 50%;
-                margin: 0 0.5em;
+            flex-direction: column;
+            .wrap-infos {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: $robotoLight;
+                font-size: 14px;
+                .separator {
+                    background: #fff;
+                    width: 3px;
+                    height: 3px;
+                    border-radius: 50%;
+                    margin: 0 0.5em;
+                }
+            }
+        }
+        .currentSong {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1em 0;
+            margin-bottom: 2em;
+            .album-cover {
+                width: 51px;
+                height: 51px;
+                img {
+                    width: 51px;
+                    height: 51px;
+                    object-fit: cover;
+                }
+            }
+            .current-track {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: flex-start;
+                padding-left: 1em;
+                .current-song {
+                    font-family: $robotoBold;
+                    font-size: 14px;
+                    margin-bottom: .5em;
+                }
+            }
+            .wrap-name {
+                .album_name, .artiste_name {
+                    font-family: $robotoLight;
+                    font-weight: 500;
+                }
+            }
+            .like {
+                flex-grow: 1;
+                text-align: right;
+                margin-left: 1em;
+            }
+        }
+        .albumTracks {
+            h2 {
+                text-align: left;
+                font-size: 18px;
             }
         }
     }
+}
+
+@keyframes slide {
+from { left: 100%;}
+to { left: -100%;}
+}
+
+.slide {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    animation-name: slide;
+    animation-duration: 10s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 

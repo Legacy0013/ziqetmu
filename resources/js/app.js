@@ -5,134 +5,173 @@ require('alpinejs');
 
 if(document.querySelector('.audio-player')) {
     let tracks = document.querySelectorAll('.track');
-
     const audioPlayer = document.querySelector('.audio-player');
 
     //récuperer une piste de l'album
     let currentSong = document.querySelector('.titre_name');
-    let trackName = currentSong.textContent;
+    let trackName = currentSong.innerText;
 
     //récuprérer l'id de l'album pour construire le lien de la piste
-    let url = window.location.href;
-    let searchIndex = url.split('/');
-    let index = searchIndex.length-1;
-    let albumId = searchIndex.splice(index, 1, trackName);
+    let albumId = document.querySelector('#album_id').value;
 
     //create track trackName
-    let audio = new Audio(
-        '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3'
-    );
+    let audio = new Audio('../storage/albums/titres/' + albumId + '/' + trackName + '.mp3');
 
     audio.setAttribute('preload', 'metadata')
 
     audio.addEventListener(
         "loadeddata",
         () => {
-            audioPlayer.querySelector(".time .length").textContent = getTimeCodeFromNum(
-            audio.duration
-        );
+            audioPlayer.querySelector(".time .length").innerText = getTimeCodeFromNum(audio.duration);
         audio.volume = .75;
         },
         false
     );
 
     //click on button to change track
-    let trackIndex = Array.prototype.indexOf.call(tracks, trackName)+1;
+    let trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1;
 
     //prev track
-    const prev = audioPlayer.querySelector('.prev');
+    let prev = audioPlayer.querySelector('.prev');
+
+    if(trackIndex == 0) {
+        prev.style.opacity = "0.5"
+    } else {
+        prev.style.opacity = "1"
+    }
+
+
     prev.addEventListener("click", e => {
+        if(trackIndex == 0) {
+            prev.style.opacity = "0.5"
+        } else {
+            prev.style.opacity = "1"
+        }
         if(shuffle.classList.contains('active')) {
             let tracksArray = Array.prototype.slice.call(tracks);
             tracksArray.sort(function() {
                 return 0.5 - Math.random();
             })
-            // let trackIndexShuffle = Array.prototype.indexOf.call(tracks, trackName)+1;
-
             if(trackIndex == 0) {
-                let track = tracksArray[tracksArray.length - 1].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
-                currentSong.innerText = track;
-                playBtn.classList.remove("play");
-                playBtn.classList.add("pause");
-                audio.play();
-                trackIndex = tracksArray.length -1;
+
+                // let track = tracksArray[tracksArray.length - 1].innerText;
+                // console.log('avant:' + trackIndex);
+                // console.log(track);
+                // audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
+                // currentSong.innerText = track;
+                // playBtn.classList.remove("play");
+                // audio.play();
+                // trackIndex = tracksArray.length;
+                // console.log('après:' + trackIndex);
             }
             else {
-                let track = tracksArray[trackIndex-1].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                let track = tracksArray[trackIndex-1].innerText;
+                console.log('avant:' + trackIndex);
+                console.log(track);
+                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                 currentSong.innerText = track;
                 playBtn.classList.remove("play");
                 playBtn.classList.add("pause");
                 audio.play();
                 trackIndex--;
+                console.log('après:' + trackIndex);
             }
         } else {
             if(trackIndex == 0) {
-                let track = tracks[tracks.length - 1].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
-                currentSong.innerText = track;
-                playBtn.classList.remove("play");
-                playBtn.classList.add("pause");
-                audio.play();
-                trackIndex = tracks.length -1;
+                // let track = tracks[tracks.length - 1].innerText;
+                // console.log('avant:' + trackIndex);
+                // console.log(track);
+                // audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
+                // currentSong.innerText = track;
+                // prev.setAttribute('display', 'none')
+                // playBtn.classList.remove("play");
+                // playBtn.classList.add("pause");
+                // audio.play();
+                // trackIndex = tracks.length;
+                // console.log('après:' + trackIndex);
             }
             else {
-                let track = tracks[trackIndex-1].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                let track = tracks[trackIndex -1].innerText;
+                console.log('avant:' + trackIndex);
+                console.log(track);
+                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                 currentSong.innerText = track;
                 playBtn.classList.remove("play");
                 playBtn.classList.add("pause");
                 audio.play();
                 trackIndex--;
+                console.log('après:' + trackIndex);
+
             }
         }
+        console.log(trackIndex);
     }, false);
 
     //next track
     const next = audioPlayer.querySelector('.next');
     next.addEventListener("click", e => {
+        if(trackIndex == 0) {
+            prev.style.opacity = "0.5"
+        } else {
+            prev.style.opacity = "1"
+        }
         if(shuffle.classList.contains('active')) {
             let tracksArray = Array.prototype.slice.call(tracks);
             tracksArray.sort(function() {
                 return 0.5 - Math.random();
             });
             if(trackIndex == tracks.length -1) {
-                let track = tracks[0].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                let track = tracks[0].innerText;
+                console.log('avant:' + trackIndex);
+                console.log(track);
+                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                 currentSong.innerText = track;
                 playBtn.classList.remove("play");
                 playBtn.classList.add("pause");
                 audio.play();
                 trackIndex = 0;
+                console.log('après:' + trackIndex);
+
             }
             else {
-                let track = tracks[trackIndex+1].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                let track = tracks[trackIndex+1].innerText;
+                console.log('avant:' + trackIndex);
+                console.log(track);
+                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                 currentSong.innerText = track;
                 playBtn.classList.remove("play");
                 playBtn.classList.add("pause");
                 audio.play();
                 trackIndex++;
+                console.log('après:' + trackIndex);
+
             }
         } else {
             if(trackIndex == tracks.length -1) {
-                let track = tracks[0].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                let track = tracks[0].innerText;
+                console.log('avant:' + trackIndex);
+                console.log(track);
+                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                 currentSong.innerText = track;
                 playBtn.classList.remove("play");
                 playBtn.classList.add("pause");
                 audio.play();
                 trackIndex = 0;
+                console.log('après:' + trackIndex);
+
             }
             else {
-                let track = tracks[trackIndex+1].textContent;
-                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                let track = tracks[trackIndex + 1].innerText;
+                console.log('avant:' + trackIndex);
+                console.log(track);
+                audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                 currentSong.innerText = track;
                 playBtn.classList.remove("play");
                 playBtn.classList.add("pause");
                 audio.play();
                 trackIndex++;
+                console.log('après:' + trackIndex);
+
             }
         }
     }, false);
@@ -149,13 +188,19 @@ if(document.querySelector('.audio-player')) {
     });
 
     //in queue tracks
-    let queue = document.querySelector('.queue');
+    let showQueue = document.querySelector('.queue');
     let titreList = document.querySelector('.titres-list');
-    queue.addEventListener('click', function(e) {
+    showQueue.addEventListener('click', function(e) {
         titreList.classList.toggle('active')
+        // hideQueue.classList.add('active')
     });
 
     audio.addEventListener("timeupdate", function(){
+        if(trackIndex == 0) {
+            prev.style.opacity = "0.5"
+        } else {
+            prev.style.opacity = "1"
+        }
         if(this.currentTime == this.duration) {
             if(shuffle.classList.contains('active')) {
                 let tracksArray = Array.prototype.slice.call(tracks);
@@ -164,16 +209,16 @@ if(document.querySelector('.audio-player')) {
                 })
                 if(loop.classList.contains('active')) {
                     if(trackIndex == tracksArray.length -1) {
-                        let track = tracksArray[0].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracksArray[0].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("play");
                         playBtn.classList.add("pause");
                         audio.play();
                         trackIndex = 0;
                     } else {
-                        let track = tracksArray[trackIndex+1].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracksArray[trackIndex+1].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("play");
                         playBtn.classList.add("pause");
@@ -182,35 +227,36 @@ if(document.querySelector('.audio-player')) {
                     }
                 } else {
                     if(trackIndex == tracksArray.length -1) {
-                        let track = tracksArray[0].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracksArray[-1].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("pause");
                         playBtn.classList.add("play");
                         audio.pause();
                     } else {
-                        let track = tracksArray[trackIndex+1].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracksArray[trackIndex+1].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("play");
                         playBtn.classList.add("pause");
                         audio.play();
                         trackIndex++;
                     }
+                    console.log(trackIndex);
                 }
             } else {
                 if(loop.classList.contains('active')) {
                     if(trackIndex == tracks.length -1) {
-                        let track = tracks[0].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracks[0].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("play");
                         playBtn.classList.add("pause");
                         audio.play();
                         trackIndex = 0;
                     } else {
-                        let track = tracks[trackIndex+1].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracks[trackIndex+1].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("play");
                         playBtn.classList.add("pause");
@@ -219,15 +265,15 @@ if(document.querySelector('.audio-player')) {
                     }
                 } else {
                     if(trackIndex == tracks.length -1) {
-                        let track = tracks[0].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracks[0].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("pause");
                         playBtn.classList.add("play");
                         audio.pause();
                     } else {
-                        let track = tracks[trackIndex+1].textContent;
-                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track.replace('%20', ' ') + '.mp3');
+                        let track = tracks[trackIndex+1].innerText;
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
                         currentSong.innerText = track;
                         playBtn.classList.remove("play");
                         playBtn.classList.add("pause");
@@ -245,14 +291,13 @@ if(document.querySelector('.audio-player')) {
         let timelineWidth = window.getComputedStyle(timeline).width;
         let timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
         audio.currentTime = timeToSeek;
-        console.dir(audio)
     }, false);
 
     //check audio percentage and update time accordingly
     setInterval(() => {
         const progressBar = audioPlayer.querySelector(".progress");
         progressBar.style.width = audio.currentTime / audio.duration * 100 + "%";
-        audioPlayer.querySelector(".time .current").textContent = getTimeCodeFromNum(
+        audioPlayer.querySelector(".time .current").innerText = getTimeCodeFromNum(
         audio.currentTime);
     }, 500);
 
@@ -288,5 +333,31 @@ if(document.querySelector('.audio-player')) {
         seconds % 60
     ).padStart(2, 0)}`;
     }
+
+    //show current track
+    window.onload = function(){
+        tracks[0].parentElement.style.display = 'none';
+        let currentTrack = document.querySelector('.current-song');
+        currentTrack.innerText = currentSong.innerText;
+        let currentInnerText = document.querySelector('.titre_name');
+
+        currentInnerText.addEventListener('DOMSubtreeModified', function() {
+            currentTrack.innerText = currentSong.innerText;
+            tracks.forEach(track => {
+                if(trackIndex != tracks.length -1) {
+                    if(track.innerText == currentTrack.innerText) {
+                        track.parentElement.style.display = 'none';
+                    }
+                } else {
+                    tracks[0].parentElement.style.display = 'none';
+                    // track.parentElement.style.display = 'flex';
+                }
+            });
+        }, false);
+    };
+
+
+    //hide already played tracks
+
 }
 

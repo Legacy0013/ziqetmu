@@ -624,7 +624,6 @@ header nav a:nth-child(1) {
   flex-direction: column;
   align-items: center;
   padding: 0 2em 1em;
-  height: 100vh;
   overflow-y: hidden;
 }
 .container-player h2 {
@@ -692,10 +691,22 @@ header nav a:nth-child(1) {
   cursor: pointer;
 }
 .container-player .audio-player .timeline .progress {
+  position: relative;
   background: #fff;
   width: 0%;
   height: 100%;
-  transition: 0.25s;
+  transition: 0.25s linear;
+}
+.container-player .audio-player .timeline .progress::after {
+  position: absolute;
+  content: "";
+  right: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
 }
 .container-player .audio-player .controls {
   display: flex;
@@ -723,7 +734,7 @@ header nav a:nth-child(1) {
 .container-player .audio-player .controls .loop.active {
   background-repeat: no-repeat !important;
   background-size: contain !important;
-  background: url(/images/repeat-active.svg?764f4e72194f8aee744c18094536bc52);
+  background: url(/images/repeat-active.svg?cba79f5cd568b738cae7929a84f1af85);
   background-position: center;
 }
 .container-player .audio-player .controls .prev {
@@ -790,7 +801,7 @@ header nav a:nth-child(1) {
 .container-player .audio-player .controls .shuffle.active {
   background-repeat: no-repeat !important;
   background-size: contain !important;
-  background: url(/images/shuffle-active.svg?695cb5dc5c5242699799ecc8a1ed84c2);
+  background: url(/images/shuffle-active.svg?4c7f91516023541411fd55a65a400b8a);
   background-position: center;
 }
 .container-player .audio-player .queue {
@@ -804,17 +815,19 @@ header nav a:nth-child(1) {
   background-size: contain !important;
   background: url(/images/playlist.svg?8782e488fb1a7d6c101fcc8d57e82c83);
   background-position: right center;
-  z-index: 999;
 }
 .container-player .audio-player .queue span {
   margin-right: 30px;
 }
-.container-player .titre_name {
+.container-player .titre_name_container {
+  margin: 0.5em auto 0.3em;
+  overflow: hidden;
+}
+.container-player .titre_name_container .titre_name {
   text-align: center;
   color: #fff;
   font-family: "roboto bold";
   font-size: 14px;
-  margin: 0.5em 0 0;
 }
 .container-player .wrap-name {
   display: flex;
@@ -835,14 +848,25 @@ header nav a:nth-child(1) {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 3.5em;
+  bottom: 3em;
   height: 0;
   color: #fff;
   font-size: 14px;
-  background: linear-gradient(to bottom, #B00D72 10%, #5523BF);
+  background: linear-gradient(to bottom, #B00D72, #5523BF);
   overflow-y: scroll;
   padding: 0 1em;
   transition: height 0.25s ease-in-out;
+}
+.container-player .titres-list .close {
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  background: url(/images/play.svg?6e86fd673c48f497a56f281a5dfb835e);
+  background-position: center;
+  transform: rotate(90deg);
+  float: right;
 }
 .container-player .titres-list .titre {
   display: flex;
@@ -878,17 +902,100 @@ header nav a:nth-child(1) {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
-.container-player .titres-list .infos .separator {
+.container-player .titres-list .infos .wrap-infos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "roboto light";
+  font-size: 14px;
+}
+.container-player .titres-list .infos .wrap-infos .separator {
   background: #fff;
   width: 3px;
   height: 3px;
   border-radius: 50%;
   margin: 0 0.5em;
 }
+.container-player .titres-list .currentSong {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1em 0;
+  margin-bottom: 2em;
+}
+.container-player .titres-list .currentSong .album-cover {
+  width: 51px;
+  height: 51px;
+}
+.container-player .titres-list .currentSong .album-cover img {
+  width: 51px;
+  height: 51px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.container-player .titres-list .currentSong .current-track {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-left: 1em;
+}
+.container-player .titres-list .currentSong .current-track .current-song {
+  font-family: "roboto bold";
+  font-size: 14px;
+  margin-bottom: 0.5em;
+}
+.container-player .titres-list .currentSong .wrap-name .album_name, .container-player .titres-list .currentSong .wrap-name .artiste_name {
+  font-family: "roboto light";
+  font-weight: 500;
+}
+.container-player .titres-list .currentSong .like {
+  flex-grow: 1;
+  text-align: right;
+  margin-left: 1em;
+}
+.container-player .titres-list .albumTracks h2 {
+  text-align: left;
+  font-size: 18px;
+}
+
+@-webkit-keyframes slide {
+  from {
+    left: 100%;
+  }
+  to {
+    left: -100%;
+  }
+}
+
+@keyframes slide {
+  from {
+    left: 100%;
+  }
+  to {
+    left: -100%;
+  }
+}
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  -webkit-animation-name: slide;
+          animation-name: slide;
+  -webkit-animation-duration: 10s;
+          animation-duration: 10s;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
 
 body {
   background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px) no-repeat;
+  height: 100vh;
 }
 
 /*# sourceMappingURL=app.css.map*/

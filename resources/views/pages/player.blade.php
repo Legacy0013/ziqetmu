@@ -2,6 +2,7 @@
 
 @section('content')
     <div class="container-player">
+        <input type="hidden" name="album_id" id="album_id" value="{{ $album->id }}">
         <h2>{{ $album->name }}</h2>
         <img class="cover" src="../storage/albums/covers/{{ $album->id }}/cover.jpg" alt="">
         <form action="" method="post">
@@ -18,7 +19,9 @@
             <div class="timeline">
                 <div class="progress"></div>
             </div>
-            <div class="titre_name">{{ $album->titre[0]->name }}</div>
+            <div class="titre_name_container">
+                <span class="titre_name">{{ $album->titre[0]->name }}</span>
+            </div>
             <div class="wrap-name">
                 <div class="album-name">{{ $album->name }}</div>
                 <div class="separator"></div>
@@ -36,35 +39,56 @@
             <div class="queue"><span>File d'attente</span></div>
         </div>
         <div class="titres-list">
-            <h2>à l'écoute</h2>
+            {{-- <div class="close"></div> --}}
             <div class="infos">
-                <div class="titres_count">
+                <h2>à l'écoute</h2>
+                <div class="wrap-infos">
+                    <div class="titres_count"></div>
                     <p>{{ count($titreCount) }} titres</p>
+                    <div class="separator"></div>
+                    <div class="duration">{{ $album->duration }} min</div>
                 </div>
-                <div class="separator"></div>
-                <div class="duration">{{ $album->duration }} min</div>
+
             </div>
             <div class="currentSong">
-
-            </div>
-            @for($i=0; $i<count($titres); $i++)
-                @if ($album->id == $titres[$i]->album_id)
-                    <div class="titre">
-                        <span class="number">
-                            {{ str_pad($titres[$i]['order'], 2, '0', STR_PAD_LEFT) }}
-                        </span>
-                        <span class="track">
-                            {{$titres[$i]['name']}}
-                        </span>
-                        <span class="like">
-                            {{-- @if (si le titre est liké ou non)
-
-                            @endif --}}
-                            <img src="../img/favori-active.svg" alt="">
-                        </span>
+                <span class="album-cover">
+                    <img src="../storage/{{ $album->picture }}" alt="">
+                </span>
+                <span class="current-track">
+                    <span class="current-song"></span>
+                    <div class="wrap-name">
+                        <div class="album_name">{{ $album->name }}</div>
+                        <div class="separator"></div>
+                        <div class="artiste_name">{{ $album->artiste->name }}</div>
                     </div>
-                @endif
-            @endfor
+                </span>
+                <span class="like">
+                    {{-- @if (si le titre est liké ou non)
+
+                    @endif --}}
+                    <img src="../img/favori-active.svg" alt="">
+                </span>
+            </div>
+            <div class="albumTracks">
+                <h2>à suivre</h2>
+                @for($i=0; $i<count($titres); $i++)
+                    @if($album->id == $titres[$i]->album_id)
+                        <div class="titre">
+                            <span class="number">
+                                {{ str_pad($titres[$i]['order'], 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span class="track">{{$titres[$i]['name']}}</span>
+                            <span class="like">
+                                {{-- @if (si le titre est liké ou non)
+
+                                @endif --}}
+                                <img src="../img/favori-active.svg" alt="">
+                            </span>
+                        </div>
+
+                    @endif
+                @endfor
+            </div>
         </div>
     </div>
 @endsection
