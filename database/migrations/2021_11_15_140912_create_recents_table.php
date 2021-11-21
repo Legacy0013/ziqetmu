@@ -27,12 +27,6 @@ class CreateRecentsTable extends Migration
                     ->on('albums')
                     ->onDelete('cascade')
                     ->onUpdate('cascade');
-            $table->unsignedBigInteger('titre_id');
-            $table->foreign('titre_id')
-                    ->references('id')
-                    ->on('titres')
-                    ->onDelete('cascade')
-                    ->onUpdate('cascade');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
                     ->references('id')

@@ -33,9 +33,18 @@ class RecentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Recent $recent)
     {
-        //
+        $request->validate([
+            'user_id' => 'required',
+            'album_id' => 'required',
+            'artiste_id' => 'required'
+            ]);
+            $recent->user_id = $request->user_id;
+            $recent->album_id = $request->album_id;
+            $recent->artiste_id = $request->artiste_id;
+            $recent->save();
+            return redirect()->route('player', $recent->album_id);
     }
 
     /**

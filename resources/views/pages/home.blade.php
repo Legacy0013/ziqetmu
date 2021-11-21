@@ -5,6 +5,7 @@
     <main>
         <div class="recents">
             <h2>écouté récemment</h2>
+            @if (count($recents) > 0)
             <div class="wrap-cards">
                 @foreach ($albums as $album)
                     @foreach ($artistes as $artiste)
@@ -21,6 +22,8 @@
                     @endforeach
                 @endforeach
             </div>
+            @endif
+
         </div>
         <div class="genres">
             <h2>

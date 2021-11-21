@@ -848,11 +848,11 @@ header nav a:nth-child(1) {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 3em;
+  bottom: 6em;
   height: 0;
   color: #fff;
   font-size: 14px;
-  background: linear-gradient(to bottom, #B00D72, #5523BF);
+  background: linear-gradient(to bottom, #B00D72 10%, #5523BF);
   overflow-y: scroll;
   padding: 0 1em;
   transition: height 0.25s ease-in-out;
@@ -873,7 +873,7 @@ header nav a:nth-child(1) {
   align-items: center;
   justify-content: flex-start;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 1em 0;
+  padding: 1em 0.5em;
 }
 .container-player .titres-list .titre .number {
   font-family: "roboto bold";
@@ -882,11 +882,21 @@ header nav a:nth-child(1) {
 .container-player .titres-list .titre .titre_name {
   font-family: "roboto light";
   font-weight: 600;
+  pointer-events: none;
+}
+.container-player .titres-list .titre .track {
+  font-family: "roboto medium";
+  font-size: 14px;
+  pointer-events: none;
 }
 .container-player .titres-list .titre .like {
   flex-grow: 1;
   text-align: right;
   margin-left: 1em;
+  pointer-events: none;
+}
+.container-player .titres-list .titre.active {
+  background: rgba(176, 13, 112, 0.5);
 }
 .container-player .titres-list h2 {
   font-family: "righteous";
@@ -896,7 +906,7 @@ header nav a:nth-child(1) {
 }
 .container-player .titres-list.active {
   height: 100%;
-  padding: 4em 1em 0;
+  padding: 6em 1em 0;
 }
 .container-player .titres-list .infos {
   display: flex;
@@ -922,8 +932,8 @@ header nav a:nth-child(1) {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 1em 0;
-  margin-bottom: 2em;
+  padding: 1em 0.5em;
+  margin-bottom: 1em;
 }
 .container-player .titres-list .currentSong .album-cover {
   width: 51px;
@@ -995,7 +1005,7 @@ header nav a:nth-child(1) {
 
 body {
   background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px) no-repeat;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /*# sourceMappingURL=app.css.map*/

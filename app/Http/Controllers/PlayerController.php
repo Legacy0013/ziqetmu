@@ -12,7 +12,7 @@ class PlayerController extends Controller
     {
         $titres = Titre::all();
         $nbrTitresAlbum = Album::where('id', $titres->album_id);
-        dd($nbrTitresAlbum);
+
         return view('pages.player', compact('nbrTitresAlbum'));
     }
 }

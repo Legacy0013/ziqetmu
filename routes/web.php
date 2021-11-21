@@ -4,6 +4,7 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtisteController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RecentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +28,8 @@ Route::get('/genres', [GenreController::class, 'index'])->name('genres');
 Route::get('/genre/{genre}', [GenreController::class, 'show'])->name('genre');
 
 Route::get('/player/{album}', [AlbumController::class, 'player'])->name('player');
+
+Route::resource('recent', RecentController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

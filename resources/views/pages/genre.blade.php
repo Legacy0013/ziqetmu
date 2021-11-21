@@ -8,6 +8,7 @@
         <div class="top">
             <div class="wrap-cards">
                 @foreach ($albums as $album)
+                <a href="{{ route('album', $album->id) }}">
                     <div class="card">
                         <img src="../storage{{ $album->picture }}" alt="">
                         <h2 class="album_name">{{ ucfirst($album->name) }}</h2>
@@ -16,6 +17,7 @@
                             Sorti en {{ $album->date }}
                         </span>
                     </div>
+                </a>
                 @endforeach
             </div>
         </div>

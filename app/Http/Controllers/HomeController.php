@@ -16,12 +16,16 @@ class HomeController extends Controller
         $genres = Genre::all();
         $artistes = Artiste::all();
 
-        $recents = Recent::where('user_id', Auth::user()->id )->get();
+        $recents = Recent::where('user_id', Auth::user()->id )->groupBy('id')->get();
 
-        for ($i=0; $i < count($recents); $i++) {
-            $albums[] =  Album::findOrFail($recents[$i]['album_id']);
+        if(count($recents) > 0) {
+            for ($i=0; $i < count($recents); $i++) {
+                $albums[] =  Album::findOrFail($recents[$i]['album_id']);
+            }
         }
-
+        else {
+            $albums = Album::all();
+        }
         return view('pages.home', compact('genres', 'albums', 'artistes', 'recents'));
     }
 }

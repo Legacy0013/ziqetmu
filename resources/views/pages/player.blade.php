@@ -70,7 +70,6 @@
                 </span>
             </div>
             <div class="albumTracks">
-                <h2>à suivre</h2>
                 @for($i=0; $i<count($titres); $i++)
                     @if($album->id == $titres[$i]->album_id)
                         <div class="titre">

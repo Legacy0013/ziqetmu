@@ -19,11 +19,16 @@
                     <div class="wrap">
                         <input type="submit" value="ajouter">
                     </div>
+
                 </form>
-                <form action="" method="post">
+                <form action="{{ route('recent.store', $album) }}" method="post">
                     @csrf
                     <div class="wrap">
                         <input type="submit" value="écouter">
+                        <input type="hidden" name="album_id" value="{{ $album->id }}">
+                        <input type="hidden" name="artiste_id" value="{{ $album->artiste_id }}">
+                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                        {{-- <input type="hidden" name="titre_id" value="{{ $titres->id }}"> --}}
                     </div>
                 </form>
             </div>

@@ -10,12 +10,9 @@ class Recent extends Model
     use HasFactory;
 
 
-    protected $fillable = ['user_id', 'album_id', 'titre_id', 'artiste_id'];
+    protected $fillable = ['user_id', 'album_id', 'artiste_id'];
     protected $dates = ['created_at', 'updated_at'];
 
-    public function titre() {
-        return $this->hasMany(Titre::class);
-    }
     public function album() {
         return $this->hasMany(Album::class);
     }
