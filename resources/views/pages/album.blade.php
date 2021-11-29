@@ -14,12 +14,21 @@
                 <span>{{ $album->date }}</span>
             </p>
             <div class="wrap-forms">
-                <form action="" method="post">
+                <form action="{{ route('like', $album->id) }}" method="post">
                     @csrf
-                    <div class="wrap">
-                        <input type="submit" value="ajouter">
-                    </div>
-
+                    @if ($liked == true)
+                        <div class="wrap liked">
+                            <input type="hidden" name="album_id" value="{{ $album->id }}">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                            <input type="submit" id="likeAlbum" value="ajouter">
+                        </div>
+                    @else
+                        <div class="wrap">
+                            <input type="hidden" name="album_id" value="{{ $album->id }}">
+                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                            <input type="submit" id="likeAlbum" value="ajouter">
+                        </div>
+                    @endif
                 </form>
                 <form action="{{ route('recent.store', $album) }}" method="post">
                     @csrf
@@ -43,10 +52,11 @@
                         {{ $titre->name }}
                     </span>
                     <span class="like">
-                        {{-- @if (si le titre est liké ou non)
-
+                        {{-- @if (isset($liked)) --}}
+                            <img src="../img/favori-inactive.svg" alt="">
+                        {{-- @else
+                            <img src="../img/favori-active.svg" alt="">
                         @endif --}}
-                        <img src="../img/favori-active.svg" alt="">
                     </span>
                 </div>
             @endforeach

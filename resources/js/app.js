@@ -1,5 +1,6 @@
 const { round, indexOf } = require('lodash');
-
+import Swup from 'swup';
+const swup = new Swup();
 require('./bootstrap');
 require('alpinejs');
 
@@ -45,9 +46,7 @@ if(document.querySelector('.audio-player')) {
         }
     }
     shuffledTracks(tracksArray)
-    tracksArray.forEach(el => {
-        console.log(el.innerText);
-    })
+
     //click on button to change track
     let trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1;
 
@@ -495,5 +494,30 @@ if(document.querySelector('.audio-player')) {
             }
         })
     });
+
+    //like album
+    let likeAlbum = document.querySelector('#likeAlbum');
+    if(likeAlbum) {
+        likeAlbum.addEventListener('click', function(e) {
+            e.target.classList.toggle('liked')
+        })
+    }
+
+    //texte défilant player
+    const body = document.querySelector('body');
+    const slideTextContainer = document.querySelector('.textSlide');
+    const visible = document.querySelector('.titres-list');
+    let totalWidth = document.querySelector('body').clientWidth;
+    slideTextContainer.parentElement.style.width = totalWidth + 'px';
+
+    if(slideTextContainer.offsetWidth > body.offsetWidth - 100) {
+        slideTextContainer.classList.add('slide')
+        setInterval(function(){
+            slideTextContainer.classList.remove('slide')
+        }, 7000)
+        setInterval(function(){
+            slideTextContainer.classList.add('slide')
+        }, 14000)
+    }
 }
 

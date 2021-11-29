@@ -4,6 +4,8 @@ use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\ArtisteController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LikeController;
+use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\RecentController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,11 +25,13 @@ Route::get('/', [HomeController::class, 'showHomepage'])->name('home');
 Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
 
 Route::get('/album/{album}', [AlbumController::class, 'show'])->name('album');
+Route::post('/album/{album}', [AlbumController::class, 'like'])->name('like');
 
 Route::get('/genres', [GenreController::class, 'index'])->name('genres');
 Route::get('/genre/{genre}', [GenreController::class, 'show'])->name('genre');
 
-Route::get('/player/{album}', [AlbumController::class, 'player'])->name('player');
+Route::get('/player/{album}', [PlayerController::class, 'show'])->name('player');
+Route::post('/player/{album}', [PlayerController::class, 'like'])->name('likePlayer');
 
 Route::resource('recent', RecentController::class);
 

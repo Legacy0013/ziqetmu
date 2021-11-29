@@ -24,7 +24,7 @@
         &::before {
             position: absolute;
             content: "";
-            background: url('../img/favori-active.svg') no-repeat;
+            background: url('../img/favori-inactive.svg') no-repeat;
             background-position: center;
             background-size: contain;
             width: 16px;
@@ -41,6 +41,20 @@
             text-transform: uppercase;
             border-radius: 30px;
             font-family: $robotoBold;
+        }
+        &.liked {
+            &::before {
+                position: absolute;
+                content: "";
+                background: url('../img/favori-active.svg') no-repeat;
+                background-position: center;
+                background-size: contain;
+                width: 16px;
+                height: 16px;
+                left: 30px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
         }
     }
     .audio-player {
@@ -327,6 +341,7 @@
                 justify-content: space-around;
                 align-items: flex-start;
                 padding-left: 1em;
+                overflow-x: hidden;
                 .current-song {
                     font-family: $robotoBold;
                     font-size: 14px;
@@ -334,10 +349,26 @@
                 }
             }
             .wrap-name {
+                display: block;
+                position: relative;
+                height: 20px;
+                overflow-x: hidden;
+                width: 100%;
+                .textSlide {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    position:absolute;
+                    top:0;
+                    left:0;
+                    right: 0;
+                    width:100%;
+                }
                 .album_name, .artiste_name {
                     font-family: $robotoLight;
                     font-weight: 500;
                 }
+
             }
             .like {
                 flex-grow: 1;
@@ -355,18 +386,14 @@
 }
 
 @keyframes slide {
-from { left: 100%;}
-to { left: -100%;}
+from { left: 0%; }
+to { left: -100%; }
 }
 
 .slide {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
     animation-name: slide;
-    animation-duration: 10s;
+    animation-duration: 7s;
+    animation-delay: 1s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
-

@@ -5335,11 +5335,17 @@ module.exports = {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+Object(function webpackMissingModule() { var e = new Error("Cannot find module 'swup'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
 var _require = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"),
     round = _require.round,
     indexOf = _require.indexOf;
+
+
+var swup = new Object(function webpackMissingModule() { var e = new Error("Cannot find module 'swup'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())();
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
@@ -5390,10 +5396,7 @@ if (document.querySelector('.audio-player')) {
     this.classList.toggle('active');
   });
   var tracksArray = Array.prototype.slice.call(tracks);
-  shuffledTracks(tracksArray);
-  tracksArray.forEach(function (el) {
-    console.log(el.innerText);
-  }); //click on button to change track
+  shuffledTracks(tracksArray); //click on button to change track
 
   var trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1; //prev track
 
@@ -5799,7 +5802,32 @@ if (document.querySelector('.audio-player')) {
         trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
       }
     });
-  });
+  }); //like album
+
+  var likeAlbum = document.querySelector('#likeAlbum');
+
+  if (likeAlbum) {
+    likeAlbum.addEventListener('click', function (e) {
+      e.target.classList.toggle('liked');
+    });
+  } //texte défilant player
+
+
+  var body = document.querySelector('body');
+  var slideTextContainer = document.querySelector('.textSlide');
+  var visible = document.querySelector('.titres-list');
+  var totalWidth = document.querySelector('body').clientWidth;
+  slideTextContainer.parentElement.style.width = totalWidth + 'px';
+
+  if (slideTextContainer.offsetWidth > body.offsetWidth - 100) {
+    slideTextContainer.classList.add('slide');
+    setInterval(function () {
+      slideTextContainer.classList.remove('slide');
+    }, 7000);
+    setInterval(function () {
+      slideTextContainer.classList.add('slide');
+    }, 14000);
+  }
 }
 
 /***/ }),

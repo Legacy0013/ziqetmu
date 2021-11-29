@@ -35,7 +35,7 @@
        </nav>
     </header>
 
-    <main>
+    <main id="swup" class="transition-fade">
         @yield('content')
     </main>
 

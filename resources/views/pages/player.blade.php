@@ -5,11 +5,21 @@
         <input type="hidden" name="album_id" id="album_id" value="{{ $album->id }}">
         <h2>{{ $album->name }}</h2>
         <img class="cover" src="../storage/albums/covers/{{ $album->id }}/cover.jpg" alt="">
-        <form action="" method="post">
+        <form action="{{ route('likePlayer', $album->id) }}" method="post">
             @csrf
-            <div class="wrap">
-                <input type="submit" value="ajouter">
-            </div>
+            @if ($liked == true)
+                <div class="wrap liked">
+                    <input type="hidden" name="album_id" value="{{ $album->id }}">
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                    <input type="submit" id="likeAlbum" value="ajouter">
+                </div>
+            @else
+                <div class="wrap">
+                    <input type="hidden" name="album_id" value="{{ $album->id }}">
+                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                    <input type="submit" id="likeAlbum" value="ajouter">
+                </div>
+            @endif
         </form>
         <div class="audio-player">
             <div class="time">
@@ -48,7 +58,6 @@
                     <div class="separator"></div>
                     <div class="duration">{{ $album->duration }} min</div>
                 </div>
-
             </div>
             <div class="currentSong">
                 <span class="album-cover">
@@ -57,16 +66,21 @@
                 <span class="current-track">
                     <span class="current-song"></span>
                     <div class="wrap-name">
-                        <div class="album_name">{{ $album->name }}</div>
-                        <div class="separator"></div>
-                        <div class="artiste_name">{{ $album->artiste->name }}</div>
+                        <div class="textSlide">
+                            <div class="album_name">{{ $album->name }}</div>
+                            <div class="separator"></div>
+                            <div class="artiste_name">{{ $album->artiste->name }}</div>
+                        </div>
                     </div>
                 </span>
                 <span class="like">
-                    {{-- @if (si le titre est liké ou non)
-
+                    {{-- @if (si l'album est liké ou non)
                     @endif --}}
-                    <img src="../img/favori-active.svg" alt="">
+                    <form action="" method="post">
+                        @csrf
+                        <img src="../img/favori-active.svg" alt="">
+                        {{-- <input type="submit" value=""> --}}
+                    </form>
                 </span>
             </div>
             <div class="albumTracks">
