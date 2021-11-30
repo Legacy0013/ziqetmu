@@ -5,18 +5,16 @@
         <input type="hidden" name="album_id" id="album_id" value="{{ $album->id }}">
         <h2>{{ $album->name }}</h2>
         <img class="cover" src="../storage/albums/covers/{{ $album->id }}/cover.jpg" alt="">
-        <form action="{{ route('likePlayer', $album->id) }}" method="post">
+        <form action="{{ route('likePlayer', $album->id) }}" method="post" id="like">
             @csrf
             @if ($liked == true)
                 <div class="wrap liked">
                     <input type="hidden" name="album_id" value="{{ $album->id }}">
-                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <input type="submit" id="likeAlbum" value="ajouter">
                 </div>
             @else
                 <div class="wrap">
                     <input type="hidden" name="album_id" value="{{ $album->id }}">
-                    <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                     <input type="submit" id="likeAlbum" value="ajouter">
                 </div>
             @endif
@@ -33,9 +31,11 @@
                 <span class="titre_name">{{ $album->titre[0]->name }}</span>
             </div>
             <div class="wrap-name">
-                <div class="album-name">{{ $album->name }}</div>
-                <div class="separator"></div>
-                <div class="artiste_name">{{ $album->artiste->name }}</div>
+                <div class="textSlide2">
+                    <div class="album-name">{{ $album->name }}</div>
+                    <div class="separator"></div>
+                    <div class="artiste_name">{{ $album->artiste->name }}</div>
+                </div>
             </div>
             <div class="controls">
                 <div class="loop"></div>

@@ -13,19 +13,24 @@ use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
     public function showHomepage() {
-        $genres = Genre::all();
-        $artistes = Artiste::all();
+        if (auth()->check()) {
+            $genres = Genre::all();
+            $artistes = Artiste::all();
 
-        $recents = Recent::where('user_id', Auth::user()->id )->groupBy('id')->get();
+            $recents = Recent::where('user_id', Auth::user()->id )->groupBy('id')->get();
 
-        if(count($recents) > 0) {
-            for ($i=0; $i < count($recents); $i++) {
-                $albums[] =  Album::findOrFail($recents[$i]['album_id']);
+            if(count($recents) > 0) {
+                for ($i=0; $i < count($recents); $i++) {
+                    $albums[] =  Album::findOrFail($recents[$i]['album_id']);
+                }
             }
+            else {
+                $albums = Album::all();
+            }
+            return view('pages.home', compact('genres', 'albums', 'artistes', 'recents'));
+        } else {
+            return view('layouts.guest');
         }
-        else {
-            $albums = Album::all();
-        }
-        return view('pages.home', compact('genres', 'albums', 'artistes', 'recents'));
+
     }
 }

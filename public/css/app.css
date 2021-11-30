@@ -458,14 +458,29 @@ header nav a:nth-child(1) {
 .container-album .top .wrap-forms form:nth-child(1) input[type=submit] {
   margin-right: 2em;
 }
-.container-album .top .wrap-forms form:nth-child(2) .wrap::before {
+.container-album .top .wrap-forms form:nth-child(2) .wrapListen {
+  position: relative;
+}
+.container-album .top .wrap-forms form:nth-child(2) .wrapListen::before {
+  position: absolute;
+  content: "";
   background: url(/images/play.svg?6e86fd673c48f497a56f281a5dfb835e) no-repeat;
   background-position: center;
   background-size: contain;
+  width: 16px;
+  height: 16px;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
 }
-.container-album .top .wrap-forms form:nth-child(2) .wrap input[type=submit] {
+.container-album .top .wrap-forms form:nth-child(2) .wrapListen input[type=submit] {
   background: #B00D70;
   border: 1px solid #B00D70;
+  padding: 1em 3em 1em 4em;
+  color: #fff;
+  text-transform: uppercase;
+  border-radius: 30px;
+  font-family: "roboto bold";
 }
 .container-album .bottom {
   color: #fff;
@@ -844,8 +859,9 @@ header nav a:nth-child(1) {
   margin-right: 30px;
 }
 .container-player .titre_name_container {
-  margin: 0.5em auto 0.3em;
+  margin: 1em auto 0.3em;
   overflow: hidden;
+  text-align: center;
 }
 .container-player .titre_name_container .titre_name {
   text-align: center;
@@ -854,12 +870,24 @@ header nav a:nth-child(1) {
   font-size: 14px;
 }
 .container-player .wrap-name {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  position: relative;
+  height: 20px;
+  overflow-x: hidden;
+  width: 100%;
   color: #fff;
   font-family: "roboto medium";
   font-size: 14px;
+}
+.container-player .wrap-name .textSlide2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  white-space: nowrap;
 }
 .container-player .wrap-name .separator {
   background: #fff;
@@ -997,7 +1025,9 @@ header nav a:nth-child(1) {
   top: 0;
   left: 0;
   right: 0;
-  width: 100%;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 .container-player .titres-list .currentSong .wrap-name .album_name, .container-player .titres-list .currentSong .wrap-name .artiste_name {
   font-family: "roboto light";
@@ -1018,7 +1048,7 @@ header nav a:nth-child(1) {
     left: 0%;
   }
   to {
-    left: -100%;
+    left: -60%;
   }
 }
 
@@ -1027,7 +1057,7 @@ header nav a:nth-child(1) {
     left: 0%;
   }
   to {
-    left: -100%;
+    left: -60%;
   }
 }
 .slide {
@@ -1043,9 +1073,196 @@ header nav a:nth-child(1) {
           animation-iteration-count: infinite;
 }
 
+body.auth header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 1em 0 2em;
+  padding: 0;
+}
+body.auth .btn {
+  color: #fff;
+  text-transform: uppercase;
+  background: #B00D70;
+  border-radius: 40px;
+  padding: 0.8em 2em;
+  font-family: "roboto medium";
+  font-size: 14px;
+}
+body.auth.splash {
+  padding: 1em;
+  background: linear-gradient(to bottom, rgba(176, 13, 114, 0.8) 0, rgba(85, 35, 191, 0.8) 600px), url(/images/fond-splash.png?18789deea1369514d2dcaf47afc15611) center/cover no-repeat;
+}
+body.auth.splash header img {
+  width: 60%;
+  margin: 0.5em 0 2em;
+}
+body.auth.splash header h1 {
+  font-size: 18px;
+  font-family: "righteous";
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+}
+body.auth.splash main .login, body.auth.splash main .register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2em;
+}
+body.auth.splash main h2, body.auth.splash main p {
+  color: #fff;
+  font-family: "roboto medium";
+  font-weight: 400;
+  font-size: 16px;
+  margin-bottom: 0.5em;
+  line-height: 1.5em;
+}
+body.auth.splash main h2 {
+  text-align: center;
+}
+body.auth.register {
+  padding: 1em 0;
+}
+body.auth.register h1 {
+  font-size: 24px;
+  font-family: "righteous";
+  color: #fff;
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: 1em;
+}
+body.auth.register main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+body.auth.register main form {
+  padding: 0 2em;
+  width: 100%;
+}
+body.auth.register main form > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 auto;
+  width: 100%;
+}
+body.auth.register main form > div label {
+  font-size: 16px;
+  font-family: "roboto medium";
+  font-weight: 400;
+  color: #fff;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+body.auth.register main form > div input {
+  width: 100%;
+  margin-bottom: 2em;
+  padding: 1em 0.5em;
+  border-radius: 8px;
+  border: none;
+}
+body.auth.register main form > div input::-moz-placeholder {
+  color: #9c9c9c;
+  font-size: 16px;
+  font-family: "roboto medium";
+  font-weight: 400;
+}
+body.auth.register main form > div input:-ms-input-placeholder {
+  color: #9c9c9c;
+  font-size: 16px;
+  font-family: "roboto medium";
+  font-weight: 400;
+}
+body.auth.register main form > div input::placeholder {
+  color: #9c9c9c;
+  font-size: 16px;
+  font-family: "roboto medium";
+  font-weight: 400;
+}
+body.auth.register main form > div.flex-row {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  margin-bottom: 1em;
+}
+body.auth.register main form > div.flex-row label {
+  flex-grow: 1;
+}
+body.auth.register main form > div.flex-row input {
+  width: auto;
+  margin: 0 1.5em 0 2em;
+  transform: scale(2);
+  border-radius: 0;
+}
+body.auth.register main form p {
+  color: #fff;
+  font-family: "roboto light";
+  font-size: 14px;
+  margin: 2em 0;
+  line-height: 1.2em;
+}
+body.auth.register main form button {
+  border: none;
+  align-self: center;
+}
+body.auth.login .flex-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2em;
+}
+body.auth.login .flex-column a {
+  font-family: "roboto medium";
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: underline;
+  margin-bottom: 2em;
+}
+body.auth.login .flex-column button {
+  border: none;
+  align-self: center;
+}
+body.auth.login .flex-column .btn {
+  text-decoration: none;
+}
+body.auth footer {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5em 1em;
+  background: #5D3194;
+}
+body.auth footer a {
+  font-family: "roboto medium";
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: underline;
+}
+body.auth footer ul {
+  display: flex;
+  justify-content: space-between;
+}
+
 body {
   background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px) no-repeat;
   min-height: 100vh;
+}
+
+.transition-fade {
+  transition: 0.4s;
+  opacity: 1;
+}
+
+html.is-animating .transition-fade {
+  opacity: 0;
 }
 
 /*# sourceMappingURL=app.css.map*/

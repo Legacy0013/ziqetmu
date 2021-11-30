@@ -35,13 +35,16 @@
        </nav>
     </header>
 
-    <main id="swup" class="transition-fade">
+    <main id="swup">
         @yield('content')
     </main>
+    <div class="audio-container">
 
+    </div>
     <footer>
 
     </footer>
+
     <script src="/js/app.js" defer></script>
 </body>
 </html>

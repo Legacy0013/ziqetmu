@@ -8,7 +8,7 @@
         <div class="like">
             871,189
         </div>
-        <form action="" method="post">
+        <form action="{{ route('likePArtiste', $album->id) }}" method="post" id="like">
             @csrf
             <div class="wrap">
                 <input type="submit" value="ajouter">

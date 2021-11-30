@@ -65,30 +65,19 @@ class AlbumController extends Controller
         $liked = Like::where('user_id', Auth::user()->id)
                         ->where('album_id', $album->id)
                         ->first();
-        $titres = Titre::where('album_id', $album->id)->get();
-        $artiste = Artiste::where('id', $album->artiste_id)->get();
 
-        $request->validate([
-            'user_id' => 'required',
-            'album_id' => 'nullable',
-            'artiste_id' => 'nullable',
-            'titre_id' => 'nullable'
-            ]);
+        $like->user_id = Auth::user()->id;
+        $like->album_id = $request->album_id;
 
-            $like->user_id = $request->user_id;
-            $like->album_id = $request->album_id;
-            $like->artiste_id = $request->artiste_id;
-            $like->titre_id = $request->titre_id;
+        if(!isset($liked)) {
+            $like->save();
+            $liked = true;
+        } else {
+            $liked->delete();
+            $liked = false;
+        }
 
-            if(!isset($liked)) {
-                $like->save();
-                $liked = true;
-            } else {
-                $liked->delete();
-                $liked = false;
-            }
-
-            return view('pages.album', compact('album', 'artiste', 'titres', 'liked'));
+        return response()->json(['liked'=>$liked]);
     }
 
     /**

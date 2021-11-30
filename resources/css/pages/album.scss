@@ -88,15 +88,28 @@
                     }
                 }
                 &:nth-child(2) {
-                    .wrap {
+                    .wrapListen {
+                        position: relative;
                         &::before {
+                            position: absolute;
+                            content: "";
                             background: url('../img/play.svg') no-repeat;
                             background-position: center;
                             background-size: contain;
+                            width: 16px;
+                            height: 16px;
+                            left: 30px;
+                            top: 50%;
+                            transform: translateY(-50%);
                         }
                         input[type=submit] {
                             background: $rose;
                             border: 1px solid $rose;
+                            padding: 1em 3em 1em 4em;
+                            color: $white;
+                            text-transform: uppercase;
+                            border-radius: 30px;
+                            font-family: $robotoBold;
                         }
                     }
                 }

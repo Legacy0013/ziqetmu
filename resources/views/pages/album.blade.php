@@ -14,30 +14,27 @@
                 <span>{{ $album->date }}</span>
             </p>
             <div class="wrap-forms">
-                <form action="{{ route('like', $album->id) }}" method="post">
+                <form action="{{ route('like', $album->id) }}" method="post" id="like">
                     @csrf
                     @if ($liked == true)
                         <div class="wrap liked">
                             <input type="hidden" name="album_id" value="{{ $album->id }}">
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="submit" id="likeAlbum" value="ajouter">
                         </div>
                     @else
                         <div class="wrap">
                             <input type="hidden" name="album_id" value="{{ $album->id }}">
-                            <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
                             <input type="submit" id="likeAlbum" value="ajouter">
                         </div>
                     @endif
                 </form>
-                <form action="{{ route('recent.store', $album) }}" method="post">
+                <form action="{{ route('recent.store', $album) }}" method="post" >
                     @csrf
-                    <div class="wrap">
+                    <div class="wrapListen">
                         <input type="submit" value="écouter">
                         <input type="hidden" name="album_id" value="{{ $album->id }}">
                         <input type="hidden" name="artiste_id" value="{{ $album->artiste_id }}">
                         <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
-                        {{-- <input type="hidden" name="titre_id" value="{{ $titres->id }}"> --}}
                     </div>
                 </form>
             </div>

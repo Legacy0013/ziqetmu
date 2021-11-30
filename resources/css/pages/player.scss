@@ -213,8 +213,9 @@
         }
     }
     .titre_name_container {
-        margin: .5em auto .3em;
+        margin: 1em auto .3em;
         overflow:hidden;
+        text-align: center;
         .titre_name {
             text-align: center;
             color: $white;
@@ -223,12 +224,28 @@
         }
     }
     .wrap-name {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: block;
+        position: relative;
+        height: 20px;
+        overflow-x: hidden;
+        width: 100%;
         color: $white;
         font-family: $robotoMedium;
         font-size: 14px;
+
+        .textSlide2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position:absolute;
+            top:0;
+            left:0;
+            right: 0;
+            white-space: nowrap;
+            // @media screen and (min-width: 578px) {
+            //     justify-content: center;
+            // }
+        }
         .separator {
             background: $white;
             width: 3px;
@@ -362,7 +379,7 @@
                     top:0;
                     left:0;
                     right: 0;
-                    width:100%;
+                    width: fit-content;
                 }
                 .album_name, .artiste_name {
                     font-family: $robotoLight;
@@ -385,9 +402,10 @@
     }
 }
 
+
 @keyframes slide {
 from { left: 0%; }
-to { left: -100%; }
+to { left: -60%; }
 }
 
 .slide {

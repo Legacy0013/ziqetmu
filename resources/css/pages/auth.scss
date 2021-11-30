@@ -1,0 +1,176 @@
+body.auth {
+    header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 1em 0 2em;
+        padding: 0;
+    }
+    .btn {
+        color: #fff;
+        text-transform: uppercase;
+        background: $rose;
+        border-radius: 40px;
+        padding: .8em 2em;
+        font-family: $robotoMedium;
+        font-size: 14px;
+    }
+    &.splash {
+        padding: 1em;
+        background: $linearBgAuth, url('../img/fond-splash.png') center / cover no-repeat;
+        header {
+            img {
+                width: 60%;
+                margin: .5em 0 2em;
+            }
+            h1 {
+                font-size: 18px;
+                font-family: $righteous;
+                color: #fff;
+                text-align: center;
+                text-transform: uppercase;
+            }
+        }
+        main {
+            .login, .register {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 2em;
+            }
+            h2, p {
+                color: #fff;
+                font-family: $robotoMedium;
+                font-weight: 400;
+                font-size: 16px;
+                margin-bottom: .5em;
+                line-height: 1.5em;
+            }
+            h2 {
+                text-align: center;
+            }
+        }
+    }
+    &.register {
+        padding: 1em 0;
+        h1 {
+            font-size: 24px;
+            font-family: $righteous;
+            color: #fff;
+            text-align: center;
+            text-transform: uppercase;
+            margin-top: 1em;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            form {
+                padding: 0 2em;
+                width: 100%;
+                &>div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    margin: 0 auto;
+                    width: 100%;
+                    label {
+                        font-size: 16px;
+                        font-family: $robotoMedium;
+                        font-weight: 400;
+                        color: #fff;
+                        text-align: left;
+                        margin-bottom: .5em;
+                    }
+                    input {
+                        width: 100%;
+                        margin-bottom: 2em;
+                        padding: 1em .5em;
+                        border-radius: 8px;
+                        border: none;
+                        &::placeholder {
+                            color: $grisPlaceholder;
+                            font-size: 16px;
+                            font-family: $robotoMedium;
+                            font-weight: 400;
+                        }
+                    }
+                    &.flex-row {
+                        flex-direction: row-reverse;
+                        justify-content: flex-start;
+                        margin-bottom: 1em;
+                        label {
+                            flex-grow: 1;
+
+                        }
+                        input {
+                            width: auto;
+                            margin: 0 1.5em 0 2em;
+                            transform: scale(2);
+                            border-radius: 0;
+                        }
+                    }
+                }
+                p {
+                    color: #fff;
+                    font-family: $robotoLight;
+                    font-size: 14px;
+                    margin: 2em 0;
+                    line-height: 1.2em;
+                }
+                button {
+                    border: none;
+                    align-self: center;
+                }
+            }
+
+        }
+    }
+    &.login {
+        .flex-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2em;
+            a {
+                font-family: $robotoMedium;
+                font-weight: 400;
+                font-size: 14px;
+                color: #fff;
+                text-decoration: underline;
+                margin-bottom: 2em;
+            }
+            button {
+                border: none;
+                align-self: center;
+            }
+            .btn {
+                text-decoration: none;
+            }
+        }
+    }
+    footer {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: .5em 1em;
+        background: $violet;
+        a {
+            font-family: $robotoMedium;
+            font-weight: 400;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: underline;
+        }
+        ul {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
