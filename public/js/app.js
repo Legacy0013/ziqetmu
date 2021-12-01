@@ -6089,7 +6089,7 @@ function init() {
     var slideTextContainer = document.querySelector('.textSlide');
     var slideTextContainer2 = document.querySelector('.textSlide2');
     var totalWidth = document.querySelector('body').clientWidth;
-    slideTextContainer.parentElement.style.width = totalWidth + 'px';
+    slideTextContainer.parentElement.style.width = totalWidth + 50 + 'px';
 
     if (slideTextContainer.offsetWidth >= body.offsetWidth / 2) {
       slideTextContainer.classList.add('slide');
@@ -6099,26 +6099,27 @@ function init() {
       setInterval(function () {
         slideTextContainer.classList.add('slide');
       }, 14000);
-    } // slideTextContainer2.parentElement.style.width = totalWidth + 'px';
-
+    }
 
     if (slideTextContainer2.offsetWidth >= body.offsetWidth - 65) {
-      slideTextContainer2.classList.add('slide');
-      setInterval(function () {
-        slideTextContainer2.classList.remove('slide');
-      }, 7000);
-      setInterval(function () {
-        slideTextContainer2.classList.add('slide');
-      }, 14000);
+      slideTextContainer2.classList.add('slide2');
     }
-  }
+  } //like sur un album ou un artiste
+
 
   if (document.querySelector('#like')) {
     document.querySelector('#like').addEventListener('submit', function (e) {
       e.preventDefault();
       var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
       var fd = new FormData();
-      fd.append('album_id', e.target.album_id.value);
+
+      if (e.submitter.id == 'likeAlbum') {
+        fd.append('album_id', e.target.album_id.value);
+      } else if (e.submitter.id == 'likeArtiste') {
+        fd.append('artiste_id', e.target.artiste_id.value);
+        location.reload();
+      }
+
       fetch(e.target.action, {
         method: e.target.method,
         headers: {
@@ -6130,9 +6131,70 @@ function init() {
       }).then(function (data) {
         if (data.liked == true) {
           document.querySelector('.wrap').classList.add('liked');
+          document.querySelector('.wrapPlaylist').classList.add('liked');
         } else {
           document.querySelector('.wrap').classList.remove('liked');
+          document.querySelector('.wrapPlaylist').classList.remove('liked');
         }
+      });
+    });
+  } //like sur un album dans la playlist
+
+
+  if (document.querySelector('#likePlaylist')) {
+    document.querySelector('#likePlaylist').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+      var fd = new FormData();
+
+      if (e.submitter.id == 'likeAlbum') {
+        fd.append('album_id', e.target.album_id.value);
+      }
+
+      fetch(e.target.action, {
+        method: e.target.method,
+        headers: {
+          'X-CSRF-TOKEN': csrf
+        },
+        body: fd
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        if (data.liked == true) {
+          document.querySelector('.wrapPlaylist').classList.add('liked');
+          document.querySelector('.wrap').classList.add('liked');
+        } else {
+          document.querySelector('.wrapPlaylist').classList.remove('liked');
+          document.querySelector('.wrap').classList.remove('liked');
+        }
+      });
+    });
+  } //like sur un titre
+
+
+  if (document.querySelector('.likeTitre')) {
+    var titres = document.querySelectorAll('.likeTitre');
+    titres.forEach(function (titre) {
+      titre.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var fd = new FormData();
+        fd.append('titre_id', e.target.titre_id.value);
+        fetch(e.target.action, {
+          method: e.target.method,
+          headers: {
+            'X-CSRF-TOKEN': csrf
+          },
+          body: fd
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          if (data.likedTitre == true) {
+            e.submitter.parentElement.classList.add('liked');
+          } else {
+            e.submitter.parentElement.classList.remove('liked');
+          }
+        });
       });
     });
   }

@@ -49,11 +49,20 @@
                         {{ $titre->name }}
                     </span>
                     <span class="like">
-                        {{-- @if (isset($liked)) --}}
-                            <img src="../img/favori-inactive.svg" alt="">
-                        {{-- @else
-                            <img src="../img/favori-active.svg" alt="">
-                        @endif --}}
+                        <form action="{{ route('like', $album->id) }}" method="post" class="likeTitre">
+                            @csrf
+                            @if (in_array($titre->id, $likedTitres->pluck('titre_id')->all()))
+                                <div class="wrapTitre liked">
+                                    <input type="hidden" name="titre_id" value="{{ $titre->id }}">
+                                    <input type="submit" value="">
+                                </div>
+                            @else
+                                <div class="wrapTitre">
+                                    <input type="hidden" name="titre_id" value="{{ $titre->id }}">
+                                    <input type="submit" value="">
+                                </div>
+                            @endif
+                        </form>
                     </span>
                 </div>
             @endforeach

@@ -120,11 +120,12 @@
         color: $white;
         font-size: 14px;
         .titre {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: flex-start;
             border-bottom: 1px solid rgba($color: $white, $alpha: .5);
-            padding: 1em 0;
+            padding: 1em 2em 1em 0;
             .number {
                 font-family: $robotoBold;
                 margin-right: 1em;
@@ -134,9 +135,42 @@
                 font-weight: 600;
             }
             .like {
-                flex-grow: 1;
+                position: absolute;
+                right: 0;
                 text-align: right;
                 margin-left: 1em;
+                form {
+                    .wrapTitre {
+                        position: relative;
+                        &::before {
+                            position: absolute;
+                            content: "";
+                            background: url('../img/favori-inactive.svg') no-repeat;
+                            background-position: center;
+                            background-size: contain;
+                            width: 16px;
+                            height: 16px;
+                            top: 50%;
+                            transform: translateY(-50%);
+                        }
+                        input[type=submit] {
+                            opacity: 0;
+                        }
+                        &.liked {
+                            &::before {
+                                position: absolute;
+                                content: "";
+                                background: url('../img/favori-active.svg') no-repeat;
+                                background-position: center;
+                                background-size: contain;
+                                width: 16px;
+                                height: 16px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                            }
+                        }
+                    }
+                }
             }
         }
         h2 {

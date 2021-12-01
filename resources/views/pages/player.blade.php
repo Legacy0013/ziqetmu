@@ -54,7 +54,7 @@
                 <h2>à l'écoute</h2>
                 <div class="wrap-infos">
                     <div class="titres_count"></div>
-                    <p>{{ count($titreCount) }} titres</p>
+                    <p>{{ count($titres) }} titres</p>
                     <div class="separator"></div>
                     <div class="duration">{{ $album->duration }} min</div>
                 </div>
@@ -74,12 +74,19 @@
                     </div>
                 </span>
                 <span class="like">
-                    {{-- @if (si l'album est liké ou non)
-                    @endif --}}
-                    <form action="" method="post">
+                    <form action="{{ route('likePlayer', $album->id) }}" method="post" id="likePlaylist">
                         @csrf
-                        <img src="../img/favori-active.svg" alt="">
-                        {{-- <input type="submit" value=""> --}}
+                        @if ($liked == true)
+                            <div class="wrapPlaylist liked">
+                                <input type="hidden" name="album_id" value="{{ $album->id }}">
+                                <input type="submit" id="likeAlbum" value="">
+                            </div>
+                        @else
+                            <div class="wrapPlaylist">
+                                <input type="hidden" name="album_id" value="{{ $album->id }}">
+                                <input type="submit" id="likeAlbum" value="">
+                            </div>
+                        @endif
                     </form>
                 </span>
             </div>
@@ -92,10 +99,20 @@
                             </span>
                             <span class="track">{{$titres[$i]['name']}}</span>
                             <span class="like">
-                                {{-- @if (si le titre est liké ou non)
-
-                                @endif --}}
-                                <img src="../img/favori-active.svg" alt="">
+                                <form action="{{ route('likePlayer', $album->id) }}" method="post" class="likeTitre">
+                                    @csrf
+                                    @if (in_array($titres[$i]['id'], $likedTitres->pluck('titre_id')->all()))
+                                        <div class="wrapTitre liked">
+                                            <input type="hidden" name="titre_id" value="{{ $titres[$i]['id'] }}">
+                                            <input type="submit" value="">
+                                        </div>
+                                    @else
+                                        <div class="wrapTitre">
+                                            <input type="hidden" name="titre_id" value="{{ $titres[$i]['id'] }}">
+                                            <input type="submit" value="">
+                                        </div>
+                                    @endif
+                                </form>
                             </span>
                         </div>
 

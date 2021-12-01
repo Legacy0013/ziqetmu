@@ -11,6 +11,7 @@ use App\Http\Controllers\RecentController;
 use App\Http\Controllers\ArtisteController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\TitreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 Route::get('/', [HomeController::class, 'showHomepage'])->name('home');
 
 Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
-// Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
+Route::post('/artiste/{artiste}', [ArtisteController::class, 'like'])->name('likeArtiste');
 
 Route::get('/album/{album}', [AlbumController::class, 'show'])->name('album');
 Route::post('/album/{album}', [AlbumController::class, 'like'])->name('like');

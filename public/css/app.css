@@ -277,7 +277,7 @@ header nav a:nth-child(1) {
   font-family: "roboto medium";
   margin-bottom: 0.5em;
 }
-.container-artiste .top .like {
+.container-artiste .top .likeArtiste {
   color: #fff;
   position: relative;
   font-size: 12px;
@@ -285,7 +285,7 @@ header nav a:nth-child(1) {
   padding-left: 1.5em;
   margin-bottom: 1em;
 }
-.container-artiste .top .like::before {
+.container-artiste .top .likeArtiste::before {
   position: absolute;
   content: "";
   background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
@@ -303,7 +303,7 @@ header nav a:nth-child(1) {
 .container-artiste .top form .wrap::before {
   position: absolute;
   content: "";
-  background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
+  background: url(/images/favori-inactive.svg?3b52e5ac0e1dd96b7310bb841f8c9118) no-repeat;
   background-position: center;
   background-size: contain;
   width: 16px;
@@ -320,6 +320,18 @@ header nav a:nth-child(1) {
   text-transform: uppercase;
   border-radius: 30px;
   font-family: "roboto bold";
+}
+.container-artiste .top form .wrap.liked::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .container-artiste .bottom h2 {
   color: #fff;
@@ -487,11 +499,12 @@ header nav a:nth-child(1) {
   font-size: 14px;
 }
 .container-album .bottom .titre {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 1em 0;
+  padding: 1em 2em 1em 0;
 }
 .container-album .bottom .titre .number {
   font-family: "roboto bold";
@@ -502,9 +515,38 @@ header nav a:nth-child(1) {
   font-weight: 600;
 }
 .container-album .bottom .titre .like {
-  flex-grow: 1;
+  position: absolute;
+  right: 0;
   text-align: right;
   margin-left: 1em;
+}
+.container-album .bottom .titre .like form .wrapTitre {
+  position: relative;
+}
+.container-album .bottom .titre .like form .wrapTitre::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-inactive.svg?3b52e5ac0e1dd96b7310bb841f8c9118) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.container-album .bottom .titre .like form .wrapTitre input[type=submit] {
+  opacity: 0;
+}
+.container-album .bottom .titre .like form .wrapTitre.liked::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .container-album .bottom h2 {
   font-family: "righteous";
@@ -854,6 +896,7 @@ header nav a:nth-child(1) {
   background-size: contain !important;
   background: url(/images/playlist.svg?8782e488fb1a7d6c101fcc8d57e82c83);
   background-position: right center;
+  margin-top: 1em;
 }
 .container-player .audio-player .queue span {
   margin-right: 30px;
@@ -900,7 +943,7 @@ header nav a:nth-child(1) {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 6em;
+  bottom: 7em;
   height: 0;
   color: #fff;
   font-size: 14px;
@@ -942,10 +985,39 @@ header nav a:nth-child(1) {
   pointer-events: none;
 }
 .container-player .titres-list .titre .like {
-  flex-grow: 1;
+  position: absolute;
+  right: 0;
   text-align: right;
   margin-left: 1em;
-  pointer-events: none;
+}
+.container-player .titres-list .titre .like form .wrapTitre {
+  position: relative;
+}
+.container-player .titres-list .titre .like form .wrapTitre::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-inactive.svg?3b52e5ac0e1dd96b7310bb841f8c9118) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.container-player .titres-list .titre .like form .wrapTitre input[type=submit] {
+  opacity: 0;
+  margin-right: 1.5em;
+}
+.container-player .titres-list .titre .like form .wrapTitre.liked::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .container-player .titres-list .titre.active {
   background: rgba(176, 13, 112, 0.5);
@@ -958,7 +1030,7 @@ header nav a:nth-child(1) {
 }
 .container-player .titres-list.active {
   height: 100%;
-  padding: 6em 1em 0;
+  padding: 7em 1em 0;
 }
 .container-player .titres-list .infos {
   display: flex;
@@ -1002,7 +1074,8 @@ header nav a:nth-child(1) {
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-start;
-  padding-left: 1em;
+  padding: 0 0 0 1em;
+  margin-right: 2.5em;
   overflow-x: hidden;
 }
 .container-player .titres-list .currentSong .current-track .current-song {
@@ -1034,9 +1107,42 @@ header nav a:nth-child(1) {
   font-weight: 500;
 }
 .container-player .titres-list .currentSong .like {
-  flex-grow: 1;
+  position: absolute;
+  right: 0;
   text-align: right;
   margin-left: 1em;
+}
+.container-player .titres-list .currentSong .like form .wrapPlaylist {
+  position: relative;
+  margin-bottom: 0;
+}
+.container-player .titres-list .currentSong .like form .wrapPlaylist::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-inactive.svg?3b52e5ac0e1dd96b7310bb841f8c9118) no-repeat;
+  background-position: center;
+  background-size: contain;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.container-player .titres-list .currentSong .like form .wrapPlaylist input[type=submit] {
+  opacity: 0;
+  padding: 0;
+  margin-right: 2.5em;
+}
+.container-player .titres-list .currentSong .like form .wrapPlaylist.liked::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .container-player .titres-list .albumTracks h2 {
   text-align: left;
@@ -1067,6 +1173,52 @@ header nav a:nth-child(1) {
           animation-duration: 7s;
   -webkit-animation-delay: 1s;
           animation-delay: 1s;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+}
+
+@-webkit-keyframes slide2 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 0, 0);
+  }
+  75% {
+    transform: translate3d(50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes slide2 {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  25% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 0, 0);
+  }
+  75% {
+    transform: translate3d(50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.slide2 {
+  -webkit-animation-name: slide2;
+          animation-name: slide2;
+  -webkit-animation-duration: 20s;
+          animation-duration: 20s;
   -webkit-animation-timing-function: linear;
           animation-timing-function: linear;
   -webkit-animation-iteration-count: infinite;

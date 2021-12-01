@@ -26,7 +26,7 @@
             font-family: $robotoMedium;
             margin-bottom: .5em;
         }
-        .like {
+        .likeArtiste {
             color: $white;
             position: relative;
             font-size: 12px;
@@ -52,7 +52,7 @@
                 &::before {
                     position: absolute;
                     content: "";
-                    background: url('../img/favori-active.svg') no-repeat;
+                    background: url('../img/favori-inactive.svg') no-repeat;
                     background-position: center;
                     background-size: contain;
                     width: 16px;
@@ -69,6 +69,20 @@
                     text-transform: uppercase;
                     border-radius: 30px;
                     font-family: $robotoBold;
+                }
+                &.liked {
+                    &::before {
+                        position: absolute;
+                        content: "";
+                        background: url('../img/favori-active.svg') no-repeat;
+                        background-position: center;
+                        background-size: contain;
+                        width: 16px;
+                        height: 16px;
+                        left: 30px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
                 }
             }
         }

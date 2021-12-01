@@ -5,14 +5,22 @@
     <div class="top">
         <img src="../storage{{ $artiste->picture }}" alt="">
         <h2>{{ $artiste->name }}</h2>
-        <div class="like">
-            871,189
+        <div class="likeArtiste">
+            {{ $nbrLikeArtiste }}
         </div>
-        <form action="{{ route('likePArtiste', $album->id) }}" method="post" id="like">
+        <form action="{{ route('likeArtiste', $artiste->id) }}" method="post" id="like">
             @csrf
-            <div class="wrap">
-                <input type="submit" value="ajouter">
-            </div>
+            @if ($liked == true)
+                <div class="wrap liked">
+                    <input type="hidden" name="artiste_id" value="{{ $artiste->id }}">
+                    <input type="submit" id="likeArtiste" value="ajouter">
+                </div>
+             @else
+                <div class="wrap">
+                    <input type="hidden" name="artiste_id" value="{{ $artiste->id }}">
+                    <input type="submit" id="likeArtiste" value="ajouter">
+                </div>
+            @endif
         </form>
     </div>
     <div class="bottom">

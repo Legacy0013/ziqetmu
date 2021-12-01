@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use App\Models\Titre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TitreController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *

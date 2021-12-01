@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use App\Models\Album;
 use App\Models\Artiste;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArtisteController extends Controller
 {
@@ -47,10 +49,34 @@ class ArtisteController extends Controller
      */
     public function show(Artiste $artiste)
     {
+        $nbrLikeArtiste = Like::where('artiste_id', $artiste->id)->count();
+        $liked = Like::where('user_id', Auth::user()->id)
+        ->where('artiste_id', $artiste->id)
+        ->first();
         $albums = Album::where('artiste_id', $artiste->id)->get();
-        return view('pages.artiste', compact('artiste', 'albums'));
+        return view('pages.artiste', compact('artiste', 'albums', 'liked', 'nbrLikeArtiste'));
     }
 
+      //ajouter ou supprimer un like sur un album
+      public function like(Request $request, Artiste $artiste, Like $like)
+      {
+          $liked = Like::where('user_id', Auth::user()->id)
+                          ->where('artiste_id', $artiste->id)
+                          ->first();
+
+          $like->user_id = Auth::user()->id;
+          $like->artiste_id = $request->artiste_id;
+
+          if(!isset($liked)) {
+              $like->save();
+              $liked = true;
+          } else {
+              $liked->delete();
+              $liked = false;
+          }
+
+          return response()->json(['liked'=>$liked]);
+      }
     /**
      * Show the form for editing the specified resource.
      *
