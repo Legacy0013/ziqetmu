@@ -24,7 +24,7 @@ use App\Http\Controllers\TitreController;
 |
 */
 
-Route::get('/', [HomeController::class, 'showHomepage'])->name('home');
+Route::get('/', [HomeController::class, 'showHomepage'])->middleware(['auth'])->name('home');
 
 Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
 Route::post('/artiste/{artiste}', [ArtisteController::class, 'like'])->name('likeArtiste');

@@ -31,14 +31,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*',function($view){
-
             $titres = Titre::all();
-            $recents = Recent::where('user_id', Auth::user()->id )
-                                ->orderBy('id', 'desc')
-                                ->get();
 
+            if(isset(Auth::user()->id)){
+                $lastRecent = Recent::where('user_id', Auth::user()->id )
+                ->orderBy('id', 'desc')
+                ->first();
+            } else {
+                $lastRecent = [];
+            }
+            $lastAlbum = Album::where('id', $lastRecent->album_id)->first();
             $view->with('titres', $titres)
-                    ->with('recents', $recents);
+                ->with('lastRecent', $lastRecent)
+                ->with('lastAlbum', $lastAlbum);
         });
     }
+
 }
+

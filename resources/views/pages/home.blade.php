@@ -61,7 +61,6 @@
                         <div class="card">
                             <img src="storage{{ $artiste->picture }}" alt="">
                             <div class="artiste_name">{{ $artiste->name }}</div>
-                            {{-- <div class="album_name">{{ $album->like }}</div> --}}
                         </div>
                     </a>
                 @endforeach

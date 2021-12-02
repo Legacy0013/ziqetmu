@@ -413,7 +413,7 @@ function init() {
             if(audioPlayer.querySelector(".time .current")) {
                 audioPlayer.querySelector(".time .current").innerText = getTimeCodeFromNum(audio.currentTime);
             }
-        }, 500);
+        }, 100);
 
         //toggle between playing and pausing on button click
         const playBtn = audioPlayer.querySelector(".controls .toggle-play");
@@ -458,7 +458,7 @@ function init() {
 
 
         //play tracks onclick
-        let titleList = document.querySelectorAll('.titre');
+        let titleList = document.querySelectorAll('.albumTracks .titre');
         titleList.forEach(title => {
             title.addEventListener('click', function(e) {
                 let newTrack = e.target.querySelector('.track').innerText;
@@ -538,11 +538,15 @@ function init() {
             .then(data => {
                 if(data.liked == true){
                     document.querySelector('.wrap').classList.add('liked');
-                    document.querySelector('.wrapPlaylist').classList.add('liked');
+                    if(document.querySelector('.wrapPlaylist')){
+                        document.querySelector('.wrapPlaylist').classList.add('liked');
+                    }
                     e.submitter.value = "Retirer"
                 } else {
                     document.querySelector('.wrap').classList.remove('liked');
-                    document.querySelector('.wrapPlaylist').classList.remove('liked');
+                    if(document.querySelector('.wrapPlaylist')){
+                        document.querySelector('.wrapPlaylist').classList.remove('liked');
+                    }
                     e.submitter.value = "Ajouter"
                 }
             });
