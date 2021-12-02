@@ -28,6 +28,9 @@ header {
         }
         .recents {
             margin-bottom: 1em;
+            h3 {
+                color: #fff;
+            }
             .wrap-cards {
                 display: flex;
                 overflow-x: scroll;
@@ -51,6 +54,11 @@ header {
                         height: 116px;
                         margin-bottom: .5em;
                         object-fit: cover;
+                    }
+                    .artiste_name {
+                        color: $white;
+                        font-family: $robotoRegular;
+                        font-size: 14px;
                     }
                     .titre_name {
                         color: $white;

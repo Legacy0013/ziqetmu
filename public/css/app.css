@@ -120,6 +120,9 @@ header nav a:nth-child(1) {
 .container-home main .recents {
   margin-bottom: 1em;
 }
+.container-home main .recents h3 {
+  color: #fff;
+}
 .container-home main .recents .wrap-cards {
   display: flex;
   overflow-x: scroll;
@@ -149,6 +152,11 @@ header nav a:nth-child(1) {
   margin-bottom: 0.5em;
   -o-object-fit: cover;
      object-fit: cover;
+}
+.container-home main .recents .wrap-cards .card .artiste_name {
+  color: #fff;
+  font-family: "roboto regular";
+  font-size: 14px;
 }
 .container-home main .recents .wrap-cards .card .titre_name {
   color: #fff;
@@ -1187,11 +1195,17 @@ header nav a:nth-child(1) {
   0% {
     transform: translate3d(0, 0, 0);
   }
-  33% {
+  20% {
     transform: translate3d(0, 0, 0);
   }
-  66% {
-    transform: translate3d(-100%, 0, 0);
+  40% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  60% {
+    transform: translate3d(0, 0, 0);
+  }
+  80% {
+    transform: translate3d(50%, 0, 0);
   }
   100% {
     transform: translate3d(0, 0, 0);
@@ -1202,11 +1216,17 @@ header nav a:nth-child(1) {
   0% {
     transform: translate3d(0, 0, 0);
   }
-  33% {
+  20% {
     transform: translate3d(0, 0, 0);
   }
-  66% {
-    transform: translate3d(-100%, 0, 0);
+  40% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  60% {
+    transform: translate3d(0, 0, 0);
+  }
+  80% {
+    transform: translate3d(50%, 0, 0);
   }
   100% {
     transform: translate3d(0, 0, 0);
@@ -1289,7 +1309,7 @@ header nav a:nth-child(1) {
   align-items: center;
   position: absolute;
   top: 0;
-  left: 100px;
+  left: 0;
   right: 0;
   white-space: nowrap;
 }

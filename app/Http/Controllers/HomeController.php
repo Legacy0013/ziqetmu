@@ -17,7 +17,10 @@ class HomeController extends Controller
             $genres = Genre::all();
             $artistes = Artiste::all();
 
-            $recents = Recent::where('user_id', Auth::user()->id )->groupBy('id')->get();
+            $recents = Recent::where('user_id', Auth::user()->id )
+                                ->orderBy('id', 'desc')
+                                ->get();
+
 
             if(count($recents) > 0) {
                 for ($i=0; $i < count($recents); $i++) {

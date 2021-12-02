@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Recent;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RecentController extends Controller
 {
@@ -35,15 +36,23 @@ class RecentController extends Controller
      */
     public function store(Request $request, Recent $recent)
     {
+        $recents = Recent::where('user_id', Auth::user()->id)->get();
+
         $request->validate([
             'user_id' => 'required',
             'album_id' => 'required',
             'artiste_id' => 'required'
             ]);
+
             $recent->user_id = $request->user_id;
             $recent->album_id = $request->album_id;
             $recent->artiste_id = $request->artiste_id;
-            $recent->save();
+
+            if(!isset($recents)) {
+                $recent->save();
+            } else {
+                $recent->delete();
+            }
             return redirect()->route('player', $recent->album_id);
     }
 

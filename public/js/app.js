@@ -6134,10 +6134,10 @@ function init() {
       }
     }, false);
 
-    if (document.querySelectorAll('.titres-list')) {
-      var currentTrack = document.querySelector('.current-song'); //show current track
-
+    if (document.querySelector('.current-song')) {
+      //show current track
       window.onload = function () {
+        var currentTrack = document.querySelector('.current-song');
         currentTrack.innerText = currentSong.innerText;
       };
     } //play tracks onclick
@@ -6230,9 +6230,11 @@ function init() {
         if (data.liked == true) {
           document.querySelector('.wrap').classList.add('liked');
           document.querySelector('.wrapPlaylist').classList.add('liked');
+          e.submitter.value = "Retirer";
         } else {
           document.querySelector('.wrap').classList.remove('liked');
           document.querySelector('.wrapPlaylist').classList.remove('liked');
+          e.submitter.value = "Ajouter";
         }
       });
     });
@@ -6261,9 +6263,11 @@ function init() {
         if (data.liked == true) {
           document.querySelector('.wrapPlaylist').classList.add('liked');
           document.querySelector('.wrap').classList.add('liked');
+          document.querySelector('#likeAlbum').value = "Retirer";
         } else {
           document.querySelector('.wrapPlaylist').classList.remove('liked');
           document.querySelector('.wrap').classList.remove('liked');
+          document.querySelector('#likeAlbum').value = "Ajouter";
         }
       });
     });

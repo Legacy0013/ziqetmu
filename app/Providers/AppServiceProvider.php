@@ -31,11 +31,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*',function($view){
-            $album = Recent::orderBy('id', 'DESC')->first();
 
             $titres = Titre::all();
+            $recents = Recent::where('user_id', Auth::user()->id )
+                                ->orderBy('id', 'desc')
+                                ->get();
 
-            $view->with('titres', $titres);
+            $view->with('titres', $titres)
+                    ->with('recents', $recents);
         });
     }
 }
