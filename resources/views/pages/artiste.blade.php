@@ -30,7 +30,7 @@
                 <a href="{{ route('album', $album->id) }}">
                     <div class="card">
                         <img src="../storage{{ $album->picture }}" alt="">
-                        <div class="titre_name">{{ $artiste->name}}</div>
+                        <div class="artiste_name">{{ $artiste->name}}</div>
                         <div class="album_name">{{ $album->name}}</div>
                         <div class="play"></div>
                     </div>

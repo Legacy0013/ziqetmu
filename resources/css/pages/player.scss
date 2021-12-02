@@ -243,6 +243,8 @@
             left:0;
             right: 0;
             white-space: nowrap;
+            width: fit-content;
+            margin: 0 auto;
         }
         .separator {
             background: $white;
@@ -490,24 +492,261 @@ to { left: -60%; }
     0% {
         transform: translate3d(0, 0, 0);
     }
-    25% {
-        transform: translate3d(-50%, 0, 0);
-    }
-    50% {
+    33% {
         transform: translate3d(0, 0, 0);
     }
-    75% {
-        transform: translate3d(50%, 0, 0);
+    66% {
+        transform: translate3d(-100%, 0, 0);
     }
     100% {
         transform: translate3d(0, 0, 0);
     }
+    // 100% {
+    //     transform: translate3d(0, 0, 0);
+    // }
 }
 
 .slide2 {
     animation-name: slide2;
     animation-duration: 20s;
-    // animation-delay: 2s;
+    animation-delay: 2s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
+}
+
+.partial-player {
+    position: sticky;
+    bottom: 0;
+    padding: 0 1em;
+    margin: 0 .5em;
+    border-radius: 15px;
+    background: rgba($color: $rose, $alpha: .8);
+    .audio-player {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        font-family: $robotoMedium;
+        color: white;
+        font-size: 0.75em;
+        overflow: hidden;
+        padding: 1em 0;
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: .5em;
+            .left {
+                width: 15%;
+                img {
+                    width: 100%;
+                }
+
+            }
+            .middle {
+                width: 60%;
+                flex-grow: 1;
+                padding: 0 .5em;
+            }
+            .right {
+
+            }
+            .titre_name_container {
+                margin: 1em auto .3em;
+                overflow:hidden;
+                text-align: center;
+                .titre_name {
+                    text-align: center;
+                    color: $white;
+                    font-family: $robotoBold;
+                    font-size: 14px;
+                }
+            }
+            .wrap-name {
+                display: block;
+                position: relative;
+                height: 20px;
+                overflow-x: hidden;
+                width: 100%;
+                color: $white;
+                font-family: $robotoMedium;
+                font-size: 12px;
+
+                .textSlide2 {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    position:absolute;
+                    top:0;
+                    left:100px;
+                    right: 0;
+                    white-space: nowrap;
+                }
+                .separator {
+                    background: $white;
+                    width: 3px;
+                    height: 3px;
+                    border-radius: 50%;
+                    margin: 0 .5em;
+                }
+            }
+            .controls {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 1em 0;
+                &>* {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .loop {
+                    display: none;
+                    cursor: pointer;
+                    height: 20px;
+                    width: 30px;
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background:  url('../img/repeat.svg');
+                    background-position: center;
+                    &:hover {
+                        transform: scale(1.1) rotate(180deg);
+                    }
+                    &.active {
+                        background-repeat: no-repeat !important;
+                        background-size: contain !important;
+                        background:  url('../img/repeat-active.svg');
+                        background-position: center;
+                    }
+                }
+                .prev {
+                    display: none;
+                    cursor: pointer;
+                    height: 20px;
+                    width: 30px;
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background-position: center;
+                    background:  url('../img/next.svg');
+                    transform: rotate(180deg);
+                    &:hover {
+                        transform: scale(1.1) rotate(180deg);
+                    }
+                }
+                .next {
+                    display: none;
+                    cursor: pointer;
+                    height: 20px;
+                    width: 30px;
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background-position: center;
+                    background:  url('../img/next.svg');
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+                .toggle-play.play {
+                    cursor: pointer;
+                    height: 25px;
+                    width: 30px;
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background:  url('../img/play.svg');
+                    background-position: 5px center;
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+                .toggle-play.pause {
+                    height: 25px;
+                    width: 30px;
+                    cursor: pointer;
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background:  url('../img/pause.svg');
+                    background-position: center;
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                }
+                .shuffle {
+                    display: none;
+                    cursor: pointer;
+                    height: 20px;
+                    width: 30px;
+                    background-repeat: no-repeat !important;
+                    background-size: contain !important;
+                    background:  url('../img/shuffle.svg');
+                    background-position: center;
+                    &:hover {
+                        transform: scale(1.1);
+                    }
+                    &.active {
+                        background-repeat: no-repeat !important;
+                        background-size: contain !important;
+                        background:  url('../img/shuffle-active.svg');
+                        background-position: center;
+                    }
+                }
+            }
+            .queue {
+                display: none;
+                display: flex;
+                align-items: center;
+                justify-self: flex-end;
+                cursor: pointer;
+                height: 20px;
+                width: 100px;
+                background-repeat: no-repeat !important;
+                background-size: contain !important;
+                background:  url('../img/playlist.svg');
+                background-position: right center;
+                margin-top: 1em;
+                span {
+                    margin-right: 30px;
+                }
+            }
+        }
+        .bottom {
+            .time {
+                display: flex;
+                justify-content: space-between;
+                margin-top: -15px;
+                &>* {
+                    padding: 2px;
+                }
+            }
+            .timeline {
+                background: rgba($white, .5);
+                width: 100%;
+                height: 3px;
+                position: relative;
+                cursor: pointer;
+                .progress {
+                    position: relative;
+                    background: $white;
+                    width: 0%;
+                    height: 100%;
+                    transition: 0.25s linear;
+                    &::after {
+                        position: absolute;
+                        content: "";
+                        right: -10px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: $white;
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 50%;
+                    }
+                  }
+            }
+        }
+
+
+        .albumTracks {
+            display: none;
+        }
+    }
 }

@@ -38,9 +38,14 @@
     <main id="swup">
         @yield('content')
     </main>
-    <div class="audio-container">
 
-    </div>
+    @if (\Route::current()->getName() != 'player')
+        <div class="partial-player">
+            @include('pages.partial-player')
+        </div>
+    @endif
+
+    <div class="audio-container"></div>
     <footer>
 
     </footer>

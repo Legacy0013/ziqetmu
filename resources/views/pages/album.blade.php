@@ -41,30 +41,32 @@
         </div>
         <div class="bottom">
             @foreach ($titres as $titre)
-                <div class="titre">
-                    <span class="number">
-                        {{ str_pad($titre->order, 2, '0', STR_PAD_LEFT) }}
-                    </span>
-                    <span class="titre_name">
-                        {{ $titre->name }}
-                    </span>
-                    <span class="like">
-                        <form action="{{ route('like', $album->id) }}" method="post" class="likeTitre">
-                            @csrf
-                            @if (in_array($titre->id, $likedTitres->pluck('titre_id')->all()))
-                                <div class="wrapTitre liked">
-                                    <input type="hidden" name="titre_id" value="{{ $titre->id }}">
-                                    <input type="submit" value="">
-                                </div>
-                            @else
-                                <div class="wrapTitre">
-                                    <input type="hidden" name="titre_id" value="{{ $titre->id }}">
-                                    <input type="submit" value="">
-                                </div>
-                            @endif
-                        </form>
-                    </span>
-                </div>
+                @if ($titre->album_id == $album->id)
+                    <div class="titre">
+                        <span class="number">
+                            {{ str_pad($titre->order, 2, '0', STR_PAD_LEFT) }}
+                        </span>
+                        <span class="titre_name">
+                            {{ $titre->name }}
+                        </span>
+                        <span class="like">
+                            <form action="{{ route('like', $album->id) }}" method="post" class="likeTitre">
+                                @csrf
+                                @if (in_array($titre->id, $likedTitres->pluck('titre_id')->all()))
+                                    <div class="wrapTitre liked">
+                                        <input type="hidden" name="titre_id" value="{{ $titre->id }}">
+                                        <input type="submit" value="">
+                                    </div>
+                                @else
+                                    <div class="wrapTitre">
+                                        <input type="hidden" name="titre_id" value="{{ $titre->id }}">
+                                        <input type="submit" value="">
+                                    </div>
+                                @endif
+                            </form>
+                        </span>
+                    </div>
+                @endif
             @endforeach
         </div>
     @endforeach

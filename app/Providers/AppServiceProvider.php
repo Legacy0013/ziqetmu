@@ -2,6 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Like;
+use App\Models\Album;
+use App\Models\Titre;
+use App\Models\Recent;
+use App\Models\Artiste;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +30,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        View::composer('*',function($view){
+            $album = Recent::orderBy('id', 'DESC')->first();
+
+            $titres = Titre::all();
+
+            $view->with('titres', $titres);
+        });
     }
 }
