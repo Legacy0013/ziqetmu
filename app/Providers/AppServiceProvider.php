@@ -34,16 +34,44 @@ class AppServiceProvider extends ServiceProvider
             $titres = Titre::all();
 
             if(isset(Auth::user()->id)){
-                $lastRecent = Recent::where('user_id', Auth::user()->id )
-                ->orderBy('id', 'desc')
-                ->first();
+                $recents = Recent::where('user_id', Auth::user()->id )
+                ->get();
+
+                if(count($recents) > 0) {
+                    $lastRecent = Recent::where('user_id', Auth::user()->id )
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+
+                    $lastAlbum = Album::where('id', $lastRecent->album_id)
+                    ->first();
+
+                    $liked = Like::where('user_id', Auth::user()->id)
+                    ->where('album_id', $lastAlbum->id)
+                    ->first();
+                } else {
+                    $lastRecent = [];
+                    $lastAlbum = [];
+                    $likedTitres = [];
+                    $liked = [];
+                }
+
+                $titresId = $titres->pluck('id');
+
+                $likedTitres = Like::where('user_id', Auth::user()->id)
+                ->whereIn('titre_id', $titresId)
+                ->get();
             } else {
                 $lastRecent = [];
+                $lastAlbum = [];
+                $likedTitres = [];
+                $liked = [];
             }
-            $lastAlbum = Album::where('id', $lastRecent->album_id)->first();
+
             $view->with('titres', $titres)
                 ->with('lastRecent', $lastRecent)
-                ->with('lastAlbum', $lastAlbum);
+                ->with('lastAlbum', $lastAlbum)
+                ->with('liked', $liked)
+                ->with('likedTitres', $likedTitres);
         });
     }
 

@@ -21,7 +21,6 @@ class HomeController extends Controller
                                 ->orderBy('id', 'desc')
                                 ->get();
 
-
             if(count($recents) > 0) {
                 for ($i=0; $i < count($recents); $i++) {
                     $albums[] =  Album::findOrFail($recents[$i]['album_id']);

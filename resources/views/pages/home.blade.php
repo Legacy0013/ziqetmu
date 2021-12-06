@@ -8,18 +8,39 @@
             @if (count($recents) > 0)
                 <div class="wrap-cards">
                     @foreach ($albums as $album)
-                        @foreach ($artistes as $artiste)
-                            @if ($album->artiste_id == $artiste->id)
-                                <a href="{{ route('player', $album->id) }}">
-                                    <div class="card">
-                                        <img src="storage{{ $album->picture }}" alt="">
-                                        <div class="artiste_name">{{ $artiste->name}}</div>
-                                        <div class="album_name">{{ $album->name}}</div>
-                                        <div class="play"></div>
-                                    </div>
-                                </a>
-                            @endif
-                        @endforeach
+                        <div class="card">
+                            <input type="text" name="album_id" value="{{ $album->id }}">
+                            <img src="storage{{ $album->picture }}" alt="">
+                            <div class="artiste_name">{{ $album->artiste->name}}</div>
+                            <div class="album_name">{{ $album->name}}</div>
+                            <div class="play"></div>
+                            <div class="albumTracks">
+                                @for($i = 0; $i < count($album->titre); $i++)
+                                <div class="titre">
+                                    <span class="number">
+                                        {{ str_pad($album->titre[$i]->order, 2, '0', STR_PAD_LEFT) }}
+                                    </span>
+                                    <span class="track">{{$album->titre[$i]->name}}</span>
+                                    <span class="like">
+                                        <form action="{{ route('likePlayer', $album->id) }}" method="post" class="likeTitre">
+                                            @csrf
+                                            @if (in_array($album->titre[$i]->id, $likedTitres->pluck('titre_id')->all()))
+                                                <div class="wrapTitre liked">
+                                                    <input type="hidden" name="titre_id" value="{{ $album->titre[$i]->id}}">
+                                                    <input type="submit" value="">
+                                                </div>
+                                            @else
+                                                <div class="wrapTitre">
+                                                    <input type="hidden" name="titre_id" value="{{ $album->titre[$i]->id }}">
+                                                    <input type="submit" value="">
+                                                </div>
+                                            @endif
+                                        </form>
+                                    </span>
+                                </div>
+                                @endfor
+                            </div>
+                        </div>
                     @endforeach
                 </div>
             @else

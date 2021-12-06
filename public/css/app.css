@@ -180,6 +180,9 @@ header nav a:nth-child(1) {
   top: 75px;
   left: 5px;
 }
+.container-home main .recents .wrap-cards .card .albumTracks {
+  display: none;
+}
 .container-home main .genres {
   margin-bottom: 1em;
 }
@@ -696,12 +699,24 @@ header nav a:nth-child(1) {
 }
 
 .container-player {
-  position: relative;
-  display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 2em 1em;
+  position: absolute;
+  top: -100%;
+  background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px);
+  display: flex;
+  padding: 4em 2em 1em;
   overflow-y: hidden;
+  transition: 0.25s ease-in-out;
+}
+.container-player .hide {
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  color: #fff;
+  width: 50px;
+  height: 50px;
+  transform: rotate(180deg);
 }
 .container-player h2 {
   color: #fff;
@@ -759,10 +774,11 @@ header nav a:nth-child(1) {
   font-family: "roboto medium";
   color: white;
   font-size: 0.75em;
-  overflow: hidden;
   display: grid;
   grid-template-rows: 6px auto;
-  padding-top: 1em;
+  padding: 1em;
+  position: absolute;
+  bottom: 0;
 }
 .container-player .audio-player .time {
   display: flex;
@@ -771,6 +787,9 @@ header nav a:nth-child(1) {
 }
 .container-player .audio-player .time > * {
   padding: 2px;
+}
+.container-player .audio-player .time.active {
+  display: none;
 }
 .container-player .audio-player .timeline {
   background: rgba(255, 255, 255, 0.5);
@@ -796,6 +815,9 @@ header nav a:nth-child(1) {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+}
+.container-player .audio-player .timeline.active {
+  display: none;
 }
 .container-player .audio-player .controls {
   display: flex;
@@ -909,16 +931,22 @@ header nav a:nth-child(1) {
 .container-player .audio-player .queue span {
   margin-right: 30px;
 }
+.container-player .audio-player .queue.margin {
+  margin-top: 2.5em;
+}
 .container-player .titre_name_container {
   margin: 1em auto 0.3em;
   overflow: hidden;
-  text-align: center;
+  text-align: left;
 }
 .container-player .titre_name_container .titre_name {
-  text-align: center;
+  text-align: left;
   color: #fff;
   font-family: "roboto bold";
   font-size: 14px;
+}
+.container-player .titre_name_container.active {
+  display: none;
 }
 .container-player .wrap-name {
   display: block;
@@ -932,17 +960,13 @@ header nav a:nth-child(1) {
 }
 .container-player .wrap-name .textSlide2 {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   white-space: nowrap;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: 0 auto;
 }
 .container-player .wrap-name .separator {
   background: #fff;
@@ -951,11 +975,20 @@ header nav a:nth-child(1) {
   border-radius: 50%;
   margin: 0 0.5em;
 }
+.container-player .wrap-name .element {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 10em;
+}
+.container-player .wrap-name.active {
+  display: none;
+}
 .container-player .titres-list {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 7em;
+  top: 0;
   height: 0;
   color: #fff;
   font-size: 14px;
@@ -1041,8 +1074,10 @@ header nav a:nth-child(1) {
   text-transform: capitalize;
 }
 .container-player .titres-list.active {
-  height: 100%;
-  padding: 7em 1em 0;
+  height: 87%;
+  padding: 5em 1em 0;
+  bottom: 0;
+  top: 0;
 }
 .container-player .titres-list .infos {
   display: flex;
@@ -1118,6 +1153,9 @@ header nav a:nth-child(1) {
   font-family: "roboto light";
   font-weight: 500;
 }
+.container-player .titres-list .currentSong .wrap-name.active {
+  display: none;
+}
 .container-player .titres-list .currentSong .like {
   position: absolute;
   right: 0;
@@ -1159,6 +1197,17 @@ header nav a:nth-child(1) {
 .container-player .titres-list .albumTracks h2 {
   text-align: left;
   font-size: 18px;
+}
+.container-player.active {
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px);
+  display: flex;
+  padding: 4em 2em 1em;
+  overflow-y: hidden;
 }
 
 @-webkit-keyframes slide {
@@ -1235,8 +1284,8 @@ header nav a:nth-child(1) {
 .slide2 {
   -webkit-animation-name: slide2;
           animation-name: slide2;
-  -webkit-animation-duration: 20s;
-          animation-duration: 20s;
+  -webkit-animation-duration: 10s;
+          animation-duration: 10s;
   -webkit-animation-delay: 2s;
           animation-delay: 2s;
   -webkit-animation-timing-function: linear;
@@ -1278,17 +1327,17 @@ header nav a:nth-child(1) {
   width: 100%;
 }
 .partial-player .audio-player .top .middle {
-  width: 60%;
+  width: 100%;
   flex-grow: 1;
   padding: 0 0.5em;
 }
 .partial-player .audio-player .top .titre_name_container {
   margin: 1em auto 0.3em;
   overflow: hidden;
-  text-align: center;
+  text-align: left;
 }
 .partial-player .audio-player .top .titre_name_container .titre_name {
-  text-align: center;
+  text-align: left;
   color: #fff;
   font-family: "roboto bold";
   font-size: 14px;
@@ -1305,7 +1354,7 @@ header nav a:nth-child(1) {
 }
 .partial-player .audio-player .top .wrap-name .textSlide2 {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: absolute;
   top: 0;
@@ -1319,6 +1368,12 @@ header nav a:nth-child(1) {
   height: 3px;
   border-radius: 50%;
   margin: 0 0.5em;
+}
+.partial-player .audio-player .top .wrap-name .element {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-right: 10em;
 }
 .partial-player .audio-player .top .controls {
   display: flex;

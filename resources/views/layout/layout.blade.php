@@ -35,15 +35,15 @@
        </nav>
     </header>
 
-    <main id="swup">
+    <main id="swup" class="transition-fade">
         @yield('content')
     </main>
 
-    @if (\Route::current()->getName() != 'player')
-        <div class="partial-player">
-            @include('pages.partial-player')
-        </div>
-    @endif
+    @include('pages.player')
+
+    <div class="partial-player">
+        @include('pages.partial-player')
+    </div>
 
     <div class="audio-container"></div>
     <footer>
@@ -51,5 +51,6 @@
     </footer>
 
     <script src="/js/app.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 </body>
 </html>

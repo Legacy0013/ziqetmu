@@ -41,26 +41,26 @@ class RecentController extends Controller
                             ->where('album_id', $request->album_id)
                             ->first();
 
-        $request->validate([
-            'user_id' => 'required',
-            'album_id' => 'required',
-            'artiste_id' => 'required'
-            ]);
+        // $request->validate([
+        //     'user_id' => '',
+        //     'album_id' => '',
+        //     'artiste_id' => ''
+        //     ]);
 
-            $recent->user_id = $request->user_id;
+            $recent->user_id = Auth::user()->id;
             $recent->album_id = $request->album_id;
             $recent->artiste_id = $request->artiste_id;
-
 
             if(!isset($recents)) {
                 $recent->save();
                 $recents = true;
             } else {
-                $recent->delete();
-                $recents = false;
+                $recents->delete();
+                $recent->save();
+                $recents = true;
             }
 
-            return redirect()->route('player', $recent->album_id);
+            return response()->json(['recents'=>$recents]);
     }
 
     /**

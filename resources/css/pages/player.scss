@@ -1,10 +1,22 @@
 .container-player {
-    position: relative;
-    display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 2em 1em;
+    position: absolute;
+    top: -100%;
+    background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px);
+    display: flex;
+    padding: 4em 2em 1em;
     overflow-y: hidden;
+    transition: .25s ease-in-out;
+    .hide {
+        position: absolute;
+        top: 1em;
+        left: 1em;
+        color: #fff;
+        width: 50px;
+        height: 50px;
+        transform: rotate(180deg);
+    }
     h2 {
         color: $white;
         font-family: $robotoMedium;
@@ -60,19 +72,23 @@
     .audio-player {
         height: auto;
         width: 100%;
-        font-family: $robotoMedium;
+        font-family: "roboto medium";
         color: white;
         font-size: 0.75em;
-        overflow: hidden;
         display: grid;
         grid-template-rows: 6px auto;
-        padding-top: 1em;
+        padding: 1em;
+        position: absolute;
+        bottom: 0;
         .time {
             display: flex;
             justify-content: space-between;
             margin-top: -15px;
             &>* {
                 padding: 2px;
+            }
+            &.active {
+                display: none;
             }
         }
         .timeline {
@@ -99,6 +115,9 @@
                     border-radius: 50%;
                 }
               }
+              &.active {
+                display: none;
+            }
         }
         .controls {
             display: flex;
@@ -211,17 +230,23 @@
             span {
                 margin-right: 30px;
             }
+            &.margin {
+                margin-top: 2.5em;
+            }
         }
     }
     .titre_name_container {
         margin: 1em auto .3em;
         overflow:hidden;
-        text-align: center;
+        text-align: left;
         .titre_name {
-            text-align: center;
+            text-align: left;
             color: $white;
             font-family: $robotoBold;
             font-size: 14px;
+        }
+        &.active {
+            display: none;
         }
     }
     .wrap-name {
@@ -236,15 +261,13 @@
 
         .textSlide2 {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
-            position:absolute;
-            top:0;
-            left:0;
+            position: absolute;
+            top: 0;
+            left: 0;
             right: 0;
             white-space: nowrap;
-            width: fit-content;
-            margin: 0 auto;
         }
         .separator {
             background: $white;
@@ -253,12 +276,21 @@
             border-radius: 50%;
             margin: 0 .5em;
         }
+        .element {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-right: 10em;
+        }
+        &.active {
+            display: none;
+        }
     }
     .titres-list {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 7em;
+        top: 0;
         height: 0;
         color: $white;
         font-size: 14px;
@@ -291,6 +323,7 @@
                 font-family: $robotoLight;
                 font-weight: 600;
                 pointer-events: none;
+
             }
             .track {
                 font-family: $robotoMedium;
@@ -348,8 +381,10 @@
             text-transform: capitalize;
         }
         &.active {
-            height: 100%;
-            padding: 7em 1em 0;
+            height: 87%;
+            padding: 5em 1em 0;
+            bottom: 0;
+            top: 0;
         }
         .infos {
             display: flex;
@@ -420,7 +455,9 @@
                     font-family: $robotoLight;
                     font-weight: 500;
                 }
-
+                &.active {
+                    display: none;
+                }
             }
             .like {
                 position: absolute;
@@ -472,6 +509,17 @@
             }
         }
     }
+    &.active {
+        flex-direction: column;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, $linearRose 0, $linearViolet 600px);
+        display: flex;
+        padding: 4em 2em 1em;
+        overflow-y: hidden;
+    }
 }
 
 
@@ -511,7 +559,7 @@ to { left: -60%; }
 
 .slide2 {
     animation-name: slide2;
-    animation-duration: 20s;
+    animation-duration: 10s;
     animation-delay: 2s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
@@ -547,19 +595,16 @@ to { left: -60%; }
 
             }
             .middle {
-                width: 60%;
+                width: 100%;
                 flex-grow: 1;
                 padding: 0 .5em;
-            }
-            .right {
-
             }
             .titre_name_container {
                 margin: 1em auto .3em;
                 overflow:hidden;
-                text-align: center;
+                text-align: left;
                 .titre_name {
-                    text-align: center;
+                    text-align: left;
                     color: $white;
                     font-family: $robotoBold;
                     font-size: 14px;
@@ -577,7 +622,7 @@ to { left: -60%; }
 
                 .textSlide2 {
                     display: flex;
-                    justify-content: center;
+                    justify-content: flex-start;
                     align-items: center;
                     position:absolute;
                     top:0;
@@ -591,6 +636,12 @@ to { left: -60%; }
                     height: 3px;
                     border-radius: 50%;
                     margin: 0 .5em;
+                }
+                .element {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    margin-right: 10em;
                 }
             }
             .controls {

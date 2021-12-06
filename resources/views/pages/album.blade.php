@@ -9,7 +9,7 @@
             <h2 class="artiste_name">par {{ $art->name }}</h2>
             <h3 class="album_genre">{{ ucfirst($album->genre->name ) }} ></h3>
             <p>
-                <span>{{ count($titres) }} titres</span> -
+                <span>{{ count($album->titre) }} titres</span> -
                 <span>{{ $album->duration }} min</span> -
                 <span>{{ $album->date }}</span>
             </p>
@@ -28,15 +28,16 @@
                         </div>
                     @endif
                 </form>
-                <form action="{{ route('recent.store', $album) }}" method="post" >
+
+                <form action="{{ route('recent.store', $album->id) }}" id="listenAndAddRecent" method="post" >
                     @csrf
                     <div class="wrapListen">
-                        <input type="submit" value="écouter">
                         <input type="hidden" name="album_id" value="{{ $album->id }}">
                         <input type="hidden" name="artiste_id" value="{{ $album->artiste_id }}">
-                        <input type="hidden" name="user_id" value="{{ Auth::user()->id }}">
+                        <input type="submit" value="écouter">
                     </div>
                 </form>
+
             </div>
         </div>
         <div class="bottom">

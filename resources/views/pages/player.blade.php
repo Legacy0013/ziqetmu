@@ -1,20 +1,21 @@
-@extends('layout.layout')
-
-@section('content')
+@if ($lastRecent)
     <div class="container-player">
-        <input type="hidden" name="album_id" id="album_id" value="{{ $album->id }}">
-        <h2>{{ $album->name }}</h2>
-        <img class="cover" src="../storage/albums/covers/{{ $album->id }}/cover.jpg" alt="">
-        <form action="{{ route('likePlayer', $album->id) }}" method="post" id="like">
+        <div class="hide">
+        <img src="../img/arrow-down.svg" alt="icone fermer">
+        </div>
+        <input type="hidden" name="album_id" id="album_id" value="{{ $lastAlbum->id }}">
+        <h2>{{ $lastAlbum->name }}</h2>
+        <img class="cover" src="../storage/albums/covers/{{ $lastAlbum->id }}/cover.jpg" alt="">
+        <form action="{{ route('likePlayer', $lastAlbum->id) }}" method="post" id="like">
             @csrf
             @if ($liked == true)
                 <div class="wrap liked">
-                    <input type="hidden" name="album_id" value="{{ $album->id }}">
-                    <input type="submit" id="likeAlbum" value="ajouter">
+                    <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
+                    <input type="submit" id="likeAlbum" value="retirer">
                 </div>
             @else
                 <div class="wrap">
-                    <input type="hidden" name="album_id" value="{{ $album->id }}">
+                    <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
                     <input type="submit" id="likeAlbum" value="ajouter">
                 </div>
             @endif
@@ -28,13 +29,25 @@
                 <div class="progress"></div>
             </div>
             <div class="titre_name_container">
-                <span class="titre_name">{{ $album->titre[0]->name }}</span>
+                <span class="titre_name">{{ $lastAlbum->titre[0]->name }}</span>
             </div>
             <div class="wrap-name">
                 <div class="textSlide2">
-                    <div class="album-name">{{ $album->name }}</div>
-                    <div class="separator"></div>
-                    <div class="artiste_name">{{ $album->artiste->name }}</div>
+                    <div class="element">
+                        <div class="album-name">{{ $lastAlbum->name }}</div>
+                        <div class="separator"></div>
+                        <div class="artiste_name">{{ $lastAlbum->artiste->name }}</div>
+                    </div>
+                    <div class="element">
+                        <div class="album-name">{{ $lastAlbum->name }}</div>
+                        <div class="separator"></div>
+                        <div class="artiste_name">{{ $lastAlbum->artiste->name }}</div>
+                    </div>
+                    <div class="element">
+                        <div class="album-name">{{ $lastAlbum->name }}</div>
+                        <div class="separator"></div>
+                        <div class="artiste_name">{{ $lastAlbum->artiste->name }}</div>
+                    </div>
                 </div>
             </div>
             <div class="controls">
@@ -54,36 +67,36 @@
                 <h2>à l'écoute</h2>
                 <div class="wrap-infos">
                     <div class="titres_count"></div>
-                    <p>{{ count($titres) }} titres</p>
+                    <p>{{ count($lastAlbum->titre) }} titres</p>
                     <div class="separator"></div>
-                    <div class="duration">{{ $album->duration }} min</div>
+                    <div class="duration">{{ $lastAlbum->duration }} min</div>
                 </div>
             </div>
             <div class="currentSong">
                 <span class="album-cover">
-                    <img src="../storage/{{ $album->picture }}" alt="">
+                    <img src="../storage/{{ $lastAlbum->picture }}" alt="">
                 </span>
                 <span class="current-track">
                     <span class="current-song"></span>
                     <div class="wrap-name">
                         <div class="textSlide">
-                            <div class="album_name">{{ $album->name }}</div>
+                            <div class="album_name">{{ $lastAlbum->name }}</div>
                             <div class="separator"></div>
-                            <div class="artiste_name">{{ $album->artiste->name }}</div>
+                            <div class="artiste_name">{{ $lastAlbum->artiste->name }}</div>
                         </div>
                     </div>
                 </span>
                 <span class="like">
-                    <form action="{{ route('likePlayer', $album->id) }}" method="post" id="likePlaylist">
+                    <form action="{{ route('likePlayer', $lastAlbum->id) }}" method="post" id="likePlaylist">
                         @csrf
                         @if ($liked == true)
                             <div class="wrapPlaylist liked">
-                                <input type="hidden" name="album_id" value="{{ $album->id }}">
+                                <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
                                 <input type="submit" id="likeAlbum" value="">
                             </div>
                         @else
                             <div class="wrapPlaylist">
-                                <input type="hidden" name="album_id" value="{{ $album->id }}">
+                                <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
                                 <input type="submit" id="likeAlbum" value="">
                             </div>
                         @endif
@@ -91,15 +104,16 @@
                 </span>
             </div>
             <div class="albumTracks">
+                <input type="hidden" name="album_id" id="album_id" value="{{ $lastAlbum->id }}">
                 @for($i=0; $i<count($titres); $i++)
-                    @if($album->id == $titres[$i]->album_id)
+                    @if($lastAlbum->id == $titres[$i]->album_id)
                         <div class="titre">
                             <span class="number">
                                 {{ str_pad($titres[$i]['order'], 2, '0', STR_PAD_LEFT) }}
                             </span>
                             <span class="track">{{$titres[$i]['name']}}</span>
                             <span class="like">
-                                <form action="{{ route('likePlayer', $album->id) }}" method="post" class="likeTitre">
+                                <form action="{{ route('likePlayer', $lastAlbum->id) }}" method="post" class="likeTitre">
                                     @csrf
                                     @if (in_array($titres[$i]['id'], $likedTitres->pluck('titre_id')->all()))
                                         <div class="wrapTitre liked">
@@ -120,4 +134,5 @@
             </div>
         </div>
     </div>
-@endsection
+@endif
+

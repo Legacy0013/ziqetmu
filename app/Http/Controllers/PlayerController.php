@@ -16,17 +16,19 @@ class PlayerController extends Controller
         $liked = Like::where('user_id', Auth::user()->id)
                         ->where('album_id', $album->id)
                         ->first();
+
         $titreCount = Titre::all();
 
         $titres = Titre::where('album_id', $album->id)->get();
 
         $titresId = $titres->pluck('id');
+
         $artiste = Artiste::where('id', $album->artiste_id)->get();
 
         $likedTitres = Like::where('user_id', Auth::user()->id)
                             ->whereIn('titre_id', $titresId)
                             ->get();
-        // dd($likedTitres);
+
         return view('pages.player', compact('album', 'artiste', 'titres', 'titreCount', 'liked', 'likedTitres'));
     }
 
