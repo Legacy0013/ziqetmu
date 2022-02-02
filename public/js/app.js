@@ -6324,6 +6324,7 @@ function init() {
 
     setInterval(function () {
       var progressBars = document.querySelectorAll(".progress");
+      console.log(progressBars);
       progressBars.forEach(function (progressBar) {
         progressBar.style.width = audio.currentTime / audio.duration * 95 + "%";
       });
@@ -6399,11 +6400,13 @@ function init() {
       });
     }); //like album
 
-    var likeAlbum = document.querySelector('#likeAlbum');
+    var likeAlbums = document.querySelectorAll('.likeAlbum');
 
-    if (likeAlbum) {
-      likeAlbum.addEventListener('click', function (e) {
-        e.target.classList.toggle('liked');
+    if (likeAlbums) {
+      likeAlbums.forEach(function (likeAlbum) {
+        likeAlbum.addEventListener('click', function (e) {
+          e.target.classList.toggle('liked');
+        });
       });
     } //texte défilant player
 
@@ -6426,34 +6429,65 @@ function init() {
         }, 14000);
       }
     } //desactivé hors ligne
-    // if(slideTextContainer2) {
-    //     anime({
-    //         targets: slideTextContainer2,
-    //         translateX: '-100%',
-    //         duration: 12000,
-    //         delay: 2000,
-    //         easing: 'linear',
-    //         loop: true
-    //       });
-    //     slideTextContainer2.forEach(text => {
-    //     })
-    // }
-    //like sur un album ou un artiste
+
+
+    if (slideTextContainer2) {
+      anime({
+        targets: slideTextContainer2,
+        translateX: '-100%',
+        duration: 12000,
+        delay: 2000,
+        easing: 'linear',
+        loop: true
+      });
+      slideTextContainer2.forEach(function (text) {});
+    } //like sur un album
 
 
     if (document.querySelector('#like')) {
-      document.querySelector('#like').addEventListener('submit', function (e) {
+      var likes = document.querySelectorAll('#like');
+      likes.forEach(function (like) {
+        like.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var likeAlbums = document.querySelectorAll('.likeAlbum');
+          var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          var fd = new FormData();
+          fd.append('album_id', e.target.album_id.value);
+          fetch(e.target.action, {
+            method: e.target.method,
+            headers: {
+              'X-CSRF-TOKEN': csrf
+            },
+            body: fd
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            if (data.liked == true) {
+              likeAlbums.forEach(function (likeAlbum) {
+                // console.log(likeAlbum.parentElement);
+                likeAlbum.parentElement.classList.add('liked');
+                likeAlbum.value = "Retirer";
+              });
+            } else {
+              likeAlbums.forEach(function (likeAlbum) {
+                // console.log(likeAlbum.parentElement);
+                likeAlbum.parentElement.classList.remove('liked');
+                likeAlbum.value = "Ajouter";
+              });
+            }
+          });
+        });
+      });
+    } //like sur un artiste
+
+
+    if (document.querySelector('#likeArtiste')) {
+      document.querySelector('#likeArtiste').addEventListener('submit', function (e) {
         e.preventDefault();
+        var nbrLike = parseInt(document.querySelector('.likeArtiste').innerHTML);
         var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         var fd = new FormData();
-
-        if (e.submitter.id == 'likeAlbum') {
-          fd.append('album_id', e.target.album_id.value);
-        } else if (e.submitter.id == 'likeArtiste') {
-          fd.append('artiste_id', e.target.artiste_id.value);
-          location.reload();
-        }
-
+        fd.append('artiste_id', e.target.artiste_id.value);
         fetch(e.target.action, {
           method: e.target.method,
           headers: {
@@ -6463,21 +6497,13 @@ function init() {
         }).then(function (response) {
           return response.json();
         }).then(function (data) {
-          if (data.liked == true) {
-            document.querySelector('.wrap').classList.add('liked');
-
-            if (document.querySelector('.wrapPlaylist')) {
-              document.querySelector('.wrapPlaylist').classList.add('liked');
-            }
-
+          if (data.likedArtiste == true) {
+            e.target.lastElementChild.classList.add('liked');
+            document.querySelector('.likeArtiste').innerHTML = nbrLike + 1;
             e.submitter.value = "Retirer";
           } else {
-            document.querySelector('.wrap').classList.remove('liked');
-
-            if (document.querySelector('.wrapPlaylist')) {
-              document.querySelector('.wrapPlaylist').classList.remove('liked');
-            }
-
+            e.target.lastElementChild.classList.remove('liked');
+            document.querySelector('.likeArtiste').innerHTML = nbrLike - 1;
             e.submitter.value = "Ajouter";
           }
         });
@@ -6490,11 +6516,7 @@ function init() {
         e.preventDefault();
         var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         var fd = new FormData();
-
-        if (e.submitter.id == 'likeAlbum') {
-          fd.append('album_id', e.target.album_id.value);
-        }
-
+        fd.append('album_id', e.target.album_id.value);
         fetch(e.target.action, {
           method: e.target.method,
           headers: {
@@ -6515,7 +6537,7 @@ function init() {
           }
         });
       });
-    } //like sur un titre
+    } // like sur un titre
 
 
     if (document.querySelector('.likeTitre')) {
@@ -6537,8 +6559,10 @@ function init() {
           }).then(function (data) {
             if (data.likedTitre == true) {
               e.submitter.parentElement.classList.add('liked');
+              e.target.lastElementChild.classList.add('liked');
             } else {
               e.submitter.parentElement.classList.remove('liked');
+              e.target.lastElementChild.classList.remove('liked');
             }
           });
         });
@@ -6562,9 +6586,22 @@ function init() {
         }).then(function (response) {
           return response.json();
         }).then(function (data) {
-          console.log(data);
+          audio.play();
         });
-      });
+      }); // document.querySelector('#listenAndAddRecent').addEventListener('click', e => {
+      //     let albumName = document.querySelector('.container-album .album_name')
+      //     let aritste_name = document.querySelector('.container-album .artiste_name')
+      //     let nbrTracks = document.querySelector('.container-album .nbrTracks')
+      //     let duration = document.querySelector('.container-album .duration')
+      //     let newTracks = document.querySelectorAll('.container-album .bottom .titre')
+      //     let newListTracks = e.currentTarget.qquerySelectorAll('.container-album .bottom .titre .titre_name')
+      //     tracks = newListTracks;
+      //     tracksArray = Array.prototype.slice.call(tracks);
+      //     shuffledTracks(tracksArray)
+      //     let clickList = e.currentTarget.querySelector('.container-album .bottom')
+      //     let container = document.querySelector('.container-player .albumTracks')
+      //     container.innerHTML = clickList.innerHTML
+      // })
     }
 
     if (document.querySelector('.partial-player')) {
@@ -6588,22 +6625,33 @@ function init() {
     } // play recent album onclick
 
 
-    var playRecents = document.querySelectorAll('.card'); // change track list
+    var playRecents = document.querySelectorAll('.recents .card'); // change track list
 
     playRecents.forEach(function (playRecent) {
       playRecent.addEventListener('click', function (e) {
+        albumId = e.currentTarget.querySelector('[name="album_id"]').value;
+        var formAction = document.getElementById("like");
+        formAction.setAttribute('action', window.location.href + 'player/' + albumId);
+        var formAction2 = document.getElementById("likePlaylist");
+        formAction2.setAttribute('action', window.location.href + 'player/' + albumId);
         var clickListTracks = e.currentTarget.querySelectorAll('.albumTracks .titre .track');
         tracks = clickListTracks;
         tracksArray = Array.prototype.slice.call(tracks);
         shuffledTracks(tracksArray);
         var clickList = e.currentTarget.querySelector('.albumTracks');
         var container = document.querySelector('.container-player .albumTracks');
-        container.innerHTML = clickList.innerHTML; // // change img src
+        container.innerHTML = clickList.innerHTML; //change album duration
+
+        var duration = document.querySelector('.wrap-infos .duration');
+        duration.innerHTML = e.currentTarget.querySelector('[name="duration"]').value + ' min'; // change nbr tracks
+
+        var nbrTracks = document.querySelector('.wrap-infos .titres_count p');
+        nbrTracks.innerHTML = clickListTracks.length + ' titres'; // change img src
 
         var newImg = e.currentTarget.querySelector('img');
         var oldImg1 = document.querySelector('.audio-player .top .left img');
         var oldImg2 = document.querySelector('.container-player .cover');
-        var oldImg3 = document.querySelector('.container-player .album-cover');
+        var oldImg3 = document.querySelector('.container-player .album-cover img');
         oldImg1.src = newImg.src;
         oldImg2.src = newImg.src;
         oldImg3.src = newImg.src; // // change album name
@@ -6624,6 +6672,8 @@ function init() {
 
         var newTitreName = e.currentTarget.querySelector('.albumTracks .track');
         var titreNames = document.querySelectorAll('.titre_name');
+        var titreName2 = document.querySelector('.current-track .current-song');
+        titreName2.innerHTML = newTitreName.innerHTML;
         titreNames.forEach(function (titreName) {
           titreName.innerHTML = newTitreName.innerHTML;
         }); // // change artist name
@@ -6632,7 +6682,7 @@ function init() {
         var oldArtistName = document.querySelector('.container-player h2');
         var oldArtistNames2 = document.querySelectorAll('.partial-player .element .artiste_name');
         var oldArtistNames3 = document.querySelectorAll('.container-player .element .artiste_name');
-        var oldArtistName4 = document.querySelector('.container-player .artiste_name');
+        var oldArtistName4 = document.querySelector('.container-player .textSlide .artiste_name');
         oldArtistName.innerHTML = newArtistName.innerHTML;
         oldArtistNames2.forEach(function (oldArtistName2) {
           oldArtistName2.innerHTML = newArtistName.innerHTML;
@@ -6643,11 +6693,9 @@ function init() {
         oldArtistName4.innerHTML = newArtistName.innerHTML;
         var currentSong = document.querySelector('.container-player .titre_name');
         var trackName = currentSong.innerText;
-        albumId = e.currentTarget.querySelector('[name="album_id"]').value;
         audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
         var containerPlayer = document.querySelector('.container-player');
         var newIds = containerPlayer.querySelectorAll('[name="album_id"]');
-        console.log(newIds);
         newIds.forEach(function (newId) {
           newId.value = albumId;
         });
@@ -6689,10 +6737,39 @@ function init() {
               trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
             }
           });
-        });
+        }); //like sur un titre
+
+        if (document.querySelector('.likeTitre')) {
+          var _titres = document.querySelectorAll('.likeTitre');
+
+          _titres.forEach(function (titre) {
+            titre.addEventListener('submit', function (e) {
+              e.preventDefault();
+              var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+              var fd = new FormData();
+              fd.append('titre_id', e.target.titre_id.value);
+              fetch(e.target.action, {
+                method: e.target.method,
+                headers: {
+                  'X-CSRF-TOKEN': csrf
+                },
+                body: fd
+              }).then(function (response) {
+                return response.json();
+              }).then(function (data) {
+                if (data.likedTitre == true) {
+                  e.submitter.parentElement.classList.add('liked');
+                } else {
+                  e.submitter.parentElement.classList.remove('liked');
+                }
+              });
+            });
+          });
+        }
+
         audio.play();
       });
-    });
+    }); // let listenBtn = document.querySelector('')
   }
 }
 

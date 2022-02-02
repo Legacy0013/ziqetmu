@@ -9,9 +9,9 @@
             <h2 class="artiste_name">par {{ $art->name }}</h2>
             <h3 class="album_genre">{{ ucfirst($album->genre->name ) }} ></h3>
             <p>
-                <span>{{ count($album->titre) }} titres</span> -
-                <span>{{ $album->duration }} min</span> -
-                <span>{{ $album->date }}</span>
+                <span class="nbrTracks">{{ count($album->titre) }} titres</span> -
+                <span class="duration">{{ $album->duration }} min</span> -
+                <span class="date">{{ $album->date }}</span>
             </p>
             <div class="wrap-forms">
                 <form action="{{ route('like', $album->id) }}" method="post" id="like">
@@ -19,12 +19,12 @@
                     @if ($liked == true)
                         <div class="wrap liked">
                             <input type="hidden" name="album_id" value="{{ $album->id }}">
-                            <input type="submit" id="likeAlbum" value="ajouter">
+                            <input type="submit" class="likeAlbum" value="retirer">
                         </div>
                     @else
                         <div class="wrap">
                             <input type="hidden" name="album_id" value="{{ $album->id }}">
-                            <input type="submit" id="likeAlbum" value="ajouter">
+                            <input type="submit" class="likeAlbum" value="ajouter">
                         </div>
                     @endif
                 </form>

@@ -11,12 +11,12 @@
             @if ($liked == true)
                 <div class="wrap liked">
                     <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
-                    <input type="submit" id="likeAlbum" value="retirer">
+                    <input type="submit" class="likeAlbum" value="retirer">
                 </div>
             @else
                 <div class="wrap">
                     <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
-                    <input type="submit" id="likeAlbum" value="ajouter">
+                    <input type="submit" class="likeAlbum" value="ajouter">
                 </div>
             @endif
         </form>
@@ -66,8 +66,9 @@
             <div class="infos">
                 <h2>à l'écoute</h2>
                 <div class="wrap-infos">
-                    <div class="titres_count"></div>
-                    <p>{{ count($lastAlbum->titre) }} titres</p>
+                    <div class="titres_count">
+                        <p>{{ count($lastAlbum->titre) }} titres</p>
+                    </div>
                     <div class="separator"></div>
                     <div class="duration">{{ $lastAlbum->duration }} min</div>
                 </div>
@@ -92,12 +93,12 @@
                         @if ($liked == true)
                             <div class="wrapPlaylist liked">
                                 <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
-                                <input type="submit" id="likeAlbum" value="">
+                                <input type="submit" class="likeAlbum" value="">
                             </div>
                         @else
                             <div class="wrapPlaylist">
                                 <input type="hidden" name="album_id" value="{{ $lastAlbum->id }}">
-                                <input type="submit" id="likeAlbum" value="">
+                                <input type="submit" class="likeAlbum" value="">
                             </div>
                         @endif
                     </form>

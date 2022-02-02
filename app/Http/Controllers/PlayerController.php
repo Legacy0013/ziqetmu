@@ -13,26 +13,26 @@ class PlayerController extends Controller
 {
     public function show(Album $album, Titre $titre)
     {
-        $liked = Like::where('user_id', Auth::user()->id)
-                        ->where('album_id', $album->id)
-                        ->first();
+        // $liked = Like::where('user_id', Auth::user()->id)
+        //                 ->where('album_id', $album->id)
+        //                 ->first();
 
-        $titreCount = Titre::all();
+        // $titreCount = Titre::all();
 
-        $titres = Titre::where('album_id', $album->id)->get();
+        // $titres = Titre::where('album_id', $album->id)->get();
 
-        $titresId = $titres->pluck('id');
+        // $titresId = $titres->pluck('id');
 
-        $artiste = Artiste::where('id', $album->artiste_id)->get();
+        // $artiste = Artiste::where('id', $album->artiste_id)->get();
 
-        $likedTitres = Like::where('user_id', Auth::user()->id)
-                            ->whereIn('titre_id', $titresId)
-                            ->get();
+        // $likedTitres = Like::where('user_id', Auth::user()->id)
+        //                     ->whereIn('titre_id', $titresId)
+        //                     ->get();
 
-        return view('pages.player', compact('album', 'artiste', 'titres', 'titreCount', 'liked', 'likedTitres'));
+        // return view('pages.player', compact('album', 'artiste', 'titres', 'titreCount', 'liked', 'likedTitres'));
     }
 
-    //ajouter ou supprimer un like sur un album
+    //ajouter ou supprimer un like sur un album ou un titre
     public function like(Request $request, Album $album, Like $like)
     {
         if($request->has('album_id')){

@@ -369,7 +369,7 @@ header nav a:nth-child(1) {
   -o-object-fit: cover;
      object-fit: cover;
 }
-.container-artiste .bottom .wrap-cards a .card .titre_name {
+.container-artiste .bottom .wrap-cards a .card .artiste_name {
   color: #fff;
   font-family: "roboto regular";
   font-size: 14px;
@@ -1157,10 +1157,7 @@ header nav a:nth-child(1) {
   display: none;
 }
 .container-player .titres-list .currentSong .like {
-  position: absolute;
-  right: 0;
   text-align: right;
-  margin-left: 1em;
 }
 .container-player .titres-list .currentSong .like form .wrapPlaylist {
   position: relative;
@@ -1172,7 +1169,7 @@ header nav a:nth-child(1) {
   background: url(/images/favori-inactive.svg?3b52e5ac0e1dd96b7310bb841f8c9118) no-repeat;
   background-position: center;
   background-size: contain;
-  left: 0;
+  right: 0;
   width: 16px;
   height: 16px;
   top: 50%;
@@ -1180,8 +1177,6 @@ header nav a:nth-child(1) {
 }
 .container-player .titres-list .currentSong .like form .wrapPlaylist input[type=submit] {
   opacity: 0;
-  padding: 0;
-  margin-right: 2.5em;
 }
 .container-player .titres-list .currentSong .like form .wrapPlaylist.liked::before {
   position: absolute;
@@ -1191,6 +1186,7 @@ header nav a:nth-child(1) {
   background-size: contain;
   width: 16px;
   height: 16px;
+  right: 0;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -1206,7 +1202,7 @@ header nav a:nth-child(1) {
   bottom: 0;
   background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px);
   display: flex;
-  padding: 4em 2em 1em;
+  padding: 6em 2em 1em;
   overflow-y: hidden;
 }
 

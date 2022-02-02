@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Album;
 use App\Models\Genre;
-use App\Models\Titre;
 use App\Models\Recent;
 use App\Models\Artiste;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller

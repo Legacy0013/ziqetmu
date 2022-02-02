@@ -41,12 +41,6 @@ class RecentController extends Controller
                             ->where('album_id', $request->album_id)
                             ->first();
 
-        // $request->validate([
-        //     'user_id' => '',
-        //     'album_id' => '',
-        //     'artiste_id' => ''
-        //     ]);
-
             $recent->user_id = Auth::user()->id;
             $recent->album_id = $request->album_id;
             $recent->artiste_id = $request->artiste_id;
@@ -59,7 +53,6 @@ class RecentController extends Controller
                 $recent->save();
                 $recents = true;
             }
-
             return response()->json(['recents'=>$recents]);
     }
 

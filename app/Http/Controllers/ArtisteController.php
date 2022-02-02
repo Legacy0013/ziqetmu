@@ -57,25 +57,25 @@ class ArtisteController extends Controller
         return view('pages.artiste', compact('artiste', 'albums', 'liked', 'nbrLikeArtiste'));
     }
 
-      //ajouter ou supprimer un like sur un album
+      //ajouter ou supprimer un like sur un artiste
       public function like(Request $request, Artiste $artiste, Like $like)
       {
-          $liked = Like::where('user_id', Auth::user()->id)
+          $likedArtiste = Like::where('user_id', Auth::user()->id)
                           ->where('artiste_id', $artiste->id)
                           ->first();
 
           $like->user_id = Auth::user()->id;
           $like->artiste_id = $request->artiste_id;
 
-          if(!isset($liked)) {
+          if(!isset($likedArtiste)) {
               $like->save();
-              $liked = true;
+              $likedArtiste = true;
           } else {
-              $liked->delete();
-              $liked = false;
+              $likedArtiste->delete();
+              $likedArtiste = false;
           }
 
-          return response()->json(['liked'=>$liked]);
+          return response()->json(['likedArtiste'=>$likedArtiste]);
       }
     /**
      * Show the form for editing the specified resource.

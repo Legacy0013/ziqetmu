@@ -8,12 +8,12 @@
         <div class="likeArtiste">
             {{ $nbrLikeArtiste }}
         </div>
-        <form action="{{ route('likeArtiste', $artiste->id) }}" method="post" id="like">
+        <form action="{{ route('likeArtiste', $artiste->id) }}" method="post" id="likeArtiste">
             @csrf
-            @if ($liked == true)
+            @if ($likedArtiste == true)
                 <div class="wrap liked">
                     <input type="hidden" name="artiste_id" value="{{ $artiste->id }}">
-                    <input type="submit" id="likeArtiste" value="ajouter">
+                    <input type="submit" id="likeArtiste" value="retirer">
                 </div>
              @else
                 <div class="wrap">

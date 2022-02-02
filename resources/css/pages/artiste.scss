@@ -2,7 +2,6 @@
     padding: 0 2em 1em;
     min-height: 100vh;
     header {
-        // margin-bottom: 2em;
         padding-left: 2em;
         h1 {
             padding-top: 1em;
@@ -109,7 +108,7 @@
                         margin-bottom: .5em;
                         object-fit: cover;
                     }
-                    .titre_name {
+                    .artiste_name {
                         color: $white;
                         font-family: $robotoRegular;
                         font-size: 14px;

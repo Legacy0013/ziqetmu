@@ -32,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*',function($view){
             $titres = Titre::all();
+            $artistes = Artiste::all();
 
             if(isset(Auth::user()->id)){
                 $recents = Recent::where('user_id', Auth::user()->id )
@@ -56,14 +57,21 @@ class AppServiceProvider extends ServiceProvider
                 }
 
                 $titresId = $titres->pluck('id');
+                $artisteId = $artistes->pluck('id');
 
                 $likedTitres = Like::where('user_id', Auth::user()->id)
                 ->whereIn('titre_id', $titresId)
                 ->get();
+
+                $likedArtiste = Like::where('user_id', Auth::user()->id)
+                ->whereIn('artiste_id', $artisteId)
+                ->first();
+
             } else {
                 $lastRecent = [];
                 $lastAlbum = [];
                 $likedTitres = [];
+                $likedArtiste = [];
                 $liked = [];
             }
 
@@ -71,7 +79,8 @@ class AppServiceProvider extends ServiceProvider
                 ->with('lastRecent', $lastRecent)
                 ->with('lastAlbum', $lastAlbum)
                 ->with('liked', $liked)
-                ->with('likedTitres', $likedTitres);
+                ->with('likedTitres', $likedTitres)
+                ->with('likedArtiste', $likedArtiste);
         });
     }
 

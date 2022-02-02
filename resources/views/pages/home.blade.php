@@ -9,7 +9,8 @@
                 <div class="wrap-cards">
                     @foreach ($albums as $album)
                         <div class="card">
-                            <input type="text" name="album_id" value="{{ $album->id }}">
+                            <input type="hidden" name="album_id" value="{{ $album->id }}">
+                            <input type="hidden" name="duration" value="{{ $album->duration }}">
                             <img src="storage{{ $album->picture }}" alt="">
                             <div class="artiste_name">{{ $album->artiste->name}}</div>
                             <div class="album_name">{{ $album->name}}</div>
