@@ -19,15 +19,20 @@ class TitreSeeder extends Seeder
      */
     public function run()
     {
+        //définition du dossier de stockage des albums
         if(!File::exists(storage_path('app/public/albums'))){
             File::makeDirectory(storage_path('app/public/albums'));
         }
+        //définition du dossier de stockage des titres des albums
         if(!File::exists(storage_path('app/public/albums/titres'))){
             File::makeDirectory(storage_path('app/public/albums/titres'));
         }
+        //définition du dossier de stockage des illustrations des albums
         if(!File::exists(storage_path('app/public/albums/covers'))){
             File::makeDirectory(storage_path('app/public/albums/covers'));
         }
+        //Récupération depuis le dossier sources des informations relatives à un album (année, durée, nom de
+        // l'artiste, nom de l'album et genre musical
         $albums = Storage::disk('sources')->allFiles('music-20s');
         foreach ($albums as $key => $album) {
             $slashed = explode('/', $album);
@@ -39,7 +44,8 @@ class TitreSeeder extends Seeder
                 'name' => $albu[3],
                 'genre' => $albu[4],
             ];
-
+            //Découpage de la chaine de caractère (exemple: 1977 - 74 - John Williams - Star Wars Un Nouvel
+            // Espoir - BO)
             $ge = Genre::firstOrCreate([
                 'name' => str_replace('-', ' ', $al['genre']),
             ]);
@@ -53,19 +59,19 @@ class TitreSeeder extends Seeder
                 'genre_id' => $ge->id,
                 'name' => $al['name'],
             ]);
+
+            //Création d'un nouveau dossier de stockage
             if(!File::exists(storage_path("app/public/albums/covers/{$alb->id}"))){
-                                File::makeDirectory(storage_path("app/public/albums/covers/{$alb->id}/"));
-                            }
-                            if(storage_path("app/public/albums/covers/{$alb->id}/cover.jpg")){
-                                File::copy("./storage/sources/".$album, storage_path("app/public/albums/covers/{$alb->id}/cover.jpg"));
-                            }
+                File::makeDirectory(storage_path("app/public/albums/covers/{$alb->id}/"));
+            }
+            if(storage_path("app/public/albums/covers/{$alb->id}/cover.jpg")){
+                File::copy("./storage/sources/".$album, storage_path("app/public/albums/covers/{$alb->id}/cover.jpg"));
+            }
             if($slashed[2] == 'cover.jpg'){
-
-
                 $alb->picture = "/albums/covers/{$alb->id}/cover.jpg";
                 $alb->save();
 
-            }else{
+            } else {
                 $titl = explode(' - ', $slashed[2]);
 
                 $title = [

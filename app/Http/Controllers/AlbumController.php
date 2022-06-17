@@ -50,18 +50,24 @@ class AlbumController extends Controller
      */
     public function show(Album $album, Titre $titre)
     {
+        //Requête permettant de récupérer les albums que l'utilisateur a liké
         $liked = Like::where('user_id', Auth::user()->id)
                         ->where('album_id', $album->id)
                         ->first();
 
+        //Requête permettant de récupérer tous les titres correspondants à chaque album
         $titres = Titre::where('album_id', $album->id)->get();
 
+        //Requête permettant de récupérer les titres que l'utilisateur a liké
         $titresId = $titres->pluck('id');
         $likedTitres = Like::where('user_id', Auth::user()->id)
         ->whereIn('titre_id', $titresId)
         ->get();
+
+        //Requête permettant de récupérer l'artiste de chaque album
         $artiste = Artiste::where('id', $album->artiste_id)->get();
 
+        //Envoi des variables vers une vue spécifique
         return view('pages.album', compact('album', 'artiste', 'titres', 'liked', 'likedTitres'));
     }
 

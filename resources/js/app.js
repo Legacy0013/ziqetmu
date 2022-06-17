@@ -20,17 +20,17 @@ function init() {
 
         const audioPlayers = document.querySelectorAll('.audio-player');
 
-        //récupérer une piste de l'album
+        //Variables declaration for current song and track name
         let currentSong = document.querySelector('.container-player .titre_name');
         let trackName = currentSong.innerText;
 
-        //récupérer l'id de l'album pour construire le lien de la piste
+        //get album id to construct the track link
         var albumId = document.querySelector('.container-player #album_id').value;
         setInterval(() => {
             albumId = albumId
         }, 100);
 
-        //create track trackName
+        //create audio player & append it into the DOM
         var audio = document.createElement('audio');
         audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
         audio.setAttribute('preload', 'metadata')
@@ -47,7 +47,10 @@ function init() {
             },
             false
         );
-        document.querySelector('.audio-container').appendChild(audio);
+
+        if(document.querySelector('.audio-container').innerHTML === "") {
+            document.querySelector('.audio-container').appendChild(audio);
+        }
 
         //shuffle random track
         let shuffle = document.querySelector('.shuffle');
@@ -55,6 +58,7 @@ function init() {
             this.classList.toggle('active')
         });
         var tracksArray = Array.prototype.slice.call(tracks);
+
         function shuffledTracks(arr) {
             var i = arr.length, j, temp;
             while(--i > 0){
@@ -91,9 +95,9 @@ function init() {
             //prev track
             let prev = audioPlayer.querySelector('.prev');
 
-            if(trackIndex == 0) {
+            if(trackIndex === 0) {
                 prev.style.opacity = "0.5"
-            } else if (trackIndex == tracks.length -1){
+            } else if (trackIndex === tracks.length -1){
                 next.style.opacity = "0.5"
             } else {
                 prev.style.opacity = "1"
@@ -103,7 +107,7 @@ function init() {
             prev.addEventListener("click", e => {
                 if(shuffle.classList.contains('active')) {
                     if(loop.classList.contains('active')) {
-                        if(trackIndex == tracksArray.length -1) {
+                        if(trackIndex === tracksArray.length -1) {
                             let track = tracksArray[0].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -143,7 +147,7 @@ function init() {
                             trackIndex--;
                         }
                     }else {
-                        if(trackIndex == 0) {
+                        if(trackIndex === 0) {
 
                         }
                         else {
@@ -169,7 +173,7 @@ function init() {
                     }
                 } else {
                     if(loop.classList.contains('active')) {
-                        if(trackIndex == 0) {
+                        if(trackIndex === 0) {
                             let track = tracks[tracks.length - 1].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -209,7 +213,7 @@ function init() {
                             trackIndex--;
                         }
                     } else {
-                        if(trackIndex == 0) {
+                        if(trackIndex === 0) {
 
                         }
                         else {
@@ -242,7 +246,7 @@ function init() {
             next.addEventListener("click", e => {
                 if(shuffle.classList.contains('active')) {
                     if(loop.classList.contains('active')) {
-                        if(trackIndex == tracksArray.length -1) {
+                        if(trackIndex === tracksArray.length -1) {
                             let track = tracksArray[0].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -282,7 +286,7 @@ function init() {
                             trackIndex++;
                         }
                     } else {
-                        if(trackIndex == tracksArray.length -1) {
+                        if(trackIndex === tracksArray.length -1) {
 
                         } else {
                             let track = tracksArray[trackIndex+1].innerText;
@@ -309,7 +313,7 @@ function init() {
                     }
                 } else {
                     if(loop.classList.contains('active')) {
-                        if(trackIndex == tracks.length -1) {
+                        if(trackIndex === tracks.length -1) {
                             let track = tracks[0].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -350,7 +354,7 @@ function init() {
                             trackIndex++;
                         }
                     } else {
-                        if(trackIndex == tracks.length -1) {
+                        if(trackIndex === tracks.length -1) {
 
                            }
                         else {
@@ -382,9 +386,9 @@ function init() {
                 prev.style.opacity = "1"
                 next.style.opacity = "1"
             } else {
-                if(trackIndex == 0) {
+                if(trackIndex === 0) {
                     prev.style.opacity = "0.5"
-                } else if (trackIndex == tracks.length -1){
+                } else if (trackIndex === tracks.length -1){
                     next.style.opacity = "0.5"
                 } else {
                     prev.style.opacity = "1"
@@ -395,7 +399,7 @@ function init() {
             if(document.querySelector('.titres-list')) {
                 let titleList = document.querySelectorAll('.container-player .titre');
                 titleList.forEach(elem => {
-                    if(elem.querySelector('.track').innerText == currentSong.innerText) {
+                    if(elem.querySelector('.track').innerText === currentSong.innerText) {
                         elem.classList.add('active')
                     }else{
                         elem.classList.remove('active')
@@ -403,10 +407,10 @@ function init() {
                 });
             }
 
-            if(this.currentTime == this.duration) {
+            if(this.currentTime === this.duration) {
                 if(shuffle.classList.contains('active')) {
                     if(loop.classList.contains('active')) {
-                        if(trackIndex == tracksArray.length -1) {
+                        if(trackIndex === tracksArray.length -1) {
                             let track = tracksArray[0].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -446,7 +450,7 @@ function init() {
                             trackIndex++;
                         }
                     } else {
-                        if(trackIndex == tracksArray.length -1) {
+                        if(trackIndex === tracksArray.length -1) {
                             let track = tracksArray[-1].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -487,7 +491,7 @@ function init() {
                     }
                 } else {
                     if(loop.classList.contains('active')) {
-                        if(trackIndex == tracks.length -1) {
+                        if(trackIndex === tracks.length -1) {
                             let track = tracks[0].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -527,7 +531,7 @@ function init() {
                             trackIndex++;
                         }
                     } else {
-                        if(trackIndex == tracks.length -1) {
+                        if(trackIndex === tracks.length -1) {
                             let track = tracks[0].innerText;
                             audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
@@ -584,15 +588,12 @@ function init() {
             }, false);
         });
 
-
         //check audio percentage and update time accordingly
         setInterval(() => {
             const progressBars = document.querySelectorAll(".progress");
-            console.log(progressBars);
             progressBars.forEach(progressBar => {
                 progressBar.style.width = audio.currentTime / audio.duration * 95 + "%";
             });
-
             audioPlayers.forEach(audioPlayer => {
                 if(audioPlayer.querySelector(".time .current")) {
                     audioPlayer.querySelector(".time .current").innerText = getTimeCodeFromNum(audio.currentTime);
@@ -617,10 +618,8 @@ function init() {
                     }
                     audio.pause();
                 }
-
             })
         })
-
         //turn 128 seconds into 2:08
         function getTimeCodeFromNum(num) {
             let seconds = parseInt(num);
@@ -717,10 +716,8 @@ function init() {
                 loop: true
               });
             slideTextContainer2.forEach(text => {
-
             })
         }
-
 
         //like sur un album
         if(document.querySelector('#like')){
@@ -744,7 +741,7 @@ function init() {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if(data.liked == true){
+                        if(data.liked === true){
                             likeAlbums.forEach(likeAlbum => {
                                 // console.log(likeAlbum.parentElement);
                                 likeAlbum.parentElement.classList.add('liked');
@@ -760,7 +757,6 @@ function init() {
                     });
                 })
             });
-
         }
 
         //like sur un artiste
@@ -784,7 +780,7 @@ function init() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if(data.likedArtiste == true){
+                    if(data.likedArtiste === true){
                         e.target.lastElementChild.classList.add('liked');
 
                         document.querySelector('.likeArtiste').innerHTML = nbrLike + 1
@@ -816,7 +812,7 @@ function init() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if(data.liked == true){
+                    if(data.liked === true){
                         document.querySelector('.wrapPlaylist').classList.add('liked');
                         document.querySelector('.wrap').classList.add('liked');
                         document.querySelector('#likeAlbum').value = "Retirer"
@@ -846,7 +842,7 @@ function init() {
                     })
                     .then(response => response.json())
                     .then(data => {
-                        if(data.likedTitre == true){
+                        if(data.likedTitre === true){
                             e.submitter.parentElement.classList.add('liked');
                             e.target.lastElementChild.classList.add('liked');
                         } else {
@@ -880,12 +876,12 @@ function init() {
 
             // document.querySelector('#listenAndAddRecent').addEventListener('click', e => {
             //     let albumName = document.querySelector('.container-album .album_name')
-            //     let aritste_name = document.querySelector('.container-album .artiste_name')
+            //     let artiste_name = document.querySelector('.container-album .artiste_name')
             //     let nbrTracks = document.querySelector('.container-album .nbrTracks')
             //     let duration = document.querySelector('.container-album .duration')
             //     let newTracks = document.querySelectorAll('.container-album .bottom .titre')
 
-            //     let newListTracks = e.currentTarget.qquerySelectorAll('.container-album .bottom .titre .titre_name')
+            //     let newListTracks = e.currentTarget.querySelectorAll('.container-album .bottom .titre .titre_name')
 
             //     tracks = newListTracks;
             //     tracksArray = Array.prototype.slice.call(tracks);
@@ -1067,7 +1063,7 @@ function init() {
                             })
                             .then(response => response.json())
                             .then(data => {
-                                if(data.likedTitre == true){
+                                if(data.likedTitre === true){
                                     e.submitter.parentElement.classList.add('liked');
                                 } else {
                                     e.submitter.parentElement.classList.remove('liked');
@@ -1079,7 +1075,6 @@ function init() {
                 audio.play()
             })
         });
-        // let listenBtn = document.querySelector('')
     }
 }
 init();
