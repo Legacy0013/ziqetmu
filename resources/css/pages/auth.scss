@@ -5,7 +5,11 @@ body.auth {
         align-items: center;
         flex-direction: column;
         margin: 1em 0 2em;
-        padding: 0;
+        padding: 0 2em;
+        .back {
+            display: flex;
+            align-self: flex-start;
+        }
     }
     .btn {
         color: #fff;

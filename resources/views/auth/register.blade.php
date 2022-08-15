@@ -14,6 +14,9 @@
 </head>
 <body class="auth register">
     <header>
+        <a href="{{ url()->previous() }}" class="back">
+            <img src="../img/prev-page.svg" alt="page précédente">
+        </a>
         <h1>créer un compte</h1>
     </header>
 

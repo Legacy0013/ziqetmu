@@ -1,5 +1,5 @@
 @if ($lastRecent)
-    <div class="audio-player">
+    <div class="audio-player-partial">
         <div class="top">
             <div class="left">
                 <img src="../storage{{ $lastAlbum->picture }}" alt="">

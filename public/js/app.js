@@ -5689,11 +5689,64 @@ var swup = new swup__WEBPACK_IMPORTED_MODULE_0__["default"]({
   }), new _swup_debug_plugin__WEBPACK_IMPORTED_MODULE_2__["default"]()]
 });
 
+__webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+
+__webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js"); //turn 128 seconds into 2:08
+
+
+function getTimeCodeFromNum(num) {
+  var seconds = parseInt(num);
+  var minutes = parseInt(seconds / 60);
+  seconds -= minutes * 60;
+  var hours = parseInt(minutes / 60);
+  minutes -= hours * 60;
+  if (hours === 0) return "".concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
+  return "".concat(String(hours).padStart(2, 0), ":").concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
+}
+
+var tracks = document.querySelectorAll('.container-player .track');
+var audioPlayers = document.querySelectorAll('.audio-player'); //Variables declaration for current song and track name
+
+var currentSong = document.querySelector('.container-player .titre_name');
+var trackName = currentSong.innerText; //get album id to construct the track link
+
+var albumId = document.querySelector('.container-player #album_id').value;
+setInterval(function () {
+  albumId = albumId;
+}, 100); //create audio player & append it into the DOM
+
+var audio = document.createElement('audio');
+audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
+audio.setAttribute('preload', 'metadata');
+audio.pause();
+audio.addEventListener("loadeddata", function () {
+  audioPlayers.forEach(function (audioPlayer) {
+    if (audioPlayer.querySelector(".time .length")) {
+      audioPlayer.querySelector(".time .length").innerText = getTimeCodeFromNum(audio.duration);
+      audio.volume = .75;
+    }
+  });
+}, false);
+
+if (document.querySelector('.audio-container').innerHTML === "") {
+  document.querySelector('.audio-container').appendChild(audio);
+}
+
+console.log('newaudio'); //in queue tracks
+
+var showQueue = document.querySelector('.queue');
+showQueue.addEventListener('click', function (e) {
+  e.preventDefault();
+  var titreList = document.querySelector('.container-player .titres-list');
+  e.target.classList.toggle('margin');
+  titreList.classList.toggle('active');
+  document.querySelector('.container-player .audio-player .time').classList.toggle('active');
+  document.querySelector('.container-player .audio-player .timeline').classList.toggle('active');
+  document.querySelector('.container-player .audio-player .titre_name_container').classList.toggle('active');
+  document.querySelector('.container-player .audio-player .wrap-name').classList.toggle('active');
+});
+
 function init() {
-  __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
-
-  __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
-
   if (document.querySelector('.audio-player')) {
     var shuffledTracks = function shuffledTracks(arr) {
       var i = arr.length,
@@ -5708,46 +5761,32 @@ function init() {
       }
     };
 
-    //turn 128 seconds into 2:08
-    var getTimeCodeFromNum = function getTimeCodeFromNum(num) {
-      var seconds = parseInt(num);
-      var minutes = parseInt(seconds / 60);
-      seconds -= minutes * 60;
-      var hours = parseInt(minutes / 60);
-      minutes -= hours * 60;
-      if (hours === 0) return "".concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
-      return "".concat(String(hours).padStart(2, 0), ":").concat(minutes, ":").concat(String(seconds % 60).padStart(2, 0));
+    //toggle between playing and pausing on button click
+    var playOrPause = function playOrPause() {
+      var playBtns = document.querySelectorAll(".toggle-play");
+      playBtns.forEach(function (playBtn) {
+        playBtn.addEventListener('click', function () {
+          if (audio.paused) {
+            for (var index = 0; index < playBtns.length; index++) {
+              playBtns[index].classList.remove("play");
+              playBtns[index].classList.add("pause");
+            }
+
+            audio.play();
+          } else {
+            for (var _index = 0; _index < playBtns.length; _index++) {
+              playBtns[_index].classList.remove("pause");
+
+              playBtns[_index].classList.add("play");
+            }
+
+            audio.pause();
+          }
+        });
+      });
     };
 
-    var tracks = document.querySelectorAll('.container-player .track');
-    var audioPlayers = document.querySelectorAll('.audio-player'); //Variables declaration for current song and track name
-
-    var currentSong = document.querySelector('.container-player .titre_name');
-    var trackName = currentSong.innerText; //get album id to construct the track link
-
-    var albumId = document.querySelector('.container-player #album_id').value;
-    setInterval(function () {
-      albumId = albumId;
-    }, 100); //create audio player & append it into the DOM
-
-    var audio = document.createElement('audio');
-    audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
-    audio.setAttribute('preload', 'metadata');
-    audio.pause();
-    audio.addEventListener("loadeddata", function () {
-      audioPlayers.forEach(function (audioPlayer) {
-        if (audioPlayer.querySelector(".time .length")) {
-          audioPlayer.querySelector(".time .length").innerText = getTimeCodeFromNum(audio.duration);
-          audio.volume = .75;
-        }
-      });
-    }, false);
-
-    if (document.querySelector('.audio-container').innerHTML === "") {
-      document.querySelector('.audio-container').appendChild(audio);
-    } //shuffle random track
-
-
+    //shuffle random track
     var shuffle = document.querySelector('.shuffle');
     shuffle.addEventListener('click', function (e) {
       this.classList.toggle('active');
@@ -5758,18 +5797,6 @@ function init() {
     var loop = document.querySelector('.loop');
     loop.addEventListener('click', function (e) {
       this.classList.toggle('active');
-    }); //in queue tracks
-
-    var showQueue = document.querySelector('.queue');
-    showQueue.addEventListener('click', function (e) {
-      e.preventDefault();
-      var titreList = document.querySelector('.container-player .titres-list');
-      e.target.classList.toggle('margin');
-      titreList.classList.toggle('active');
-      document.querySelector('.container-player .audio-player .time').classList.toggle('active');
-      document.querySelector('.container-player .audio-player .timeline').classList.toggle('active');
-      document.querySelector('.container-player .audio-player .titre_name_container').classList.toggle('active');
-      document.querySelector('.container-player .audio-player .wrap-name').classList.toggle('active');
     }); //click on button to change track
 
     var trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1;
@@ -6108,7 +6135,7 @@ function init() {
         }
 
         if (document.querySelector('.titres-list')) {
-          var _titleList = document.querySelectorAll('.container-player .titre');
+          var _titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre');
 
           _titleList.forEach(function (elem) {
             if (elem.querySelector('.track').innerText === currentSong.innerText) {
@@ -6336,29 +6363,8 @@ function init() {
           audioPlayer.querySelector(".time .current").innerText = getTimeCodeFromNum(audio.currentTime);
         }
       });
-    }, 100); //toggle between playing and pausing on button click
-
-    var playBtns = document.querySelectorAll(".toggle-play");
-    playBtns.forEach(function (playBtn) {
-      playBtn.addEventListener('click', function () {
-        if (audio.paused) {
-          for (var index = 0; index < playBtns.length; index++) {
-            playBtns[index].classList.remove("play");
-            playBtns[index].classList.add("pause");
-          }
-
-          audio.play();
-        } else {
-          for (var _index = 0; _index < playBtns.length; _index++) {
-            playBtns[_index].classList.remove("pause");
-
-            playBtns[_index].classList.add("play");
-          }
-
-          audio.pause();
-        }
-      });
-    });
+    }, 100);
+    playOrPause();
 
     if (document.querySelector('.current-song')) {
       //show current track
@@ -6590,6 +6596,11 @@ function init() {
           return response.json();
         }).then(function (data) {
           audio.play();
+          var playBtns = document.querySelectorAll(".toggle-play");
+          playBtns.forEach(function (btn) {
+            btn.classList.remove('play');
+            btn.classList.add('pause');
+          });
         });
       }); // document.querySelector('#listenAndAddRecent').addEventListener('click', e => {
       //     let albumName = document.querySelector('.container-album .album_name')
@@ -6597,11 +6608,14 @@ function init() {
       //     let nbrTracks = document.querySelector('.container-album .nbrTracks')
       //     let duration = document.querySelector('.container-album .duration')
       //     let newTracks = document.querySelectorAll('.container-album .bottom .titre')
+      //
       //     let newListTracks = e.currentTarget.querySelectorAll('.container-album .bottom .titre .titre_name')
+      //
       //     tracks = newListTracks;
       //     tracksArray = Array.prototype.slice.call(tracks);
       //     shuffledTracks(tracksArray)
-      //     let clickList = e.currentTarget.querySelector('.container-album .bottom')
+      //
+      //     let clickList = document.querySelector('.container-album .bottom')
       //     let container = document.querySelector('.container-player .albumTracks')
       //     container.innerHTML = clickList.innerHTML
       // })
@@ -6652,7 +6666,7 @@ function init() {
         nbrTracks.innerHTML = clickListTracks.length + ' titres'; // change img src
 
         var newImg = e.currentTarget.querySelector('img');
-        var oldImg1 = document.querySelector('.audio-player .top .left img');
+        var oldImg1 = document.querySelector('.audio-player-partial .top .left img');
         var oldImg2 = document.querySelector('.container-player .cover');
         var oldImg3 = document.querySelector('.container-player .album-cover img');
         oldImg1.src = newImg.src;

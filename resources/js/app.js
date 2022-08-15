@@ -1,7 +1,7 @@
 import Swup from 'swup';
 import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupDebugPlugin from '@swup/debug-plugin';
-import { toArray } from 'lodash';
+import {once, toArray} from 'lodash';
 
 const swup = new Swup({
     plugins: [
@@ -10,49 +10,75 @@ const swup = new Swup({
     ]
 });
 
+require('./bootstrap');
+require('alpinejs');
+
+//turn 128 seconds into 2:08
+function getTimeCodeFromNum(num) {
+    let seconds = parseInt(num);
+    let minutes = parseInt(seconds / 60);
+    seconds -= minutes * 60;
+    const hours = parseInt(minutes / 60);
+    minutes -= hours * 60;
+
+    if (hours === 0) return `${minutes}:${String(seconds % 60).padStart(2, 0)}`;
+    return `${String(hours).padStart(2, 0)}:${minutes}:${String(
+        seconds % 60
+    ).padStart(2, 0)}`;
+}
+
+var tracks = document.querySelectorAll('.container-player .track');
+
+const audioPlayers = document.querySelectorAll('.audio-player');
+
+//Variables declaration for current song and track name
+let currentSong = document.querySelector('.container-player .titre_name');
+let trackName = currentSong.innerText;
+
+//get album id to construct the track link
+var albumId = document.querySelector('.container-player #album_id').value;
+setInterval(() => {
+    albumId = albumId
+}, 100);
+
+//create audio player & append it into the DOM
+var audio = document.createElement('audio');
+audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
+audio.setAttribute('preload', 'metadata')
+audio.pause();
+audio.addEventListener(
+    "loadeddata",
+    () => {
+        audioPlayers.forEach(audioPlayer => {
+            if(audioPlayer.querySelector(".time .length")){
+                audioPlayer.querySelector(".time .length").innerText = getTimeCodeFromNum(audio.duration);
+                audio.volume = .75;
+            }
+        });
+    },
+    false
+);
+if(document.querySelector('.audio-container').innerHTML === "") {
+    document.querySelector('.audio-container').appendChild(audio);
+}
+console.log('newaudio')
+
+//in queue tracks
+let showQueue = document.querySelector('.queue');
+showQueue.addEventListener('click', function(e) {
+    e.preventDefault()
+    let titreList = document.querySelector('.container-player .titres-list');
+    e.target.classList.toggle('margin')
+    titreList.classList.toggle('active')
+    document.querySelector('.container-player .audio-player .time').classList.toggle('active')
+    document.querySelector('.container-player .audio-player .timeline').classList.toggle('active')
+    document.querySelector('.container-player .audio-player .titre_name_container').classList.toggle('active')
+    document.querySelector('.container-player .audio-player .wrap-name').classList.toggle('active')
+});
+
 function init() {
-
-    require('./bootstrap');
-    require('alpinejs');
-
     if(document.querySelector('.audio-player')) {
-        var tracks = document.querySelectorAll('.container-player .track');
-
-        const audioPlayers = document.querySelectorAll('.audio-player');
-
-        //Variables declaration for current song and track name
-        let currentSong = document.querySelector('.container-player .titre_name');
-        let trackName = currentSong.innerText;
-
-        //get album id to construct the track link
-        var albumId = document.querySelector('.container-player #album_id').value;
-        setInterval(() => {
-            albumId = albumId
-        }, 100);
-
-        //create audio player & append it into the DOM
-        var audio = document.createElement('audio');
-        audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
-        audio.setAttribute('preload', 'metadata')
-        audio.pause();
-        audio.addEventListener(
-            "loadeddata",
-            () => {
-                audioPlayers.forEach(audioPlayer => {
-                    if(audioPlayer.querySelector(".time .length")){
-                        audioPlayer.querySelector(".time .length").innerText = getTimeCodeFromNum(audio.duration);
-                        audio.volume = .75;
-                    }
-                });
-            },
-            false
-        );
-
-        if(document.querySelector('.audio-container').innerHTML === "") {
-            document.querySelector('.audio-container').appendChild(audio);
-        }
-
-        //shuffle random track
+       //shuffle random track
         let shuffle = document.querySelector('.shuffle');
         shuffle.addEventListener('click', function(e) {
             this.classList.toggle('active')
@@ -74,19 +100,6 @@ function init() {
         let loop = document.querySelector('.loop');
         loop.addEventListener('click', function(e) {
             this.classList.toggle('active')
-        });
-
-        //in queue tracks
-        let showQueue = document.querySelector('.queue');
-        showQueue.addEventListener('click', function(e) {
-            e.preventDefault()
-            let titreList = document.querySelector('.container-player .titres-list');
-            e.target.classList.toggle('margin')
-            titreList.classList.toggle('active')
-            document.querySelector('.container-player .audio-player .time').classList.toggle('active')
-            document.querySelector('.container-player .audio-player .timeline').classList.toggle('active')
-            document.querySelector('.container-player .audio-player .titre_name_container').classList.toggle('active')
-            document.querySelector('.container-player .audio-player .wrap-name').classList.toggle('active')
         });
 
         //click on button to change track
@@ -397,7 +410,7 @@ function init() {
             }
 
             if(document.querySelector('.titres-list')) {
-                let titleList = document.querySelectorAll('.container-player .titre');
+                let titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre');
                 titleList.forEach(elem => {
                     if(elem.querySelector('.track').innerText === currentSong.innerText) {
                         elem.classList.add('active')
@@ -576,7 +589,6 @@ function init() {
 
         })
 
-
         //click on timeline to skip around
         const timelines = document.querySelectorAll(".timeline");
         timelines.forEach(timeline => {
@@ -602,37 +614,27 @@ function init() {
         }, 100);
 
         //toggle between playing and pausing on button click
-        let playBtns = document.querySelectorAll(".toggle-play");
-        playBtns.forEach(playBtn => {
-            playBtn.addEventListener('click', function () {
-                if (audio.paused) {
-                    for (let index = 0; index < playBtns.length; index++) {
-                        playBtns[index].classList.remove("play");
-                        playBtns[index].classList.add("pause");
+        function playOrPause() {
+            let playBtns = document.querySelectorAll(".toggle-play");
+            playBtns.forEach(playBtn => {
+                playBtn.addEventListener('click', function () {
+                    if (audio.paused) {
+                        for (let index = 0; index < playBtns.length; index++) {
+                            playBtns[index].classList.remove("play");
+                            playBtns[index].classList.add("pause");
+                        }
+                        audio.play();
+                    } else {
+                        for (let index = 0; index < playBtns.length; index++) {
+                            playBtns[index].classList.remove("pause");
+                            playBtns[index].classList.add("play");
+                        }
+                        audio.pause();
                     }
-                    audio.play();
-                } else {
-                    for (let index = 0; index < playBtns.length; index++) {
-                        playBtns[index].classList.remove("pause");
-                        playBtns[index].classList.add("play");
-                    }
-                    audio.pause();
-                }
+                })
             })
-        })
-        //turn 128 seconds into 2:08
-        function getTimeCodeFromNum(num) {
-            let seconds = parseInt(num);
-            let minutes = parseInt(seconds / 60);
-            seconds -= minutes * 60;
-            const hours = parseInt(minutes / 60);
-            minutes -= hours * 60;
-
-            if (hours === 0) return `${minutes}:${String(seconds % 60).padStart(2, 0)}`;
-            return `${String(hours).padStart(2, 0)}:${minutes}:${String(
-                seconds % 60
-            ).padStart(2, 0)}`;
         }
+        playOrPause();
 
         if(document.querySelector('.current-song')){
             //show current track
@@ -796,6 +798,7 @@ function init() {
                 });
             })
         }
+
         //like sur un album dans la playlist
         if(document.querySelector('#likePlaylist')){
             document.querySelector('#likePlaylist').addEventListener('submit', e => {
@@ -824,6 +827,7 @@ function init() {
                 });
             })
         }
+
         // like sur un titre
         if(document.querySelector('.likeTitre')){
             let titres = document.querySelectorAll('.likeTitre')
@@ -853,6 +857,7 @@ function init() {
                 })
             });
         }
+
         //listen and add to recent list
         if(document.querySelector('#listenAndAddRecent')){
             document.querySelector('#listenAndAddRecent').addEventListener('submit', e => {
@@ -871,6 +876,11 @@ function init() {
                 .then(response => response.json())
                 .then(data => {
                     audio.play()
+                    let playBtns = document.querySelectorAll(".toggle-play");
+                    playBtns.forEach(btn => {
+                        btn.classList.remove('play')
+                        btn.classList.add('pause')
+                    })
                 });
             })
 
@@ -880,14 +890,14 @@ function init() {
             //     let nbrTracks = document.querySelector('.container-album .nbrTracks')
             //     let duration = document.querySelector('.container-album .duration')
             //     let newTracks = document.querySelectorAll('.container-album .bottom .titre')
-
+            //
             //     let newListTracks = e.currentTarget.querySelectorAll('.container-album .bottom .titre .titre_name')
-
+            //
             //     tracks = newListTracks;
             //     tracksArray = Array.prototype.slice.call(tracks);
             //     shuffledTracks(tracksArray)
-
-            //     let clickList = e.currentTarget.querySelector('.container-album .bottom')
+            //
+            //     let clickList = document.querySelector('.container-album .bottom')
             //     let container = document.querySelector('.container-player .albumTracks')
             //     container.innerHTML = clickList.innerHTML
             // })
@@ -947,7 +957,7 @@ function init() {
 
                 // change img src
                 let newImg = e.currentTarget.querySelector('img')
-                let oldImg1 = document.querySelector('.audio-player .top .left img')
+                let oldImg1 = document.querySelector('.audio-player-partial .top .left img')
                 let oldImg2 = document.querySelector('.container-player .cover')
                 let oldImg3 = document.querySelector('.container-player .album-cover img')
                 oldImg1.src = newImg.src
