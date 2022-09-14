@@ -109,10 +109,12 @@
                 @for($i=0; $i<count($titres); $i++)
                     @if($lastAlbum->id == $titres[$i]->album_id)
                         <div class="titre">
-                            <span class="number">
+                            <div class="track-infos">
+                                <span class="number">
                                 {{ str_pad($titres[$i]['order'], 2, '0', STR_PAD_LEFT) }}
-                            </span>
-                            <span class="track">{{$titres[$i]['name']}}</span>
+                                 </span>
+                                <span class="track">{{$titres[$i]['name']}}</span>
+                            </div>
                             <span class="like">
                                 <form action="{{ route('likePlayer', $lastAlbum->id) }}" method="post" class="likeTitre">
                                     @csrf

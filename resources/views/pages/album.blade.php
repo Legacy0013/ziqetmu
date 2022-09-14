@@ -47,7 +47,7 @@
                         <span class="number">
                             {{ str_pad($titre->order, 2, '0', STR_PAD_LEFT) }}
                         </span>
-                        <span class="titre_name">
+                        <span class="track">
                             {{ $titre->name }}
                         </span>
                         <span class="like">
