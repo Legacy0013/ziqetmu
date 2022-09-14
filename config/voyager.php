@@ -223,9 +223,10 @@ return [
 
     'media' => [
         // The allowed mimetypes to be uploaded through the media-manager.
-        // 'allowed_mimetypes' => '*', //All types can be uploaded
+//         'allowed_mimetypes' => '*', //All types can be uploaded
         'allowed_mimetypes' => [
           'image/jpeg',
+          'image/jpg',
           'image/png',
           'image/gif',
           'image/bmp',
@@ -245,7 +246,7 @@ return [
             'x'              => 0,
             'y'              => 0,
             'size'           => 15,
-       ],
+       ],*/
        'thumbnails'          => [
            [
                 'type'  => 'fit',
@@ -253,6 +254,6 @@ return [
                 'width' => 500,
                 'height'=> 500
            ],
-       ]*/
+       ]
     ],
 ];
