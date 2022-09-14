@@ -5780,7 +5780,8 @@ if (likeAlbums) {
       e.target.classList.toggle('liked');
     });
   });
-}
+} //Ajouter d'un fond différent sur la piste en cours de lecture
+
 
 function makeActiveTrack() {
   if (document.querySelector('.titres-list')) {
@@ -5799,6 +5800,7 @@ makeActiveTrack();
 
 function init() {
   if (document.querySelector('.audio-player')) {
+    //Création d'une fonction qui mélange aléatoirement les piste
     var shuffledTracks = function shuffledTracks(arr) {
       var i = arr.length,
           j,
@@ -5810,7 +5812,8 @@ function init() {
         arr[j] = arr[i];
         arr[i] = temp;
       }
-    };
+    }; //Appel de la fonction
+
 
     //play tracks onclick
     var playOnCLick = function playOnCLick() {
@@ -5856,10 +5859,14 @@ function init() {
     };
 
     //shuffle random track
-    var shuffle = document.querySelector('.shuffle');
+    //Déclaration et définition du bouton shuffle
+    var shuffle = document.querySelector('.shuffle'); //Ajout d'un eventListener au click
+
     shuffle.addEventListener('click', function (e) {
+      //Toggle de la classe active
       this.classList.toggle('active');
-    });
+    }); //Transformation de la node list tracks en array tracksArray
+
     var tracksArray = Array.prototype.slice.call(tracks);
     shuffledTracks(tracksArray); //autoplay next track & loop
 
@@ -5867,34 +5874,44 @@ function init() {
     loop.addEventListener('click', function (e) {
       this.classList.toggle('active');
     }); //click on button to change track
+    //Déclaration et définition sur 1 de la variable trackindex qui permet de déterminer
+    //la position de la piste en cours de lecture dans la playlist
 
     var trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1;
     audioPlayers.forEach(function (audioPlayer) {
+      //Déclaration des boutons précédent et suivant
       var prev = audioPlayer.querySelector('.prev');
-      var next = audioPlayer.querySelector('.next');
+      var next = audioPlayer.querySelector('.next'); //Changement de l'opacité des boutons
+      // si l'on se trouve sur la première ou la dernière piste
 
-      if (trackIndex === 0) {
-        prev.style.opacity = "0.5";
-      } else if (trackIndex === tracks.length - 1) {
-        next.style.opacity = "0.5";
-      } else {
-        prev.style.opacity = "1";
-        next.style.opacity = "1";
-      } //prev track
+      function changePrevNExtOpacity() {
+        if (trackIndex === 0) {
+          prev.style.opacity = "0.5";
+        } else if (trackIndex === tracks.length - 1) {
+          next.style.opacity = "0.5";
+        } else {
+          prev.style.opacity = "1";
+          next.style.opacity = "1";
+        }
+      }
 
+      changePrevNExtOpacity(); //prev track
 
       prev.addEventListener("click", function (e) {
-        makeActiveTrack();
+        //Appel de la fonction permettant le changement du fond de la piste en cours de lecture
+        makeActiveTrack(); //Si le bouton lecture aléatoire est actif
 
         if (shuffle.classList.contains('active')) {
+          //Si le bouton lecture en boucle est actif
           if (loop.classList.contains('active')) {
+            //Si c'est la première piste
             if (trackIndex === tracksArray.length - 1) {
               var track = tracksArray[0].innerText;
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
               var currentSongs = document.querySelectorAll('.container-player .titre_name');
               currentSongs.forEach(function (currentSong) {
                 currentSong.innerText = track;
-              });
+              }); //Si le document contient la classe .current-track
 
               if (document.querySelector('.current-track')) {
                 document.querySelector('.current-song').innerText = track;
@@ -5908,7 +5925,7 @@ function init() {
               });
               ;
               audio.play();
-              trackIndex = 0;
+              trackIndex = 0; //Si ce n'est pas la première piste
             } else {
               var _track = tracksArray[trackIndex + 1].innerText;
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track + '.mp3');
@@ -5917,7 +5934,8 @@ function init() {
 
               _currentSongs.forEach(function (currentSong) {
                 currentSong.innerText = _track;
-              });
+              }); //Si le document contient la classe .current-track
+
 
               if (document.querySelector('.current-track')) {
                 document.querySelector('.current-song').innerText = _track;
@@ -5934,9 +5952,11 @@ function init() {
 
               audio.play();
               trackIndex--;
-            }
+            } //Si le bouton lecture en boucle est inactif
+
           } else {
-            if (trackIndex === 0) {} else {
+            if (trackIndex === 0) {} //Si ce n'est pas la première piste
+            else {
               var _track2 = tracksArray[trackIndex - 1].innerText;
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track2 + '.mp3');
 
@@ -5944,7 +5964,8 @@ function init() {
 
               _currentSongs2.forEach(function (currentSong) {
                 currentSong.innerText = _track2;
-              });
+              }); //Si le document contient la classe .current-track
+
 
               if (document.querySelector('.current-track')) {
                 document.querySelector('.current-song').innerText = _track2;
@@ -5962,9 +5983,12 @@ function init() {
               audio.play();
               trackIndex--;
             }
-          }
+          } //Si le bouton lecture aléatoire est inactif
+
         } else {
+          //Si le bouton lecture en boucle est actif
           if (loop.classList.contains('active')) {
+            //Si c'est la première piste
             if (trackIndex === 0) {
               var _track3 = tracks[tracks.length - 1].innerText;
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track3 + '.mp3');
@@ -5986,7 +6010,8 @@ function init() {
 
               audio.play();
               trackIndex = tracks.length - 1;
-            } else {
+            } //Si ce n'est pas la première piste
+            else {
               var _track4 = tracks[trackIndex - 1].innerText;
               ;
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track4 + '.mp3');
@@ -5995,7 +6020,8 @@ function init() {
 
               _currentSongs4.forEach(function (currentSong) {
                 currentSong.innerText = _track4;
-              });
+              }); //Si le document contient la classe .current-track
+
 
               if (document.querySelector('.current-track')) {
                 document.querySelector('.current-song').innerText = _track4;
@@ -6013,9 +6039,11 @@ function init() {
               _track4;
               audio.play();
               trackIndex--;
-            }
+            } //Si le bouton lecture en boucle est inactif
+
           } else {
-            if (trackIndex === 0) {} else {
+            if (trackIndex === 0) {} //Si ce n'est pas la première piste
+            else {
               var _track5 = tracks[trackIndex - 1].innerText;
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track5 + '.mp3');
 
@@ -6023,7 +6051,8 @@ function init() {
 
               _currentSongs5.forEach(function (currentSong) {
                 currentSong.innerText = _track5;
-              });
+              }); //Si le document contient la classe .current-track
+
 
               if (document.querySelector('.current-track')) {
                 document.querySelector('.current-song').innerText = _track5;
@@ -6207,7 +6236,8 @@ function init() {
             }
           }
         }
-      }, false);
+      }, false); //Ecouteur d'évènement
+
       audio.addEventListener("timeupdate", function () {
         makeActiveTrack();
 
@@ -6215,14 +6245,7 @@ function init() {
           prev.style.opacity = "1";
           next.style.opacity = "1";
         } else {
-          if (trackIndex === 0) {
-            prev.style.opacity = "0.5";
-          } else if (trackIndex === tracks.length - 1) {
-            next.style.opacity = "0.5";
-          } else {
-            prev.style.opacity = "1";
-            next.style.opacity = "1";
-          }
+          changePrevNExtOpacity();
         }
 
         if (this.currentTime === this.duration) {
@@ -6447,12 +6470,19 @@ function init() {
     }); //check audio percentage and update time accordingly
 
     setInterval(function () {
-      var progressBars = document.querySelectorAll(".progress");
+      //Déclaration et définition des barres de progression
+      var progressBars = document.querySelectorAll(".progress"); //Pour toutes les barres de progression
+
       progressBars.forEach(function (progressBar) {
+        //On définit la largeur en fonction de la durée écoulée de la piste
         progressBar.style.width = audio.currentTime / audio.duration * 95 + "%";
-      });
+      }); //Affichage du temps total et du temps restant
+      //Pour tous les lecteurs audio
+
       audioPlayers.forEach(function (audioPlayer) {
+        //Si la classe est présente sur la page
         if (audioPlayer.querySelector(".time .current")) {
+          //On écrit la valeur temporelle
           audioPlayer.querySelector(".time .current").innerText = getTimeCodeFromNum(audio.currentTime);
         }
       });
