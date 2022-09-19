@@ -5816,21 +5816,30 @@ function init() {
 
 
     //play tracks onclick
+    //Création de la fonction
     var playOnCLick = function playOnCLick() {
-      var titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre .track-infos');
+      //Déclaration et définition de la variable qui contiient toutes les pistes
+      var titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre .track-infos'); //On parcours toutes les pistes
+
       titleList.forEach(function (title) {
+        //Pour chaque piste on ajoute un écouteur d'événement au clique
         title.addEventListener('click', function (e) {
-          e.preventDefault();
+          e.preventDefault(); //Suppression de la classe active sur toutes les pistes
 
           for (var i = 0; i < titleList.length - 1; i++) {
             titleList[i].classList.remove('active');
-          }
+          } //Ajout de la classe active sur l'élément cliqué
 
-          e.target.classList.add('active');
-          var newTrack = e.target.querySelector('.track'); // newTracks.forEach(newTrack => {
 
-          var track = newTrack.innerText;
-          audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
+          e.target.classList.add('active'); //Récupération de la piste cliquée
+
+          var newTrack = e.target.querySelector('.track'); //Remplacement l'ancienne piste par ma nouvelle
+
+          var track = newTrack.innerText; //Remplacement du titre de la piste dans la balise audio
+
+          audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3'); //Remplacement du titre de la piste en cours de lecture
+          //partout où elle est affichée sur le site
+
           var currentSongs = document.querySelectorAll('.container-player .titre_name');
           currentSongs.forEach(function (currentSong) {
             currentSong.innerText = track;
@@ -5840,13 +5849,14 @@ function init() {
             document.querySelector('.current-song').innerText = track;
           }
 
-          document.querySelector('.partial-player .titre_name').innerText = track; // });
+          document.querySelector('.partial-player .titre_name').innerText = track; //Modification de tous les boutons play/pause
 
           var playBtns = document.querySelectorAll(".toggle-play");
           playBtns.forEach(function (playBtn) {
             playBtn.classList.remove("play");
             playBtn.classList.add("pause");
-          });
+          }); //On joue la piste audio
+
           audio.play();
 
           if (e.target.querySelector('.number').innerText > 9) {
@@ -5854,8 +5864,42 @@ function init() {
           } else {
             trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
           }
+
+          console.log(trackIndex);
         });
       });
+    };
+
+    // like sur un titre
+    var likeTitrePlaylist = function likeTitrePlaylist() {
+      if (document.querySelector('.likeTitre')) {
+        var titres = document.querySelectorAll('.likeTitre');
+        titres.forEach(function (titre) {
+          titre.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            var fd = new FormData();
+            fd.append('titre_id', e.target.titre_id.value);
+            fetch(e.target.action, {
+              method: e.target.method,
+              headers: {
+                'X-CSRF-TOKEN': csrf
+              },
+              body: fd
+            }).then(function (response) {
+              return response.json();
+            }).then(function (data) {
+              if (data.likedTitre === true) {
+                e.submitter.parentElement.classList.add('liked');
+                e.target.lastElementChild.classList.add('liked');
+              } else {
+                e.submitter.parentElement.classList.remove('liked');
+                e.target.lastElementChild.classList.remove('liked');
+              }
+            });
+          });
+        });
+      }
     };
 
     //shuffle random track
@@ -6622,38 +6666,9 @@ function init() {
           }
         });
       });
-    } // like sur un titre
+    }
 
-
-    if (document.querySelector('.likeTitre')) {
-      var titres = document.querySelectorAll('.likeTitre');
-      titres.forEach(function (titre) {
-        titre.addEventListener('submit', function (e) {
-          e.preventDefault();
-          var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-          var fd = new FormData();
-          fd.append('titre_id', e.target.titre_id.value);
-          fetch(e.target.action, {
-            method: e.target.method,
-            headers: {
-              'X-CSRF-TOKEN': csrf
-            },
-            body: fd
-          }).then(function (response) {
-            return response.json();
-          }).then(function (data) {
-            if (data.likedTitre === true) {
-              e.submitter.parentElement.classList.add('liked');
-              e.target.lastElementChild.classList.add('liked');
-            } else {
-              e.submitter.parentElement.classList.remove('liked');
-              e.target.lastElementChild.classList.remove('liked');
-            }
-          });
-        });
-      });
-    } //listen and add to recent list
-
+    likeTitrePlaylist(); //listen and add to recent list
 
     if (document.querySelector('#listenAndAddRecent')) {
       document.querySelector('#listenAndAddRecent').addEventListener('submit', function (e) {
@@ -6736,8 +6751,8 @@ function init() {
           albumId = document.querySelectorAll('.container-album input[name=album_id]')[0].value;
           var newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track');
           tracks = Array.prototype.slice.call(newListTracks);
-          console.log(tracks);
           playOnCLick();
+          likeTitrePlaylist();
           audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
           audio.play();
           var playBtns = document.querySelectorAll(".toggle-play");
@@ -6746,23 +6761,7 @@ function init() {
             playBtn.classList.add("pause");
           });
         });
-      }); // document.querySelector('#listenAndAddRecent').addEventListener('click', e => {
-      //     let albumName = document.querySelector('.container-album .album_name')
-      //     let artiste_name = document.querySelector('.container-album .artiste_name')
-      //     let nbrTracks = document.querySelector('.container-album .nbrTracks')
-      //     let duration = document.querySelector('.container-album .duration')
-      //     let newTracks = document.querySelectorAll('.container-album .bottom .titre')
-      //
-      //     let newListTracks = e.currentTarget.querySelectorAll('.container-album .bottom .titre .titre_name')
-      //
-      //     tracks = newListTracks;
-      //     tracksArray = Array.prototype.slice.call(tracks);
-      //     shuffledTracks(tracksArray)
-      //
-      //     let clickList = document.querySelector('.container-album .bottom')
-      //     let container = document.querySelector('.container-player .albumTracks')
-      //     container.innerHTML = clickList.innerHTML
-      // })
+      });
     }
 
     if (document.querySelector('.partial-player')) {
@@ -6866,44 +6865,11 @@ function init() {
           playBtn.classList.add("pause");
         }); //play tracks onclick
 
-        var titleList = document.querySelectorAll('.container-player .albumTracks .titre');
-        titleList.forEach(function (title) {
-          title.addEventListener('click', function (e) {
-            var newTracks = e.target.querySelectorAll('.track');
-            newTracks.forEach(function (newTrack) {
-              var track = newTrack.innerText;
-              audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
-              titleList.forEach(function (elem) {
-                return elem.classList.remove('active');
-              });
-              e.target.classList.add('active');
-              var currentSongs = document.querySelectorAll('.titre_name');
-              currentSongs.forEach(function (currentSong) {
-                currentSong.innerText = track;
-              });
-
-              if (document.querySelector('.current-track')) {
-                document.querySelector('.current-song').innerText = track;
-              }
-            });
-            playBtns.forEach(function (playBtn) {
-              playBtn.classList.remove("play");
-              playBtn.classList.add("pause");
-            });
-            audio.play();
-
-            if (e.target.querySelector('.number').innerText > 9) {
-              trackIndex = parseInt(e.target.querySelector('.number').innerText) - 1;
-            } else {
-              trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
-            }
-          });
-        }); //like sur un titre
+        playOnCLick(); //like sur un titre
 
         if (document.querySelector('.likeTitre')) {
-          var _titres = document.querySelectorAll('.likeTitre');
-
-          _titres.forEach(function (titre) {
+          var titres = document.querySelectorAll('.likeTitre');
+          titres.forEach(function (titre) {
             titre.addEventListener('submit', function (e) {
               e.preventDefault();
               var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');

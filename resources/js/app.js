@@ -504,7 +504,7 @@ function init() {
                         changePrevNExtOpacity()
                     }
 
-                if(this.currentTime === this.duration) {
+                    if(this.currentTime === this.duration) {
                     if(shuffle.classList.contains('active')) {
                         if(loop.classList.contains('active')) {
                             if(trackIndex === tracksArray.length -1) {
@@ -686,7 +686,7 @@ function init() {
                         }
                     }
                 }
-            });
+                });
 
             })
 
@@ -730,48 +730,56 @@ function init() {
         }
 
         //play tracks onclick
-        function playOnCLick() {
-            let titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre .track-infos');
-            titleList.forEach(title => {
-                title.addEventListener('click', (e) => {
-                    e.preventDefault()
+            //Création de la fonction
+            function playOnCLick() {
+                //Déclaration et définition de la variable qui contient toutes les pistes
+                let titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre .track-infos');
+                //On parcours toutes les pistes
+                titleList.forEach(title => {
+                    //Pour chaque piste on ajoute un écouteur d'événement au clique
+                    title.addEventListener('click', (e) => {
+                        e.preventDefault()
+                        //Suppression de la classe active sur toutes les pistes
+                        for (let i = 0; i < titleList.length -1; i ++) {
+                            titleList[i].classList.remove('active')
+                        }
+                        //Ajout de la classe active sur l'élément cliqué
+                        e.target.classList.add('active');
 
-                    for (let i = 0; i < titleList.length -1; i ++) {
-                        titleList[i].classList.remove('active')
-                    }
-
-                    e.target.classList.add('active');
-                    let newTrack = e.target.querySelector('.track');
-                    // newTracks.forEach(newTrack => {
-                    let track = newTrack.innerText;
-                    audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
-
-                    let currentSongs = document.querySelectorAll('.container-player .titre_name');
-                    currentSongs.forEach(currentSong => {
-                        currentSong.innerText = track;
-                    });
-                    if(document.querySelector('.current-track')) {
-                        document.querySelector('.current-song').innerText = track;
-                    }
-                    document.querySelector('.partial-player .titre_name').innerText = track;
-
-                    // });
-
-                    let playBtns = document.querySelectorAll(".toggle-play")
-                    playBtns.forEach(playBtn => {
-                        playBtn.classList.remove("play");
-                        playBtn.classList.add("pause");
-                    });
-                    audio.play();
-                    if(e.target.querySelector('.number').innerText > 9) {
-                        trackIndex = parseInt(e.target.querySelector('.number').innerText) - 1;
-                    } else {
-                        trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
-                    }
-                })
-            });
-        }
-        playOnCLick();
+                        //Récupération de la piste cliquée
+                        let newTrack = e.target.querySelector('.track');
+                        //Remplacement l'ancienne piste par ma nouvelle
+                        let track = newTrack.innerText;
+                        //Remplacement du titre de la piste dans la balise audio
+                        audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
+                        //Remplacement du titre de la piste en cours de lecture
+                        //partout où elle est affichée sur le site
+                        let currentSongs = document.querySelectorAll('.container-player .titre_name');
+                        currentSongs.forEach(currentSong => {
+                            currentSong.innerText = track;
+                        });
+                        if(document.querySelector('.current-track')) {
+                            document.querySelector('.current-song').innerText = track;
+                        }
+                        document.querySelector('.partial-player .titre_name').innerText = track;
+                        //Modification de tous les boutons play/pause
+                        let playBtns = document.querySelectorAll(".toggle-play")
+                        playBtns.forEach(playBtn => {
+                            playBtn.classList.remove("play");
+                            playBtn.classList.add("pause");
+                        });
+                        //On joue la piste audio
+                        audio.play();
+                        //Calcul de l'index de la piste dans la liste
+                        if(e.target.querySelector('.number').innerText > 9) {
+                            trackIndex = parseInt(e.target.querySelector('.number').innerText) - 1;
+                        } else {
+                            trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
+                        }
+                    })
+                });
+            }
+            playOnCLick();
 
         //texte défilant player
         const body = document.querySelector('body');
@@ -914,34 +922,37 @@ function init() {
         }
 
         // like sur un titre
-        if(document.querySelector('.likeTitre')){
-            let titres = document.querySelectorAll('.likeTitre')
-            titres.forEach(titre => {
-            titre.addEventListener('submit', e => {
-                    e.preventDefault()
-                    let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                    let fd = new FormData();
-                    fd.append('titre_id', e.target.titre_id.value)
-                    fetch(e.target.action, {
-                        method:e.target.method,
-                        headers: {
-                            'X-CSRF-TOKEN': csrf
-                        },
-                        body: fd
+        function likeTitrePlaylist() {
+            if(document.querySelector('.likeTitre')){
+                let titres = document.querySelectorAll('.likeTitre')
+                titres.forEach(titre => {
+                    titre.addEventListener('submit', e => {
+                        e.preventDefault()
+                        let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        let fd = new FormData();
+                        fd.append('titre_id', e.target.titre_id.value)
+                        fetch(e.target.action, {
+                            method:e.target.method,
+                            headers: {
+                                'X-CSRF-TOKEN': csrf
+                            },
+                            body: fd
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if(data.likedTitre === true){
+                                    e.submitter.parentElement.classList.add('liked');
+                                    e.target.lastElementChild.classList.add('liked');
+                                } else {
+                                    e.submitter.parentElement.classList.remove('liked');
+                                    e.target.lastElementChild.classList.remove('liked');
+                                }
+                            });
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.likedTitre === true){
-                            e.submitter.parentElement.classList.add('liked');
-                            e.target.lastElementChild.classList.add('liked');
-                        } else {
-                            e.submitter.parentElement.classList.remove('liked');
-                            e.target.lastElementChild.classList.remove('liked');
-                        }
-                    });
-                })
-            });
+                });
+            }
         }
+        likeTitrePlaylist();
 
         //listen and add to recent list
         if(document.querySelector('#listenAndAddRecent')){
@@ -965,50 +976,50 @@ function init() {
                     container.innerHTML = clickList.innerHTML
 
                     //change album duration
-                        let duration = document.querySelector('.container-player .duration')
-                        duration.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.duration').innerHTML
+                    let duration = document.querySelector('.container-player .duration')
+                    duration.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.duration').innerHTML
 
                     // change nbr tracks
-                        let nbrTracks = document.querySelector('.container-player .titres_count')
-                        nbrTracks.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.nbrTracks').innerHTML + ' titres';
+                    let nbrTracks = document.querySelector('.container-player .titres_count')
+                    nbrTracks.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.nbrTracks').innerHTML + ' titres';
 
                     // change img src
-                        let newImg = document.querySelector('.top img')
-                        let oldImg1 = document.querySelector('.audio-player-partial .top .left img')
-                        let oldImg2 = document.querySelector('.container-player .cover')
-                        let oldImg3 = document.querySelector('.container-player .album-cover img')
-                        oldImg1.src = newImg.src
-                        oldImg2.src = newImg.src
-                        oldImg3.src = newImg.src
+                    let newImg = document.querySelector('.top img')
+                    let oldImg1 = document.querySelector('.audio-player-partial .top .left img')
+                    let oldImg2 = document.querySelector('.container-player .cover')
+                    let oldImg3 = document.querySelector('.container-player .album-cover img')
+                    oldImg1.src = newImg.src
+                    oldImg2.src = newImg.src
+                    oldImg3.src = newImg.src
 
                     // change album name
-                        let newAlbumName = e.target.parentElement.closest('.container-album').querySelector('.album_name')
-                        let oldAlbumName = document.querySelector('.container-player h2')
-                        let oldAlbumNames2 = document.querySelectorAll('.partial-player .element .album-name')
-                        let oldAlbumNames3 = document.querySelectorAll('.container-player .element .album-name')
-                        let oldAlbumName4 = document.querySelector('.container-player .album_name')
-                        setTimeout(() => {
-                            oldAlbumName.innerText = newAlbumName.innerText
-                            oldAlbumNames2.forEach(oldAlbumName2 => {
-                                oldAlbumName2.innerHTML = newAlbumName.innerHTML
-                            });
-                            oldAlbumNames3.forEach(oldAlbumName3 => {
-                                oldAlbumName3.innerHTML = newAlbumName.innerHTML
-                            });
-                            oldAlbumName4.innerHTML = newAlbumName.innerHTML
-                        }, "500")
+                    let newAlbumName = e.target.parentElement.closest('.container-album').querySelector('.album_name')
+                    let oldAlbumName = document.querySelector('.container-player h2')
+                    let oldAlbumNames2 = document.querySelectorAll('.partial-player .element .album-name')
+                    let oldAlbumNames3 = document.querySelectorAll('.container-player .element .album-name')
+                    let oldAlbumName4 = document.querySelector('.container-player .album_name')
+                    setTimeout(() => {
+                        oldAlbumName.innerText = newAlbumName.innerText
+                        oldAlbumNames2.forEach(oldAlbumName2 => {
+                            oldAlbumName2.innerHTML = newAlbumName.innerHTML
+                        });
+                        oldAlbumNames3.forEach(oldAlbumName3 => {
+                            oldAlbumName3.innerHTML = newAlbumName.innerHTML
+                        });
+                        oldAlbumName4.innerHTML = newAlbumName.innerHTML
+                    }, "500")
 
                     // change currentsong name
-                        let newTitreName = e.target.parentElement.closest('.container-album').querySelectorAll('.titre .track')[0].innerText
+                    let newTitreName = e.target.parentElement.closest('.container-album').querySelectorAll('.titre .track')[0].innerText
 
-                        let titreName = document.querySelector('.audio-player .titre_name')
-                        titreName.innerText = newTitreName
+                    let titreName = document.querySelector('.audio-player .titre_name')
+                    titreName.innerText = newTitreName
 
-                        let titreName2 = document.querySelector('.current-track .current-song')
-                        titreName2.innerText = newTitreName
+                    let titreName2 = document.querySelector('.current-track .current-song')
+                    titreName2.innerText = newTitreName
 
-                        let titreName3 = document.querySelector('.audio-player-partial .titre_name')
-                        titreName3.innerText = newTitreName
+                    let titreName3 = document.querySelector('.audio-player-partial .titre_name')
+                    titreName3.innerText = newTitreName
 
 
                     // change artist name
@@ -1041,9 +1052,10 @@ function init() {
 
                         let newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track')
                         tracks = Array.prototype.slice.call(newListTracks);
-                    console.log(tracks)
 
-                    playOnCLick();
+                        playOnCLick();
+                        likeTitrePlaylist();
+
                         audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
                         audio.play()
 
@@ -1054,24 +1066,6 @@ function init() {
                         });
                 });
             })
-
-            // document.querySelector('#listenAndAddRecent').addEventListener('click', e => {
-            //     let albumName = document.querySelector('.container-album .album_name')
-            //     let artiste_name = document.querySelector('.container-album .artiste_name')
-            //     let nbrTracks = document.querySelector('.container-album .nbrTracks')
-            //     let duration = document.querySelector('.container-album .duration')
-            //     let newTracks = document.querySelectorAll('.container-album .bottom .titre')
-            //
-            //     let newListTracks = e.currentTarget.querySelectorAll('.container-album .bottom .titre .titre_name')
-            //
-            //     tracks = newListTracks;
-            //     tracksArray = Array.prototype.slice.call(tracks);
-            //     shuffledTracks(tracksArray)
-            //
-            //     let clickList = document.querySelector('.container-album .bottom')
-            //     let container = document.querySelector('.container-player .albumTracks')
-            //     container.innerHTML = clickList.innerHTML
-            // })
         }
 
         if(document.querySelector('.partial-player')) {
@@ -1192,39 +1186,7 @@ function init() {
                 });
 
                 //play tracks onclick
-                let titleList = document.querySelectorAll('.container-player .albumTracks .titre');
-                titleList.forEach(title => {
-                    title.addEventListener('click', function(e) {
-                        let newTracks = e.target.querySelectorAll('.track');
-                        newTracks.forEach(newTrack => {
-                            let track = newTrack.innerText;
-                            audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
-
-                            titleList.forEach(elem => elem.classList.remove('active'));
-                            e.target.classList.add('active');
-                            let currentSongs = document.querySelectorAll('.titre_name');
-                                currentSongs.forEach(currentSong => {
-                                    currentSong.innerText = track;
-                            });
-                            if(document.querySelector('.current-track')) {
-                                document.querySelector('.current-song').innerText = track;
-                            }
-                        });
-
-                        playBtns.forEach(playBtn => {
-                            playBtn.classList.remove("play");
-                            playBtn.classList.add("pause");
-                        });
-                        audio.play();
-
-                        if(e.target.querySelector('.number').innerText > 9) {
-                            trackIndex = parseInt(e.target.querySelector('.number').innerText) - 1;
-                        } else {
-                            trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
-                        }
-                    })
-
-                });
+                playOnCLick()
                 //like sur un titre
                 if(document.querySelector('.likeTitre')){
                     let titres = document.querySelectorAll('.likeTitre')

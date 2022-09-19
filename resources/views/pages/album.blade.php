@@ -44,12 +44,14 @@
             @foreach ($titres as $titre)
                 @if ($titre->album_id == $album->id)
                     <div class="titre">
-                        <span class="number">
-                            {{ str_pad($titre->order, 2, '0', STR_PAD_LEFT) }}
-                        </span>
-                        <span class="track">
-                            {{ $titre->name }}
-                        </span>
+                        <div class="track-infos">
+                            <span class="number">
+                                {{ str_pad($titre->order, 2, '0', STR_PAD_LEFT) }}
+                            </span>
+                            <span class="track">
+                                {{ $titre->name }}
+                            </span>
+                        </div>
                         <span class="like">
                             <form action="{{ route('like', $album->id) }}" method="post" class="likeTitre">
                                 @csrf
