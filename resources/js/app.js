@@ -124,38 +124,38 @@ function makeActiveTrack() {
 }
 makeActiveTrack();
 
+//autoplay next track & loop
+let loop = document.querySelector('.loop');
+loop.addEventListener('click', function(e) {
+    this.classList.toggle('active')
+});
+//shuffle random track
+//Déclaration et définition du bouton shuffle
+let shuffle = document.querySelector('.shuffle');
+//Ajout d'un eventListener au click
+shuffle.addEventListener('click', function(e) {
+    //Toggle de la classe active
+    this.classList.toggle('active')
+});
+//Transformation de la node list tracks en array tracksArray
+let tracksArray = Array.prototype.slice.call(tracks);
+
+//Création d'une fonction qui mélange aléatoirement les piste
+function shuffledTracks(arr) {
+    let i = arr.length, j, temp;
+    while(--i > 0){
+        j = Math.floor(Math.random()*(i+1));
+        temp = arr[j];
+        arr[j] = arr[i];
+        arr[i] = temp;
+    }
+}
+//Appel de la fonction
+shuffledTracks(tracksArray)
+
+
 function init() {
     if(document.querySelector('.audio-player')) {
-       //shuffle random track
-            //Déclaration et définition du bouton shuffle
-            let shuffle = document.querySelector('.shuffle');
-            //Ajout d'un eventListener au click
-            shuffle.addEventListener('click', function(e) {
-                //Toggle de la classe active
-                this.classList.toggle('active')
-            });
-            //Transformation de la node list tracks en array tracksArray
-            let tracksArray = Array.prototype.slice.call(tracks);
-
-            //Création d'une fonction qui mélange aléatoirement les piste
-            function shuffledTracks(arr) {
-                let i = arr.length, j, temp;
-                while(--i > 0){
-                j = Math.floor(Math.random()*(i+1));
-                temp = arr[j];
-                arr[j] = arr[i];
-                arr[i] = temp;
-                }
-            }
-            //Appel de la fonction
-            shuffledTracks(tracksArray)
-
-        //autoplay next track & loop
-            let loop = document.querySelector('.loop');
-            loop.addEventListener('click', function(e) {
-                this.classList.toggle('active')
-            });
-
         //click on button to change track
             //Déclaration et définition sur 1 de la variable trackindex qui permet de déterminer
             //la position de la piste en cours de lecture dans la playlist
@@ -1020,7 +1020,6 @@ function init() {
 
                     let titreName3 = document.querySelector('.audio-player-partial .titre_name')
                     titreName3.innerText = newTitreName
-
 
                     // change artist name
                         let newArtistName = e.target.parentElement.closest('.container-album').querySelector('.artiste_name').innerText.replace("par", "")
