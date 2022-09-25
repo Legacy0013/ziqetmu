@@ -5770,18 +5770,16 @@ function playOrPause() {
   });
 }
 
-playOrPause(); //like album
-
-var likeAlbums = document.querySelectorAll('.likeAlbum');
-
-if (likeAlbums) {
-  likeAlbums.forEach(function (likeAlbum) {
-    likeAlbum.addEventListener('click', function (e) {
-      e.target.classList.toggle('liked');
-    });
-  });
-} //Ajouter d'un fond différent sur la piste en cours de lecture
-
+playOrPause(); // //like album
+// let likeAlbums = document.querySelectorAll('.likeAlbum');
+// if(likeAlbums) {
+//     likeAlbums.forEach(likeAlbum => {
+//         likeAlbum.addEventListener('click', function(e) {
+//             e.target.classList.toggle('liked')
+//         })
+//     });
+// }
+//Ajouter d'un fond différent sur la piste en cours de lecture
 
 function makeActiveTrack() {
   if (document.querySelector('.titres-list')) {
@@ -5796,29 +5794,45 @@ function makeActiveTrack() {
   }
 }
 
-makeActiveTrack();
+makeActiveTrack(); //autoplay next track & loop
+
+var loop = document.querySelector('.loop');
+loop.addEventListener('click', function (e) {
+  this.classList.toggle('active');
+}); //shuffle random track
+//Déclaration et définition du bouton shuffle
+
+var shuffle = document.querySelector('.shuffle'); //Ajout d'un eventListener au click
+
+shuffle.addEventListener('click', function (e) {
+  //Toggle de la classe active
+  this.classList.toggle('active');
+}); //Transformation de la node list tracks en array tracksArray
+
+var tracksArray = Array.prototype.slice.call(tracks); //Création d'une fonction qui mélange aléatoirement les piste
+
+function shuffledTracks(arr) {
+  var i = arr.length,
+      j,
+      temp;
+
+  while (--i > 0) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = arr[j];
+    arr[j] = arr[i];
+    arr[i] = temp;
+  }
+} //Appel de la fonction
+
+
+shuffledTracks(tracksArray);
 
 function init() {
   if (document.querySelector('.audio-player')) {
-    //Création d'une fonction qui mélange aléatoirement les piste
-    var shuffledTracks = function shuffledTracks(arr) {
-      var i = arr.length,
-          j,
-          temp;
-
-      while (--i > 0) {
-        j = Math.floor(Math.random() * (i + 1));
-        temp = arr[j];
-        arr[j] = arr[i];
-        arr[i] = temp;
-      }
-    }; //Appel de la fonction
-
-
     //play tracks onclick
     //Création de la fonction
     var playOnCLick = function playOnCLick() {
-      //Déclaration et définition de la variable qui contiient toutes les pistes
+      //Déclaration et définition de la variable qui contient toutes les pistes
       var titleList = document.querySelectorAll('.container-player .titres-list .albumTracks .titre .track-infos'); //On parcours toutes les pistes
 
       titleList.forEach(function (title) {
@@ -5857,15 +5871,13 @@ function init() {
             playBtn.classList.add("pause");
           }); //On joue la piste audio
 
-          audio.play();
+          audio.play(); //Calcul de l'index de la piste dans la liste
 
           if (e.target.querySelector('.number').innerText > 9) {
             trackIndex = parseInt(e.target.querySelector('.number').innerText) - 1;
           } else {
             trackIndex = parseInt(e.target.querySelector('.number').innerText.replace('0', '')) - 1;
           }
-
-          console.log(trackIndex);
         });
       });
     };
@@ -5902,25 +5914,9 @@ function init() {
       }
     };
 
-    //shuffle random track
-    //Déclaration et définition du bouton shuffle
-    var shuffle = document.querySelector('.shuffle'); //Ajout d'un eventListener au click
-
-    shuffle.addEventListener('click', function (e) {
-      //Toggle de la classe active
-      this.classList.toggle('active');
-    }); //Transformation de la node list tracks en array tracksArray
-
-    var tracksArray = Array.prototype.slice.call(tracks);
-    shuffledTracks(tracksArray); //autoplay next track & loop
-
-    var loop = document.querySelector('.loop');
-    loop.addEventListener('click', function (e) {
-      this.classList.toggle('active');
-    }); //click on button to change track
+    //click on button to change track
     //Déclaration et définition sur 1 de la variable trackindex qui permet de déterminer
     //la position de la piste en cours de lecture dans la playlist
-
     var trackIndex = Array.prototype.indexOf.call(tracks, trackName) + 1;
     audioPlayers.forEach(function (audioPlayer) {
       //Déclaration des boutons précédent et suivant
@@ -6282,7 +6278,7 @@ function init() {
         }
       }, false); //Ecouteur d'évènement
 
-      audio.addEventListener("timeupdate", function () {
+      audio.addEventListener("timeupdate", function (e) {
         makeActiveTrack();
 
         if (loop.classList.contains('active')) {
@@ -6292,7 +6288,7 @@ function init() {
           changePrevNExtOpacity();
         }
 
-        if (this.currentTime === this.duration) {
+        if (e.target.currentTime === e.target.duration) {
           if (shuffle.classList.contains('active')) {
             if (loop.classList.contains('active')) {
               if (trackIndex === tracksArray.length - 1) {
@@ -6503,12 +6499,18 @@ function init() {
         }
       });
     }); //click on timeline to skip around
+    //Déclaration et définition des barres de progression
 
-    var timelines = document.querySelectorAll(".timeline");
+    var timelines = document.querySelectorAll(".timeline"); //Pour toutes les barres de progression
+
     timelines.forEach(function (timeline) {
+      //Ajout d'un écouteur d'événement au click
       timeline.addEventListener("click", function (e) {
-        var timelineWidth = window.getComputedStyle(timeline).width;
-        var timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
+        //Définition et déclaration de la taille totale de la barre de progression
+        var timelineWidth = window.getComputedStyle(timeline).width; //Définition et déclaration du moment de la piste audio cliqué
+
+        var timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration; //Affectation du nouveau moment dans la piste audio
+
         audio.currentTime = timeToSeek;
       }, false);
     }); //check audio percentage and update time accordingly
@@ -6901,7 +6903,12 @@ function init() {
 }
 
 init();
-swup.on('contentReplaced', init);
+swup.on('contentReplaced', init); //Search Bar
+
+var searchLogo = document.querySelector("#searchLogo");
+searchLogo.addEventListener('click', function (e) {
+  document.querySelector('#autocomplete').classList.add('active');
+});
 
 /***/ }),
 

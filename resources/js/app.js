@@ -99,15 +99,15 @@ function playOrPause() {
 }
 playOrPause();
 
-//like album
-let likeAlbums = document.querySelectorAll('.likeAlbum');
-if(likeAlbums) {
-    likeAlbums.forEach(likeAlbum => {
-        likeAlbum.addEventListener('click', function(e) {
-            e.target.classList.toggle('liked')
-        })
-    });
-}
+// //like album
+// let likeAlbums = document.querySelectorAll('.likeAlbum');
+// if(likeAlbums) {
+//     likeAlbums.forEach(likeAlbum => {
+//         likeAlbum.addEventListener('click', function(e) {
+//             e.target.classList.toggle('liked')
+//         })
+//     });
+// }
 
 //Ajouter d'un fond différent sur la piste en cours de lecture
 function makeActiveTrack() {
@@ -495,7 +495,7 @@ function init() {
                 }, false);
 
                 //Ecouteur d'évènement
-                audio.addEventListener("timeupdate", function(){
+                audio.addEventListener("timeupdate", e => {
                     makeActiveTrack();
                     if(loop.classList.contains('active')) {
                         prev.style.opacity = "1"
@@ -504,7 +504,7 @@ function init() {
                         changePrevNExtOpacity()
                     }
 
-                    if(this.currentTime === this.duration) {
+                    if(e.target.currentTime === e.target.duration) {
                     if(shuffle.classList.contains('active')) {
                         if(loop.classList.contains('active')) {
                             if(trackIndex === tracksArray.length -1) {
@@ -691,15 +691,20 @@ function init() {
             })
 
         //click on timeline to skip around
-        const timelines = document.querySelectorAll(".timeline");
-        timelines.forEach(timeline => {
-            timeline.addEventListener("click", e => {
-                let timelineWidth = window.getComputedStyle(timeline).width;
-                let timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
-
-                audio.currentTime = timeToSeek;
-            }, false);
-        });
+            //Déclaration et définition des barres de progression
+            const timelines = document.querySelectorAll(".timeline");
+            //Pour toutes les barres de progression
+            timelines.forEach(timeline => {
+                //Ajout d'un écouteur d'événement au click
+                timeline.addEventListener("click", e => {
+                    //Définition et déclaration de la taille totale de la barre de progression
+                    let timelineWidth = window.getComputedStyle(timeline).width;
+                    //Définition et déclaration du moment de la piste audio cliqué
+                    let timeToSeek = e.offsetX / parseInt(timelineWidth) * audio.duration;
+                    //Affectation du nouveau moment dans la piste audio
+                    audio.currentTime = timeToSeek;
+                }, false);
+            });
 
         //check audio percentage and update time accordingly
         setInterval(() => {
@@ -1221,3 +1226,9 @@ function init() {
 init();
 
 swup.on('contentReplaced', init)
+
+//Search Bar
+let searchLogo = document.querySelector("#searchLogo")
+searchLogo.addEventListener('click', e => {
+    document.querySelector('#autocomplete').classList.add('active')
+})

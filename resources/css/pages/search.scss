@@ -1,0 +1,58 @@
+#autocomplete {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 2000;
+    transition: .25s ease-in-out;
+    .autocomplete-input {
+        width: 100%;
+        border-radius: 0 !important;
+        padding: 5px 12px 5px 48px;
+    }
+    &.active {
+        top: 0;
+        transition: .25s ease-in-out;
+        .autocomplete-result-list {
+            border: none !important;
+            max-height: 50vh !important;
+            ul {
+                padding: 1rem;
+                font-family: $robotoMedium;
+                li {
+                    margin-bottom: .5rem;
+                    h2 {
+                        font-weight: bold;
+                    }
+                    a {
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #514A54;
+                        .colorize {
+                            font-weight: 900;
+                            color: #B00D72;
+                        }
+                        &:visited {
+                            color: #514A54;
+                        }
+                    }
+                }
+                &:not(:first-child) {
+                    padding: 0 1rem .5rem;
+                }
+            }
+            .albums {
+                display: none;
+            }
+            .artists {
+                display: none;
+            }
+            .noResult {
+                display: none;
+                padding: 1rem 1rem .5rem !important;
+            }
+        }
+    }
+}

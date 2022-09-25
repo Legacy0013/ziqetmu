@@ -1722,6 +1722,65 @@ body.auth footer ul {
   justify-content: space-between;
 }
 
+#autocomplete {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0 auto;
+  z-index: 2000;
+  transition: 0.25s ease-in-out;
+}
+#autocomplete .autocomplete-input {
+  width: 100%;
+  border-radius: 0 !important;
+  padding: 5px 12px 5px 48px;
+}
+#autocomplete.active {
+  top: 0;
+  transition: 0.25s ease-in-out;
+}
+#autocomplete.active .autocomplete-result-list {
+  border: none !important;
+  max-height: 50vh !important;
+}
+#autocomplete.active .autocomplete-result-list ul {
+  padding: 1rem;
+  font-family: "roboto medium";
+}
+#autocomplete.active .autocomplete-result-list ul li {
+  margin-bottom: 0.5rem;
+}
+#autocomplete.active .autocomplete-result-list ul li h2 {
+  font-weight: bold;
+}
+#autocomplete.active .autocomplete-result-list ul li a {
+  font-size: 14px;
+  font-weight: 400;
+  color: #514A54;
+}
+#autocomplete.active .autocomplete-result-list ul li a .colorize {
+  font-weight: 900;
+  color: #B00D72;
+}
+#autocomplete.active .autocomplete-result-list ul li a:visited {
+  color: #514A54;
+}
+#autocomplete.active .autocomplete-result-list ul:not(:first-child) {
+  padding: 0 1rem 0.5rem;
+}
+#autocomplete.active .autocomplete-result-list .albums {
+  display: none;
+}
+#autocomplete.active .autocomplete-result-list .artists {
+  display: none;
+}
+#autocomplete.active .autocomplete-result-list .noResult {
+  display: none;
+  padding: 1rem 1rem 0.5rem !important;
+}
+
 body {
   background: linear-gradient(to bottom, #B00D72 0, #5523BF 600px) no-repeat;
   min-height: 100vh;

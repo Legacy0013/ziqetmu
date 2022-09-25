@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -25,6 +26,8 @@ use App\Http\Controllers\TitreController;
 */
 
 Route::get('/', [HomeController::class, 'showHomepage'])->middleware(['auth'])->name('home');
+Route::get('/search', [SearchController::class, 'index']);
+Route::get('/autocomplete-search', [SearchController::class, 'autocompleteSearch']);
 
 Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
 Route::post('/artiste/{artiste}', [ArtisteController::class, 'like'])->name('likeArtiste');
