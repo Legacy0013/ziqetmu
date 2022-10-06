@@ -46,6 +46,11 @@ Route::resource('recent', RecentController::class);
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::get('/forgotPwd', [PasswordResetLinkController::class, 'create'])->name('forgotPwd');
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('getlogout');
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
