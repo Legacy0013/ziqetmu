@@ -26,6 +26,9 @@ use App\Http\Controllers\TitreController;
 */
 
 Route::get('/', [HomeController::class, 'showHomepage'])->middleware(['auth'])->name('home');
+
+Route::get('/page/{name}', [HomeController::class, 'showPage'])->name('page')->whereAlpha('name');
+
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/autocomplete-search', [SearchController::class, 'autocompleteSearch']);
 

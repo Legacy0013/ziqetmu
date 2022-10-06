@@ -31,6 +31,14 @@ class HomeController extends Controller
         } else {
             return view('layouts.guest');
         }
+    }
 
+    public function showPage($page)
+    {
+        $listePage = array('mentionsLegales', 'cgv');
+        if (in_array($page, $listePage)) {
+            return view('pages.' . $page);
+        }
+        return abort(404);
     }
 }
