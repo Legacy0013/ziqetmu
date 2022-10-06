@@ -1826,6 +1826,10 @@ html.is-animating .transition-fade {
   margin-bottom: 0.5em;
 }
 
+.page-error h1 {
+  margin-bottom: 2rem;
+}
+
 @media screen and (min-width: 992px) {
   .container-page,
 .auth main {
