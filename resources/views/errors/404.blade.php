@@ -12,26 +12,18 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="auth splash">
+<body class="auth register login page-error">
     <header>
-        <img src="/img/logo.svg" alt="logo du site">
-        <h1>écoutez votre musique favorite en un seul clic</h1>
+        <h1>Erreur</h1>
     </header>
-    <main>
-        <div class="register">
-            <h2>
-                Profitez gratuitement <br> de toute votre musique
-            </h2>
-            <a href="{{ route('register') }}" class="btn">s'inscrire</a>
+
+    <main class="error">
+        <h1>404 | Page non trouvé</h1>
+        <div class="message">
+            <a href="{{ route('home') }}">Revenir à l'accueil</a>
         </div>
-        <div class="login">
-            <h2>
-                Vous avez déjà un compte ?
-            </h2>
-            <a href="{{ route('login') }}" class="btn">se connecter</a>
-        </div>
-        <p>Explorez tout un monde de musique sans publicité, hors connexion et même avec l’écran verrouillé. Disponible sur mobile et ordinateur. Ziq&mu propose des albums officiels, des playlists, des singles et plus encore.</p>
     </main>
+
     <footer>
         <div class="container">
             <a href="{{ route('page', ['name' => 'mentionsLegales'] ) }}">Mentions légales</a>

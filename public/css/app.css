@@ -1795,4 +1795,99 @@ html.is-animating .transition-fade {
   opacity: 0;
 }
 
+.container-page p {
+  margin-bottom: 1rem;
+}
+.container-page a {
+  color: #8C8490;
+}
+.container-page a:hover {
+  color: #fff;
+}
+.container-page h2 {
+  position: relative;
+  color: #fff;
+  font-family: "righteous";
+  font-size: 18px;
+  margin-top: 1rem;
+  margin-bottom: 0.5em;
+  text-transform: capitalize;
+}
+.container-page h2 span {
+  position: absolute;
+  font-size: 20px;
+  padding-left: 10px;
+}
+.container-page h3 {
+  color: #fff;
+  font-size: 18px;
+  font-family: "righteous";
+  margin-top: 1rem;
+  margin-bottom: 0.5em;
+}
+.container-page label {
+  font-size: 16px;
+  font-family: "roboto medium";
+  font-weight: 400;
+  color: #fff;
+  text-align: left;
+  margin-bottom: 0.5em;
+  display: block;
+  cursor: pointer;
+}
+.container-page input,
+.container-page textarea {
+  width: 100%;
+  margin-bottom: 2em;
+  padding: 1em 0.5em;
+  border-radius: 8px;
+  border: none;
+}
+.container-page textarea {
+  min-height: 200px;
+}
+.container-page button[type=submit],
+.container-page input[type=submit] {
+  cursor: pointer;
+}
+.container-page .btn {
+  color: #fff;
+  text-transform: uppercase;
+  background: #B00D70;
+  border-radius: 40px;
+  padding: 0.8em 2em;
+  font-family: "roboto medium";
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
+  align-self: center;
+}
+.container-page .invalid-feedback {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background-color: #514A54;
+  border-radius: 0.5rem;
+}
+
+.page-error h1 {
+  margin-bottom: 2rem;
+}
+
+@media screen and (min-width: 992px) {
+  .container-page,
+.auth main {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  footer .container {
+    width: 960px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
 /*# sourceMappingURL=app.css.map*/

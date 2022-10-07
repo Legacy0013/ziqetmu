@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -69,23 +69,17 @@
     </main>
 
     <footer>
-        <a href="">Mentions légales</a>
-        <a href="">CGV</a>
-        <a href="">Contact</a>
-        <ul>
-            <a href="">
-                <li><img src="/img/facebook.svg" alt="logo facebook"></li>
-            </a>
-            <a href="">
-                <li><img src="/img/instagram.svg" alt="logo instagram"></li>
-            </a>
-            <a href="">
-                <li><img src="/img/pinterest.svg" alt="logo pinterest"></li>
-            </a>
-        </ul>
+        <div class="container">
+            <a href="{{ route('page', ['name' => 'mentionsLegales'] ) }}">Mentions légales</a>
+            <a href="{{ route('page', ['name' => 'cgv'] ) }}">CGV</a>
+            <a href="{{ route('contact') }}">Contact</a>
+            <ul>
+                <li><a href="https://www.facebook.com" target="_blank"><img src="/img/facebook.svg" alt="logo facebook"></a></li>
+                <li><a href="https://www.instagram.com/" target="_blank"><img src="/img/instagram.svg" alt="logo instagram"></a></li>
+                <li><a href="https://fr.pinterest.com/" target="_blank"><img src="/img/pinterest.svg" alt="logo pinterest"></a></li>
+            </ul>
+        </div>
     </footer>
     <script src="/js/app.js" defer></script>
 </body>
 </html>
-
-

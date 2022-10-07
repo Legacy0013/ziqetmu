@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\AlbumController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\TitreController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\RecentController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ArtisteController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\TitreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +27,11 @@ use App\Http\Controllers\TitreController;
 */
 
 Route::get('/', [HomeController::class, 'showHomepage'])->middleware(['auth'])->name('home');
+
+Route::get('/page/{name}', [HomeController::class, 'showPage'])->name('page')->whereAlpha('name');
+Route::get('contact', [ContactController::class, 'create'])->name('contact');
+Route::post('contact', [ContactController::class, 'store'])->name('contact');
+
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/autocomplete-search', [SearchController::class, 'autocompleteSearch']);
 
@@ -46,6 +52,11 @@ Route::resource('recent', RecentController::class);
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::get('/forgotPwd', [PasswordResetLinkController::class, 'create'])->name('forgotPwd');
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('getlogout');
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
