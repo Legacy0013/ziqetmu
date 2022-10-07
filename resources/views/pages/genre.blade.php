@@ -10,7 +10,7 @@
                 @foreach ($albums as $album)
                 <a href="{{ route('album', $album->id) }}">
                     <div class="card">
-                        <img src="../storage{{ $album->picture }}" alt="">
+                        <img src="../storage/{{ $album->picture }}" alt="">
                         <h2 class="album_name">{{ ucfirst($album->name) }}</h2>
                         <h2 class="artiste_name">par {{ $album->artiste->name }}</h2>
                         <span class="date">
@@ -29,7 +29,7 @@
 
                     <a href="{{ route('artiste', $artiste->id) }}">
                         <div class="card">
-                            <img src="../storage{{ $artiste->picture }}" alt="">
+                            <img src="../storage/{{ $artiste->picture }}" alt="">
                             <div class="artiste_name">{{ $artiste->name }}</div>
                             {{-- <div class="album_name">{{ $album->like }}</div> --}}
                         </div>

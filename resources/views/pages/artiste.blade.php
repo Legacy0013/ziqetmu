@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-artiste">
     <div class="top">
-        <img src="../storage{{ $artiste->picture }}" alt="">
+        <img src="../storage/{{ $artiste->picture }}" alt="">
         <h2>{{ $artiste->name }}</h2>
         <div class="likeArtiste">
             {{ $nbrLikeArtiste }}
@@ -29,7 +29,7 @@
             @foreach ($albums as $album)
                 <a href="{{ route('album', $album->id) }}">
                     <div class="card">
-                        <img src="../storage{{ $album->picture }}" alt="">
+                        <img src="../storage/{{ $album->picture }}" alt="">
                         <div class="artiste_name">{{ $artiste->name}}</div>
                         <div class="album_name">{{ $album->name}}</div>
                         <div class="play"></div>

@@ -4,7 +4,7 @@
 <div class="container-album">
     @foreach ($artiste as $art)
         <div class="top">
-            <img src="../storage{{ $album->picture }}" alt="">
+            <img src="../storage/{{ $album->picture }}" alt="">
             <h2 class="album_name">{{ ucfirst($album->name) }}</h2>
             <h2 class="artiste_name">par {{ $art->name }}</h2>
             <h3 class="album_genre">{{ ucfirst($album->genre->name ) }} ></h3>

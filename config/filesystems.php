@@ -38,7 +38,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL').'/storage/',
             'visibility' => 'public',
         ],
 
@@ -52,14 +52,18 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
         ],
-
         'sources' => [
             'driver' => 'local',
             'root' =>storage_path('sources/'),
             'url' => env('APP_URL').'/sources',
             'visibility' => 'private'
-        ]
-
+        ],
+//        'voyager' => [
+//            'driver' => 'local',
+//            'root' => storage_path('app/public'),// change here something specific to your application need
+//            'url' => env('APP_URL').'./storage',
+//            'visibility' => 'private',
+//        ],
     ],
 
     /*

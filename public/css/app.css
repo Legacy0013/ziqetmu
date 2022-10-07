@@ -1735,7 +1735,7 @@ body.auth footer ul {
 #autocomplete .autocomplete-input {
   width: 100%;
   border-radius: 0 !important;
-  padding: 5px 12px 5px 48px;
+  padding: 20px 12px 20px 48px;
 }
 #autocomplete.active {
   top: 0;
@@ -1746,7 +1746,7 @@ body.auth footer ul {
   max-height: 50vh !important;
 }
 #autocomplete.active .autocomplete-result-list ul {
-  padding: 1rem;
+  padding: 1rem 1rem 0.5rem;
   font-family: "roboto medium";
 }
 #autocomplete.active .autocomplete-result-list ul li {
@@ -1766,9 +1766,6 @@ body.auth footer ul {
 }
 #autocomplete.active .autocomplete-result-list ul li a:visited {
   color: #514A54;
-}
-#autocomplete.active .autocomplete-result-list ul:not(:first-child) {
-  padding: 0 1rem 0.5rem;
 }
 #autocomplete.active .autocomplete-result-list .albums {
   display: none;

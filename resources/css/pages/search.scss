@@ -10,7 +10,7 @@
     .autocomplete-input {
         width: 100%;
         border-radius: 0 !important;
-        padding: 5px 12px 5px 48px;
+        padding: 20px 12px 20px 48px;
     }
     &.active {
         top: 0;
@@ -19,7 +19,7 @@
             border: none !important;
             max-height: 50vh !important;
             ul {
-                padding: 1rem;
+                padding: 1rem 1rem .5rem;
                 font-family: $robotoMedium;
                 li {
                     margin-bottom: .5rem;
@@ -38,9 +38,6 @@
                             color: #514A54;
                         }
                     }
-                }
-                &:not(:first-child) {
-                    padding: 0 1rem .5rem;
                 }
             }
             .albums {

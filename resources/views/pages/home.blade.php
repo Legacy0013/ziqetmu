@@ -11,7 +11,7 @@
                         <div class="card">
                             <input type="hidden" name="album_id" value="{{ $album->id }}">
                             <input type="hidden" name="duration" value="{{ $album->duration }}">
-                            <img src="storage{{ $album->picture }}" alt="">
+                            <img src="storage/{{ $album->picture }}" alt="">
                             <div class="artiste_name">{{ $album->artiste->name}}</div>
                             <div class="album_name">{{ $album->name}}</div>
                             <div class="play"></div>
@@ -81,7 +81,7 @@
                 @foreach ($artistes as $artiste)
                     <a href="{{ route('artiste', $artiste->id) }}">
                         <div class="card">
-                            <img src="storage{{ $artiste->picture }}" alt="">
+                            <img src="storage/{{ $artiste->picture }}" alt="">
                             <div class="artiste_name">{{ $artiste->name }}</div>
                         </div>
                     </a>

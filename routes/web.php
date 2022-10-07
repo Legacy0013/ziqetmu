@@ -35,10 +35,10 @@ Route::post('contact', [ContactController::class, 'store'])->name('contact');
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/autocomplete-search', [SearchController::class, 'autocompleteSearch']);
 
-Route::get('/artiste/{artiste}', [ArtisteController::class, 'show'])->name('artiste');
+Route::get('/artiste/{artiste?}', [ArtisteController::class, 'show'])->name('artiste');
 Route::post('/artiste/{artiste}', [ArtisteController::class, 'like'])->name('likeArtiste');
 
-Route::get('/album/{album}', [AlbumController::class, 'show'])->name('album');
+Route::get('/album/{album?}', [AlbumController::class, 'show'])->name('album');
 Route::post('/album/{album}', [AlbumController::class, 'like'])->name('like');
 
 Route::get('/genres', [GenreController::class, 'index'])->name('genres');
@@ -51,6 +51,7 @@ Route::resource('recent', RecentController::class);
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
+Route::get('/logout', [AuthenticatedSessionController::class, 'create'])->name('logout');
 Route::get('/forgotPwd', [PasswordResetLinkController::class, 'create'])->name('forgotPwd');
 Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')

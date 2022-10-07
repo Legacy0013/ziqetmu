@@ -2,7 +2,7 @@
     <div class="audio-player-partial">
         <div class="top">
             <div class="left">
-                <img src="../storage{{ $lastAlbum->picture }}" alt="">
+                <img src="../storage/{{ $lastAlbum->picture }}" alt="">
             </div>
             <div class="middle">
                 <div class="titre_name_container">
