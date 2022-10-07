@@ -12,6 +12,28 @@ php artisan migrate
 php artisan db:seed
 ```
 
+### Configuration
+
+Il faut configurer la base de données et le système d'envoi de mail :
+
+```
+DB_HOST=127.0.0.1
+DB_PORT=8889
+DB_DATABASE=ziqetmu
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+
+```
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=824ad51fe50a5X
+MAIL_PASSWORD=55762d03f59eX6
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=app@ziqetmu.fr
+```
+
 ### Crée un utilisateur
 
 ```

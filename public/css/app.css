@@ -1825,6 +1825,50 @@ html.is-animating .transition-fade {
   margin-top: 1rem;
   margin-bottom: 0.5em;
 }
+.container-page label {
+  font-size: 16px;
+  font-family: "roboto medium";
+  font-weight: 400;
+  color: #fff;
+  text-align: left;
+  margin-bottom: 0.5em;
+  display: block;
+  cursor: pointer;
+}
+.container-page input,
+.container-page textarea {
+  width: 100%;
+  margin-bottom: 2em;
+  padding: 1em 0.5em;
+  border-radius: 8px;
+  border: none;
+}
+.container-page textarea {
+  min-height: 200px;
+}
+.container-page button[type=submit],
+.container-page input[type=submit] {
+  cursor: pointer;
+}
+.container-page .btn {
+  color: #fff;
+  text-transform: uppercase;
+  background: #B00D70;
+  border-radius: 40px;
+  padding: 0.8em 2em;
+  font-family: "roboto medium";
+  font-size: 14px;
+  text-decoration: none;
+  border: none;
+  align-self: center;
+}
+.container-page .invalid-feedback {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  background-color: #514A54;
+  border-radius: 0.5rem;
+}
 
 .page-error h1 {
   margin-bottom: 2rem;
