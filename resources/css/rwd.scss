@@ -86,7 +86,26 @@
         margin-bottom: 2rem;
     }
 }
-
+@media screen and (max-width: 992px) {
+    body.auth footer {
+        justify-content: center;
+        a {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        ul {
+            text-align: center;
+            justify-content: center;
+            a {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+    }
+    footer .container {
+        text-align: center;
+    }
+}
 
 @media screen and (min-width: 992px) {
     .container-page,
