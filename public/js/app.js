@@ -5770,7 +5770,7 @@ function playOrPause() {
   });
 }
 
-playOrPause(); // //like album
+playOrPause(); //like album
 // let likeAlbums = document.querySelectorAll('.likeAlbum');
 // if(likeAlbums) {
 //     likeAlbums.forEach(likeAlbum => {
@@ -6469,7 +6469,6 @@ function init() {
                 audio.pause();
               } else {
                 var _track17 = tracks[trackIndex + 1].innerText;
-                console.log(tracks);
                 audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track17 + '.mp3');
 
                 var _currentSongs17 = document.querySelectorAll('.container-player .titre_name');
@@ -6595,16 +6594,20 @@ function init() {
           }).then(function (response) {
             return response.json();
           }).then(function (data) {
+            var allLikes = document.querySelectorAll('#like');
+
             if (data.liked === true) {
-              likeAlbums.forEach(function (likeAlbum) {
-                likeAlbum.parentElement.classList.add('liked');
-                likeAlbum.value = "Retirer";
+              allLikes.forEach(function (el) {
+                el.querySelector('.wrap').classList.add('liked');
+                el.querySelector('.likeAlbum').value = "Retirer";
               });
+              document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
             } else {
-              likeAlbums.forEach(function (likeAlbum) {
-                likeAlbum.parentElement.classList.remove('liked');
-                likeAlbum.value = "Ajouter";
+              allLikes.forEach(function (el) {
+                el.querySelector('.wrap').classList.remove('liked');
+                el.querySelector('.likeAlbum').value = "Ajouter";
               });
+              document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
             }
           });
         });
@@ -6657,14 +6660,20 @@ function init() {
         }).then(function (response) {
           return response.json();
         }).then(function (data) {
+          var allLikes = document.querySelectorAll('#like');
+
           if (data.liked === true) {
-            document.querySelector('.wrapPlaylist').classList.add('liked');
-            document.querySelector('.wrap').classList.add('liked');
-            document.querySelector('#likeAlbum').value = "Retirer";
+            allLikes.forEach(function (el) {
+              el.querySelector('.wrap').classList.add('liked');
+              el.querySelector('.likeAlbum').value = "Retirer";
+            });
+            document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
           } else {
-            document.querySelector('.wrapPlaylist').classList.remove('liked');
-            document.querySelector('.wrap').classList.remove('liked');
-            document.querySelector('#likeAlbum').value = "Ajouter";
+            allLikes.forEach(function (el) {
+              el.querySelector('.wrap').classList.remove('liked');
+              el.querySelector('.likeAlbum').value = "Ajouter";
+            });
+            document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
           }
         });
       });
@@ -6899,16 +6908,50 @@ function init() {
         audio.play();
       });
     });
-  }
+  } //Search Bar
+
+
+  var divSearch = document.querySelector('#autocomplete');
+  var searchLogo = document.querySelector("#searchLogo");
+  searchLogo.addEventListener('click', function (e) {
+    divSearch.classList.add('active');
+  });
+  var closeBtn = document.querySelector('#closeBtn');
+  closeBtn.addEventListener('click', function (e) {
+    divSearch.classList.remove('active');
+  }); //Settings menu
+
+  var settingsMenu = document.querySelector('.settingsMenu');
+  var settingsBtn = document.querySelector('#settings');
+  settingsBtn.addEventListener('click', function (e) {
+    settingsMenu.classList.toggle('show');
+    e.target.classList.toggle('dark');
+  });
+
+  var close_results = function close_results() {
+    var container = $("#autocomplete");
+    container.removeClass('active');
+    var settingsMenu = $('.settingsMenu');
+    settingsMenu.removeClass('show');
+    var settingsBtn = $('#settings');
+    settingsBtn.removeClass('dark');
+  }; //Header sticky
+
+
+  var header = document.querySelector('header');
+  window.addEventListener('scroll', function (e) {
+    if (window.scrollY > 5) {
+      header.classList.add('sticky');
+    } else {
+      header.classList.remove('sticky');
+    }
+  });
 }
 
 init();
-swup.on('contentReplaced', init); //Search Bar
-
-var searchLogo = document.querySelector("#searchLogo");
-searchLogo.addEventListener('click', function (e) {
-  document.querySelector('#autocomplete').classList.add('active');
-});
+swup.on('contentReplaced', init); // $('main').on('click', e => {
+//     close_results()
+// });
 
 /***/ }),
 

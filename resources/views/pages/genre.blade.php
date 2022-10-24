@@ -11,11 +11,13 @@
                 <a href="{{ route('album', $album->id) }}">
                     <div class="card">
                         <img src="../storage/{{ $album->picture }}" alt="">
-                        <h2 class="album_name">{{ ucfirst($album->name) }}</h2>
-                        <h2 class="artiste_name">par {{ $album->artiste->name }}</h2>
-                        <span class="date">
+                        <div class="infos">
+                            <h4 class="album_name">{{ ucfirst($album->name) }}</h4>
+                            <h4 class="artiste_name">par {{ $album->artiste->name }}</h4>
+                            <span class="date">
                             Sorti en {{ $album->date }}
                         </span>
+                        </div>
                     </div>
                 </a>
                 @endforeach

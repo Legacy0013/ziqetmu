@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Album;
+use App\Models\Artiste;
 use App\Models\Like;
+use App\Models\Titre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
@@ -44,9 +48,15 @@ class LikeController extends Controller
      * @param  \App\Models\Like  $like
      * @return \Illuminate\Http\Response
      */
-    public function show(Like $like)
+    public function show(Album $album, Artiste $artiste, Titre $titre, Like $like)
     {
-        //
+        $albums = Album::all();
+        $artistes = Artiste::all();
+        $likedTitres = Like::where('user_id', Auth::user()->id)
+            ->whereNotNull('titre_id')
+            ->get();
+
+        return view('pages.favoris', compact('likedTitres', 'albums', 'album', 'artistes' ));
     }
 
     /**

@@ -20,7 +20,7 @@
     <main class="error">
         <h1>404 | Page non trouvé</h1>
         <div class="message">
-            <a href="{{ route('home') }}">Revenir à l'accueil</a>
+            <a href="{{ route('home') }}" class="btn">Revenir à l'accueil</a>
         </div>
     </main>
 

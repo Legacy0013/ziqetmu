@@ -1,6 +1,14 @@
 .container-album {
-    padding: 0 2em 1em;
+    padding: 0 1em 1em;
     min-height: 100vh;
+    h2 {
+        color: $white;
+        font-family: $righteous;
+        font-size: 24px;
+        text-transform: capitalize;
+        text-align: center;
+        margin: 1.5em 0;
+    }
     .top {
         display: flex;
         flex-direction: column;

@@ -2,7 +2,47 @@ header {
     display: flex;
     justify-content: space-between;
     padding: 1em;
+    &.sticky {
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: $linearRose;
+        transition: .25s ease-in-out;
+        z-index: 9990;
+    }
     nav {
+        #settings {
+            &.dark {
+                position: relative;
+                z-index: 9990;
+                filter: invert(16%) sepia(53%) saturate(3208%) hue-rotate(255deg) brightness(99%) contrast(87%);
+            }
+        }
+        .settingsMenu {
+            position: absolute;
+            top: -300%;
+            right: 0;
+            z-index: 0;
+            padding: 3em 2em 1em;
+            background: #fff;
+            transition: top .25s ease-in-out;
+            &.show {
+                top: 0;
+                transition: top .25s ease-in-out;
+            }
+            ul {
+                li {
+                    margin-bottom: 1rem;
+                }
+            }
+           a {
+               color: $violet;
+           }
+        }
+        &>img {
+            margin-right: 1em;
+        }
         a:nth-child(1) {
             margin-right: .5em;
         }

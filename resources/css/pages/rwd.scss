@@ -1,5 +1,11 @@
 // Page CGV, ML
+header.rwd {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+}
 .container-page {
+    padding: 2em 1em 5rem;
     p {
         margin-bottom: 1rem;
     }
@@ -11,12 +17,12 @@
     }
     h2 {
         position: relative;
-        color: $white;
+        color: #fff;
         font-family: "righteous";
-        font-size: 18px;
-        margin-top: 01rem;
-        margin-bottom: 0.5em;
+        font-size: 24px;
         text-transform: capitalize;
+        text-align: center;
+        margin-bottom: 1.5em;
     }
     h2 span {
         position: absolute;
@@ -31,35 +37,51 @@
         margin-bottom: .5em;
     }
 
-
     // Formulaire de contact
-    label {
-        font-size: 16px;
-        font-family: "roboto medium";
-        font-weight: 400;
-        color: #fff;
-        text-align: left;
-        margin-bottom: 0.5em;
-        display: block;
-        cursor: pointer;
-    }
+    .ligne {
+        position: relative;
+        label {
+            font-size: 16px;
+            font-family: "roboto medium";
+            font-weight: 400;
+            color: #fff;
+            text-align: left;
+            margin-bottom: 0.5em;
+            display: block;
+            cursor: pointer;
+        }
 
-    input,
-    textarea {
-        width: 100%;
-        margin-bottom: 2em;
-        padding: 1em 0.5em;
-        border-radius: 8px;
-        border: none;
+        input,
+        textarea {
+            width: 100%;
+            margin-bottom: 2em;
+            padding: 1em 0.5em;
+            border-radius: 8px;
+            border: none;
+        }
+        textarea {
+            min-height: 200px;
+        }
+        button[type="submit"],
+        input[type="submit"] {
+            cursor: pointer;
+        }
+        &:has(.invalid-feedback) {
+            input,
+            textarea {
+                margin-bottom: 2.8rem;
+            }
+        }
+        .invalid-feedback {
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            color: $white;
+            background-color: red;
+            border-radius: 0.5rem;
+        }
     }
-    textarea {
-        min-height: 200px;
-    }
-    button[type="submit"],
-    input[type="submit"] {
-        cursor: pointer;
-    }
-
     .btn {
         color: #fff;
         text-transform: uppercase;
@@ -71,14 +93,6 @@
         text-decoration: none;
         border: none;
         align-self: center;
-    }
-
-    .invalid-feedback {
-        margin-bottom: 0.5rem;
-        padding: 0.5rem 1rem;
-        color: $white;
-        background-color: $darkGris;
-        border-radius: 0.5rem;
     }
 }
 .page-error {

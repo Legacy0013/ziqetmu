@@ -30,7 +30,7 @@
             </a>
         @endif
        <nav>
-            <img src="../img/search.svg" id="searchLogo" alt="page précédente">
+           <img src="../img/search.svg" id="searchLogo" alt="recherche">
 
            <div id="autocomplete" class="autocomplete">
                <input class="autocomplete-input"
@@ -40,13 +40,21 @@
                <div class="autocomplete-result-list">
                     <ul class="albums"></ul>
                     <ul class="artists"></ul>
-                    <ul class="noResult"><li>Désolé, il n'y a aucun résultat pour cette recherche</li></ul>
+                    <ul class="noResult">
+                        <li>Désolé, il n'y a aucun résultat pour cette recherche</li>
+                    </ul>
                </div>
+               <img src="../img/close-black.svg" id="closeBtn" alt="fermer">
            </div>
 
-            <a href="{{ route('home') }}">
-                <img src="../img/settings.svg" alt="page précédente">
-            </a>
+           <img src="../img/settings.svg" id="settings" alt="paramètres">
+
+           <div class="settingsMenu">
+               <ul>
+                   <li><a href="{{ route('favoris') }}">Favoris</a></li>
+                   <li><a href="{{ route('logout') }}">Déconnexion</a></li>
+               </ul>
+           </div>
        </nav>
     </header>
 
@@ -147,14 +155,6 @@
                 $(item).hide();
             })
         }
-        let close_results = () => {
-            let container= $("#autocomplete");
-            container.removeClass('active')
-        }
-
-        $('main *').on('click', e => {
-            close_results()
-        });
     </script>
 </body>
 </html>

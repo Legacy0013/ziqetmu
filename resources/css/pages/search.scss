@@ -1,6 +1,6 @@
 #autocomplete {
     position: absolute;
-    top: -100%;
+    top: -200%;
     left: 0;
     right: 0;
     width: 100%;
@@ -10,7 +10,7 @@
     .autocomplete-input {
         width: 100%;
         border-radius: 0 !important;
-        padding: 20px 12px 20px 48px;
+        padding: 20px 42px 20px 48px;
     }
     &.active {
         top: 0;
@@ -51,5 +51,12 @@
                 padding: 1rem 1rem .5rem !important;
             }
         }
+    }
+    #closeBtn {
+        position: absolute;
+        right: 15px;
+        top: 25px;
+        width: 16px;
+        height: 16px;
     }
 }

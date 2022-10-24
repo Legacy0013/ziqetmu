@@ -57,7 +57,8 @@ Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('getlogout');
 
-
+Route::get('/favoris', [LikeController::class, 'show'])->name('favoris');
+Route::post('/favoris', [AlbumController::class, 'like'])->name('likeFavoris');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -42,6 +42,8 @@ $righteous: 'righteous';
 @import 'pages/player.scss';
 @import 'pages/auth.scss';
 @import 'pages/search.scss';
+@import 'pages/rwd.scss';
+@import 'pages/favoris.scss';
 
 body {
     background: $linearBg no-repeat;
@@ -55,5 +57,3 @@ body {
 html.is-animating .transition-fade {
 opacity: 0;
 }
-
-@import 'rwd.scss';

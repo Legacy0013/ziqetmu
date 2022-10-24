@@ -99,7 +99,7 @@ function playOrPause() {
 }
 playOrPause();
 
-// //like album
+//like album
 // let likeAlbums = document.querySelectorAll('.likeAlbum');
 // if(likeAlbums) {
 //     likeAlbums.forEach(likeAlbum => {
@@ -662,7 +662,6 @@ function init() {
                                 audio.pause();
                             } else {
                                 let track = tracks[trackIndex+1].innerText;
-                                console.log(tracks)
                                 audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
                                 let currentSongs = document.querySelectorAll('.container-player .titre_name');
@@ -843,16 +842,19 @@ function init() {
                     })
                     .then(response => response.json())
                     .then(data => {
+                        let allLikes = document.querySelectorAll('#like');
                         if(data.liked === true){
-                            likeAlbums.forEach(likeAlbum => {
-                                likeAlbum.parentElement.classList.add('liked');
-                                likeAlbum.value = "Retirer"
-                            });
+                            allLikes.forEach(el => {
+                                el.querySelector('.wrap').classList.add('liked');
+                                el.querySelector('.likeAlbum').value = "Retirer"
+                            })
+                            document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
                         } else {
-                            likeAlbums.forEach(likeAlbum => {
-                                likeAlbum.parentElement.classList.remove('liked');
-                                likeAlbum.value = "Ajouter"
-                            });
+                            allLikes.forEach(el => {
+                                el.querySelector('.wrap').classList.remove('liked');
+                                el.querySelector('.likeAlbum').value = "Ajouter"
+                            })
+                            document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
                         }
                     });
                 })
@@ -882,15 +884,11 @@ function init() {
                 .then(data => {
                     if(data.likedArtiste === true){
                         e.target.lastElementChild.classList.add('liked');
-
                         document.querySelector('.likeArtiste').innerHTML = nbrLike + 1
-
                         e.submitter.value = "Retirer"
                     } else {
                         e.target.lastElementChild.classList.remove('liked');
-
                         document.querySelector('.likeArtiste').innerHTML = nbrLike - 1
-
                         e.submitter.value = "Ajouter"
                     }
                 });
@@ -913,14 +911,19 @@ function init() {
                 })
                 .then(response => response.json())
                 .then(data => {
+                    let allLikes = document.querySelectorAll('#like');
                     if(data.liked === true){
-                        document.querySelector('.wrapPlaylist').classList.add('liked');
-                        document.querySelector('.wrap').classList.add('liked');
-                        document.querySelector('#likeAlbum').value = "Retirer"
+                        allLikes.forEach(el => {
+                            el.querySelector('.wrap').classList.add('liked');
+                            el.querySelector('.likeAlbum').value = "Retirer"
+                        })
+                        document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
                     } else {
-                        document.querySelector('.wrapPlaylist').classList.remove('liked');
-                        document.querySelector('.wrap').classList.remove('liked');
-                        document.querySelector('#likeAlbum').value = "Ajouter"
+                        allLikes.forEach(el => {
+                            el.querySelector('.wrap').classList.remove('liked');
+                            el.querySelector('.likeAlbum').value = "Ajouter"
+                        })
+                        document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
                     }
                 });
             })
@@ -1222,13 +1225,50 @@ function init() {
             })
         });
     }
+
+    //Search Bar
+    let divSearch =  document.querySelector('#autocomplete');
+    let searchLogo = document.querySelector("#searchLogo");
+    searchLogo.addEventListener('click', e => {
+        divSearch.classList.add('active');
+    })
+    let closeBtn = document.querySelector(('#closeBtn'))
+    closeBtn.addEventListener('click', e => {
+        divSearch.classList.remove('active')
+    })
+
+//Settings menu
+    let settingsMenu = document.querySelector('.settingsMenu');
+    let settingsBtn = document.querySelector('#settings');
+    settingsBtn.addEventListener('click', e => {
+        settingsMenu.classList.toggle('show');
+        e.target.classList.toggle('dark')
+    })
+
+    let close_results = () => {
+        let container= $("#autocomplete");
+        container.removeClass('active')
+        let settingsMenu = $('.settingsMenu');
+        settingsMenu.removeClass('show');
+        let settingsBtn = $('#settings');
+        settingsBtn.removeClass('dark');
+    }
+
+//Header sticky
+    let header = document.querySelector('header');
+    window.addEventListener('scroll', e => {
+        if (window.scrollY > 5) {
+            header.classList.add('sticky')
+        } else {
+            header.classList.remove('sticky')
+        }
+    })
 }
 init();
 
 swup.on('contentReplaced', init)
 
-//Search Bar
-let searchLogo = document.querySelector("#searchLogo")
-searchLogo.addEventListener('click', e => {
-    document.querySelector('#autocomplete').classList.add('active')
-})
+
+// $('main').on('click', e => {
+//     close_results()
+// });
