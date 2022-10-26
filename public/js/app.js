@@ -5711,6 +5711,7 @@ var currentSong = document.querySelector('.container-player .titre_name');
 var trackName = currentSong.innerText; //get album id to construct the track link
 
 var albumId = document.querySelector('.container-player #album_id').value;
+console.log(albumId);
 setInterval(function () {
   albumId = albumId;
 }, 100); //create audio player & append it into the DOM
@@ -5838,8 +5839,7 @@ function init() {
       titleList.forEach(function (title) {
         //Pour chaque piste on ajoute un écouteur d'événement au clique
         title.addEventListener('click', function (e) {
-          e.preventDefault(); //Suppression de la classe active sur toutes les pistes
-
+          //Suppression de la classe active sur toutes les pistes
           for (var i = 0; i < titleList.length - 1; i++) {
             titleList[i].classList.remove('active');
           } //Ajout de la classe active sur l'élément cliqué
@@ -6250,6 +6250,7 @@ function init() {
           } else {
             if (trackIndex === tracks.length - 1) {} else {
               var _track10 = tracks[trackIndex + 1].innerText;
+              console.log(audio);
               audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track10 + '.mp3');
 
               var _currentSongs10 = document.querySelectorAll('.container-player .titre_name');
@@ -6469,6 +6470,7 @@ function init() {
                 audio.pause();
               } else {
                 var _track17 = tracks[trackIndex + 1].innerText;
+                console.log(albumId);
                 audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + _track17 + '.mp3');
 
                 var _currentSongs17 = document.querySelectorAll('.container-player .titre_name');
@@ -6497,6 +6499,7 @@ function init() {
           }
         }
       });
+      playOnCLick();
     }); //click on timeline to skip around
     //Déclaration et définition des barres de progression
 
@@ -6574,46 +6577,45 @@ function init() {
       });
       slideTextContainer2.forEach(function (text) {});
     } //like sur un album
+    // if(document.querySelector('#like')){
 
 
-    if (document.querySelector('#like')) {
-      var likes = document.querySelectorAll('#like');
-      likes.forEach(function (like) {
-        like.addEventListener('submit', function (e) {
-          e.preventDefault();
-          var likeAlbums = document.querySelectorAll('.likeAlbum');
-          var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-          var fd = new FormData();
-          fd.append('album_id', e.target.album_id.value);
-          fetch(e.target.action, {
-            method: e.target.method,
-            headers: {
-              'X-CSRF-TOKEN': csrf
-            },
-            body: fd
-          }).then(function (response) {
-            return response.json();
-          }).then(function (data) {
-            var allLikes = document.querySelectorAll('#like');
+    var likes = document.querySelectorAll('#like');
+    likes.forEach(function (like) {
+      like.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var likeAlbums = document.querySelectorAll('.likeAlbum');
+        var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        var fd = new FormData();
+        fd.append('album_id', e.target.album_id.value);
+        fetch(e.target.action, {
+          method: e.target.method,
+          headers: {
+            'X-CSRF-TOKEN': csrf
+          },
+          body: fd
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          var allLikes = document.querySelectorAll('#like');
 
-            if (data.liked === true) {
-              allLikes.forEach(function (el) {
-                el.querySelector('.wrap').classList.add('liked');
-                el.querySelector('.likeAlbum').value = "Retirer";
-              });
-              document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
-            } else {
-              allLikes.forEach(function (el) {
-                el.querySelector('.wrap').classList.remove('liked');
-                el.querySelector('.likeAlbum').value = "Ajouter";
-              });
-              document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
-            }
-          });
+          if (data.liked === true) {
+            allLikes.forEach(function (el) {
+              el.querySelector('.wrap').classList.add('liked');
+              el.querySelector('.likeAlbum').value = "Retirer";
+            });
+            document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
+          } else {
+            allLikes.forEach(function (el) {
+              el.querySelector('.wrap').classList.remove('liked');
+              el.querySelector('.likeAlbum').value = "Ajouter";
+            });
+            document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
+          }
         });
       });
-    } //like sur un artiste
-
+    }); // }
+    //like sur un artiste
 
     if (document.querySelector('#likeArtiste')) {
       document.querySelector('#likeArtiste').addEventListener('submit', function (e) {
@@ -6686,8 +6688,8 @@ function init() {
         e.preventDefault();
         var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         var fd = new FormData();
-        fd.append('album_id', e.target.album_id.value);
-        fd.append('artiste_id', e.target.artiste_id.value);
+        fd.append('album_id', e.target.querySelector('input[name=album_id]').value);
+        fd.append('artiste_id', e.target.querySelector('input[name=artiste_id]').value);
         fetch(e.target.action, {
           method: e.target.method,
           headers: {
@@ -6755,15 +6757,17 @@ function init() {
           oldArtistName4.innerText = newArtistName;
           var currentSong = document.querySelector('.container-player .titre_name');
           var trackName = currentSong.innerHTML;
+          albumId = document.querySelector('.container-album input[name=album_id]').value;
           var newIds = document.querySelectorAll('input[name=album_id]');
           newIds.forEach(function (newId) {
-            albumId = newId.value;
+            newId.value = albumId;
+            console.log('new id: ' + newId.value);
           });
-          albumId = document.querySelectorAll('.container-album input[name=album_id]')[0].value;
           var newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track');
           tracks = Array.prototype.slice.call(newListTracks);
           playOnCLick();
-          likeTitrePlaylist();
+          likeTitrePlaylist(); // console.log(albumId)
+
           audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
           audio.play();
           var playBtns = document.querySelectorAll(".toggle-play");
@@ -6791,6 +6795,7 @@ function init() {
         close.addEventListener('click', function (e) {
           bigPlayer.classList.remove('active');
           littlePLayer.style.display = 'block';
+          body.style.overflow = 'auto';
         });
       }
     } // play recent album onclick
@@ -6908,50 +6913,75 @@ function init() {
         audio.play();
       });
     });
-  } //Search Bar
-
-
-  var divSearch = document.querySelector('#autocomplete');
-  var searchLogo = document.querySelector("#searchLogo");
-  searchLogo.addEventListener('click', function (e) {
-    divSearch.classList.add('active');
-  });
-  var closeBtn = document.querySelector('#closeBtn');
-  closeBtn.addEventListener('click', function (e) {
-    divSearch.classList.remove('active');
-  }); //Settings menu
-
-  var settingsMenu = document.querySelector('.settingsMenu');
-  var settingsBtn = document.querySelector('#settings');
-  settingsBtn.addEventListener('click', function (e) {
-    settingsMenu.classList.toggle('show');
-    e.target.classList.toggle('dark');
-  });
-
-  var close_results = function close_results() {
-    var container = $("#autocomplete");
-    container.removeClass('active');
-    var settingsMenu = $('.settingsMenu');
-    settingsMenu.removeClass('show');
-    var settingsBtn = $('#settings');
-    settingsBtn.removeClass('dark');
-  }; //Header sticky
-
-
-  var header = document.querySelector('header');
-  window.addEventListener('scroll', function (e) {
-    if (window.scrollY > 5) {
-      header.classList.add('sticky');
-    } else {
-      header.classList.remove('sticky');
-    }
-  });
+  }
 }
 
-init();
-swup.on('contentReplaced', init); // $('main').on('click', e => {
+init(); // function myClick(event) {
+//     document.querySelector('.next').removeEventListener('click', myClick);
+//     document.querySelector('.prev').removeEventListener('click', myClick);
+//     document.querySelectorAll('#like').forEach(el => {
+//         el.removeEventListener('submit', myClick);
+//         console.log('reset')
+//     })
+//
+// }
+
+swup.on('contentReplaced', function (e) {
+  // myClick()
+  init();
+}); //Search Bar
+
+var divSearch = document.querySelector('#autocomplete');
+var searchLogo = document.querySelector("#searchLogo");
+searchLogo.addEventListener('click', function (e) {
+  divSearch.classList.add('active');
+  divSearch.querySelector('.autocomplete-input').focus();
+});
+var closeBtn = document.querySelector('#closeBtn');
+closeBtn.addEventListener('click', function (e) {
+  divSearch.classList.remove('active');
+}); //Settings menu
+
+var settingsMenu = document.querySelector('.settingsMenu');
+var settingsBtn = document.querySelector('#settings');
+settingsBtn.addEventListener('click', function (e) {
+  settingsMenu.classList.toggle('show');
+  e.target.classList.toggle('dark');
+});
+
+var close_results = function close_results() {
+  var container = $("#autocomplete");
+  container.removeClass('active');
+  var settingsMenu = $('.settingsMenu');
+  settingsMenu.removeClass('show');
+  var settingsBtn = $('#settings');
+  settingsBtn.removeClass('dark');
+}; //Header sticky
+
+
+var header = document.querySelector('header');
+window.addEventListener('scroll', function (e) {
+  if (window.scrollY > 5) {
+    header.classList.add('sticky');
+  } else {
+    header.classList.remove('sticky');
+  }
+}); // $('main').on('click', e => {
 //     close_results()
 // });
+// Show loading animation.
+
+var playPromise = audio.play();
+
+if (playPromise !== undefined) {
+  playPromise.then(function (_) {// Automatic playback started!
+    // Show playing UI.
+  })["catch"](function (error) {
+    // Auto-play was prevented
+    // Show paused UI.
+    console.log(error);
+  });
+}
 
 /***/ }),
 

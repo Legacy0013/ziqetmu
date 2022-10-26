@@ -36,13 +36,14 @@ let currentSong = document.querySelector('.container-player .titre_name');
 let trackName = currentSong.innerText;
 
 //get album id to construct the track link
-var albumId = document.querySelector('.container-player #album_id').value;
+let albumId = document.querySelector('.container-player #album_id').value;
+console.log(albumId)
 setInterval(() => {
     albumId = albumId
 }, 100);
 
 //create audio player & append it into the DOM
-var audio = document.createElement('audio');
+let audio = document.createElement('audio');
 audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
 audio.setAttribute('preload', 'metadata')
 audio.pause();
@@ -470,6 +471,7 @@ function init() {
                                }
                             else {
                                 let track = tracks[trackIndex + 1].innerText;
+                                console.log(audio)
                                 audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
                                 let currentSongs = document.querySelectorAll('.container-player .titre_name');
@@ -662,6 +664,7 @@ function init() {
                                 audio.pause();
                             } else {
                                 let track = tracks[trackIndex+1].innerText;
+                                console.log(albumId)
                                 audio.setAttribute('src', '../storage/albums/titres/' + albumId + '/' + track + '.mp3');
 
                                 let currentSongs = document.querySelectorAll('.container-player .titre_name');
@@ -686,7 +689,7 @@ function init() {
                     }
                 }
                 });
-
+                playOnCLick();
             })
 
         //click on timeline to skip around
@@ -742,7 +745,6 @@ function init() {
                 titleList.forEach(title => {
                     //Pour chaque piste on ajoute un écouteur d'événement au clique
                     title.addEventListener('click', (e) => {
-                        e.preventDefault()
                         //Suppression de la classe active sur toutes les pistes
                         for (let i = 0; i < titleList.length -1; i ++) {
                             titleList[i].classList.remove('active')
@@ -820,7 +822,7 @@ function init() {
         }
 
         //like sur un album
-        if(document.querySelector('#like')){
+        // if(document.querySelector('#like')){
             let likes = document.querySelectorAll('#like')
             likes.forEach(like => {
                 like.addEventListener('submit', e => {
@@ -859,7 +861,7 @@ function init() {
                     });
                 })
             });
-        }
+        // }
 
         //like sur un artiste
         if(document.querySelector('#likeArtiste')){
@@ -968,8 +970,8 @@ function init() {
                 e.preventDefault()
                 let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 let fd = new FormData();
-                fd.append('album_id', e.target.album_id.value)
-                fd.append('artiste_id', e.target.artiste_id.value)
+                fd.append('album_id', e.target.querySelector('input[name=album_id]').value)
+                fd.append('artiste_id', e.target.querySelector('input[name=artiste_id]').value)
                 fetch(e.target.action, {
                     method:e.target.method,
                     headers: {
@@ -1050,19 +1052,21 @@ function init() {
                         let currentSong = document.querySelector('.container-player .titre_name');
                         let trackName = currentSong.innerHTML;
 
-                        var newIds = document.querySelectorAll('input[name=album_id]')
-                        newIds.forEach(newId => {
-                            albumId = newId.value
-                        });
+                        albumId = document.querySelector('.container-album input[name=album_id]').value;
 
-                        albumId = document.querySelectorAll('.container-album input[name=album_id]')[0].value
+                        let newIds = document.querySelectorAll('input[name=album_id]')
+                        newIds.forEach(newId => {
+
+                            newId.value = albumId
+                            console.log('new id: ' + newId.value)
+                        });
 
                         let newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track')
                         tracks = Array.prototype.slice.call(newListTracks);
 
                         playOnCLick();
                         likeTitrePlaylist();
-
+                    // console.log(albumId)
                         audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
                         audio.play()
 
@@ -1091,6 +1095,7 @@ function init() {
                 close.addEventListener('click', e => {
                     bigPlayer.classList.remove('active');
                     littlePLayer.style.display ='block';
+                    body.style.overflow = 'auto';
                 })
             }
         }
@@ -1225,50 +1230,77 @@ function init() {
             })
         });
     }
-
-    //Search Bar
-    let divSearch =  document.querySelector('#autocomplete');
-    let searchLogo = document.querySelector("#searchLogo");
-    searchLogo.addEventListener('click', e => {
-        divSearch.classList.add('active');
-    })
-    let closeBtn = document.querySelector(('#closeBtn'))
-    closeBtn.addEventListener('click', e => {
-        divSearch.classList.remove('active')
-    })
-
-//Settings menu
-    let settingsMenu = document.querySelector('.settingsMenu');
-    let settingsBtn = document.querySelector('#settings');
-    settingsBtn.addEventListener('click', e => {
-        settingsMenu.classList.toggle('show');
-        e.target.classList.toggle('dark')
-    })
-
-    let close_results = () => {
-        let container= $("#autocomplete");
-        container.removeClass('active')
-        let settingsMenu = $('.settingsMenu');
-        settingsMenu.removeClass('show');
-        let settingsBtn = $('#settings');
-        settingsBtn.removeClass('dark');
-    }
-
-//Header sticky
-    let header = document.querySelector('header');
-    window.addEventListener('scroll', e => {
-        if (window.scrollY > 5) {
-            header.classList.add('sticky')
-        } else {
-            header.classList.remove('sticky')
-        }
-    })
 }
 init();
 
-swup.on('contentReplaced', init)
+// function myClick(event) {
+//     document.querySelector('.next').removeEventListener('click', myClick);
+//     document.querySelector('.prev').removeEventListener('click', myClick);
+//     document.querySelectorAll('#like').forEach(el => {
+//         el.removeEventListener('submit', myClick);
+//         console.log('reset')
+//     })
+//
+// }
 
+swup.on('contentReplaced', e => {
+   // myClick()
+    init();
+})
+
+//Search Bar
+let divSearch =  document.querySelector('#autocomplete');
+let searchLogo = document.querySelector("#searchLogo");
+searchLogo.addEventListener('click', e => {
+    divSearch.classList.add('active');
+    divSearch.querySelector('.autocomplete-input').focus();
+})
+let closeBtn = document.querySelector(('#closeBtn'))
+closeBtn.addEventListener('click', e => {
+    divSearch.classList.remove('active')
+})
+
+//Settings menu
+let settingsMenu = document.querySelector('.settingsMenu');
+let settingsBtn = document.querySelector('#settings');
+settingsBtn.addEventListener('click', e => {
+    settingsMenu.classList.toggle('show');
+    e.target.classList.toggle('dark')
+})
+
+let close_results = () => {
+    let container= $("#autocomplete");
+    container.removeClass('active')
+    let settingsMenu = $('.settingsMenu');
+    settingsMenu.removeClass('show');
+    let settingsBtn = $('#settings');
+    settingsBtn.removeClass('dark');
+}
+
+//Header sticky
+let header = document.querySelector('header');
+window.addEventListener('scroll', e => {
+    if (window.scrollY > 5) {
+        header.classList.add('sticky')
+    } else {
+        header.classList.remove('sticky')
+    }
+})
 
 // $('main').on('click', e => {
 //     close_results()
 // });
+// Show loading animation.
+var playPromise = audio.play();
+
+if (playPromise !== undefined) {
+    playPromise.then(_ => {
+        // Automatic playback started!
+        // Show playing UI.
+    })
+        .catch(error => {
+            // Auto-play was prevented
+            // Show paused UI.
+            console.log(error)
+        });
+}
