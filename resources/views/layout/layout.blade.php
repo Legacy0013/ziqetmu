@@ -52,6 +52,7 @@
            <div class="settingsMenu">
                <ul>
                    <li><a href="{{ route('favoris') }}">Favoris</a></li>
+                   <li><a href="{{ route('contact') }}">Contact</a></li>
                    <li><a href="{{ route('logout') }}">Déconnexion</a></li>
                </ul>
            </div>

@@ -14,9 +14,9 @@
                 <span class="date">{{ $album->date }}</span>
             </p>
             <div class="wrap-forms">
-                <form action="{{ route('like', $album->id) }}" method="post" id="like">
+                <form action="{{ route('like', $album->id) }}" method="post" id="like" class="likeOfTheAlbum">
                     @csrf
-                    @if ($liked == true)
+                    @if ($liked)
                         <div class="wrap liked">
                             <input type="hidden" name="album_id" value="{{ $album->id }}">
                             <input type="submit" class="likeAlbum" value="retirer">

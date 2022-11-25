@@ -1,13 +1,15 @@
 import Swup from 'swup';
+import SwupPreloadPlugin from '@swup/preload-plugin';
 import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupDebugPlugin from '@swup/debug-plugin';
-import {once, toArray} from 'lodash';
 
 const swup = new Swup({
     plugins: [
+        new SwupPreloadPlugin(),
         new SwupFormsPlugin({formSelector: 'form[data-swup-form]'}),
         new SwupDebugPlugin()
-    ]
+    ],
+    cache: false
 });
 
 require('./bootstrap');
@@ -33,6 +35,7 @@ const audioPlayers = document.querySelectorAll('.audio-player');
 
 //Variables declaration for current song and track name
 let currentSong = document.querySelector('.container-player .titre_name');
+if(currentSong) {}
 let trackName = currentSong.innerText;
 
 //get album id to construct the track link
@@ -153,7 +156,6 @@ function shuffledTracks(arr) {
 }
 //Appel de la fonction
 shuffledTracks(tracksArray)
-
 
 function init() {
     if(document.querySelector('.audio-player')) {
@@ -822,113 +824,87 @@ function init() {
         }
 
         //like sur un album
-        // if(document.querySelector('#like')){
-            let likes = document.querySelectorAll('#like')
+        if(document.querySelector('#like')){
+            let likes = document.querySelectorAll('.likeOfTheAlbum')
             likes.forEach(like => {
-                like.addEventListener('submit', e => {
+                like.addEventListener('submit', likeAlbum);
+            });
+        }
+
+        //like sur un artiste
+        if(document.querySelector('#likeArtiste')){
+            if (document.querySelector('#likeArtiste').getAttribute('listener') !== 'true') {
+                document.querySelector('#likeArtiste').addEventListener('submit', e => {
                     e.preventDefault()
 
-                    let likeAlbums = document.querySelectorAll('.likeAlbum')
+                    let nbrLike = parseInt(document.querySelector('.likeArtiste').innerHTML)
 
                     let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                     let fd = new FormData();
 
-                    fd.append('album_id', e.target.album_id.value)
+                    fd.append('artiste_id', e.target.artiste_id.value)
 
                     fetch(e.target.action, {
-                        method:e.target.method,
+                        method: e.target.method,
                         headers: {
                             'X-CSRF-TOKEN': csrf
                         },
                         body: fd
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        let allLikes = document.querySelectorAll('#like');
-                        if(data.liked === true){
-                            allLikes.forEach(el => {
-                                el.querySelector('.wrap').classList.add('liked');
-                                el.querySelector('.likeAlbum').value = "Retirer"
-                            })
-                            document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
-                        } else {
-                            allLikes.forEach(el => {
-                                el.querySelector('.wrap').classList.remove('liked');
-                                el.querySelector('.likeAlbum').value = "Ajouter"
-                            })
-                            document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
-                        }
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.likedArtiste === true) {
+                                e.target.lastElementChild.classList.add('liked');
+                                document.querySelector('.likeArtiste').innerHTML = nbrLike + 1
+                                e.submitter.value = "Retirer"
+                            } else {
+                                e.target.lastElementChild.classList.remove('liked');
+                                document.querySelector('.likeArtiste').innerHTML = nbrLike - 1
+                                e.submitter.value = "Ajouter"
+                            }
+                        });
                 })
-            });
-        // }
-
-        //like sur un artiste
-        if(document.querySelector('#likeArtiste')){
-            document.querySelector('#likeArtiste').addEventListener('submit', e => {
-                e.preventDefault()
-
-                let nbrLike = parseInt(document.querySelector('.likeArtiste').innerHTML)
-
-                let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                let fd = new FormData();
-
-                fd.append('artiste_id', e.target.artiste_id.value)
-
-                fetch(e.target.action, {
-                    method:e.target.method,
-                    headers: {
-                        'X-CSRF-TOKEN': csrf
-                    },
-                    body: fd
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if(data.likedArtiste === true){
-                        e.target.lastElementChild.classList.add('liked');
-                        document.querySelector('.likeArtiste').innerHTML = nbrLike + 1
-                        e.submitter.value = "Retirer"
-                    } else {
-                        e.target.lastElementChild.classList.remove('liked');
-                        document.querySelector('.likeArtiste').innerHTML = nbrLike - 1
-                        e.submitter.value = "Ajouter"
-                    }
-                });
-            })
+            }
         }
 
         //like sur un album dans la playlist
         if(document.querySelector('#likePlaylist')){
-            document.querySelector('#likePlaylist').addEventListener('submit', e => {
-                e.preventDefault()
-                let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                let fd = new FormData();
-                fd.append('album_id', e.target.album_id.value)
-                fetch(e.target.action, {
-                    method:e.target.method,
-                    headers: {
-                        'X-CSRF-TOKEN': csrf
-                    },
-                    body: fd
+            if (document.querySelector('#likePlaylist').getAttribute('listener') !== 'true') {
+                let playLists = document.querySelectorAll('#likePlaylist');
+                playLists.forEach(playList => {
+                    playList.addEventListener('submit', e => {
+                        console.log('addEvent');
+                        e.preventDefault()
+                        let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                        let fd = new FormData();
+                        fd.append('album_id', e.target.album_id.value)
+                        fetch(e.target.action, {
+                            method: e.target.method,
+                            headers: {
+                                'X-CSRF-TOKEN': csrf
+                            },
+                            body: fd
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                let allLikes = document.querySelectorAll('#like');
+                                if (data.liked === true) {
+                                    allLikes.forEach(el => {
+                                        el.querySelector('.wrap').classList.add('liked');
+                                        el.querySelector('.likeAlbum').value = "Retirer"
+                                    })
+                                    document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
+                                } else {
+                                    allLikes.forEach(el => {
+                                        el.querySelector('.wrap').classList.remove('liked');
+                                        el.querySelector('.likeAlbum').value = "Ajouter"
+                                    })
+                                    document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
+                                }
+                            });
+                    })
                 })
-                .then(response => response.json())
-                .then(data => {
-                    let allLikes = document.querySelectorAll('#like');
-                    if(data.liked === true){
-                        allLikes.forEach(el => {
-                            el.querySelector('.wrap').classList.add('liked');
-                            el.querySelector('.likeAlbum').value = "Retirer"
-                        })
-                        document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
-                    } else {
-                        allLikes.forEach(el => {
-                            el.querySelector('.wrap').classList.remove('liked');
-                            el.querySelector('.likeAlbum').value = "Ajouter"
-                        })
-                        document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
-                    }
-                });
-            })
+            }
         }
 
         // like sur un titre
@@ -966,117 +942,119 @@ function init() {
 
         //listen and add to recent list
         if(document.querySelector('#listenAndAddRecent')){
-            document.querySelector('#listenAndAddRecent').addEventListener('submit', e => {
-                e.preventDefault()
-                let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                let fd = new FormData();
-                fd.append('album_id', e.target.querySelector('input[name=album_id]').value)
-                fd.append('artiste_id', e.target.querySelector('input[name=artiste_id]').value)
-                fetch(e.target.action, {
-                    method:e.target.method,
-                    headers: {
-                        'X-CSRF-TOKEN': csrf
-                    },
-                    body: fd
+            if (document.querySelector('#listenAndAddRecent').getAttribute('listener') !== 'true') {
+                document.querySelector('#listenAndAddRecent').addEventListener('submit', e => {
+                    e.preventDefault()
+                    let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    let fd = new FormData();
+                    fd.append('album_id', e.target.querySelector('input[name=album_id]').value)
+                    fd.append('artiste_id', e.target.querySelector('input[name=artiste_id]').value)
+                    fetch(e.target.action, {
+                        method: e.target.method,
+                        headers: {
+                            'X-CSRF-TOKEN': csrf
+                        },
+                        body: fd
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            let clickList = document.querySelector('.container-album .bottom')
+                            let container = document.querySelector('.container-player .albumTracks')
+                            container.innerHTML = clickList.innerHTML
+
+                            //change album duration
+                            let duration = document.querySelector('.container-player .duration')
+                            duration.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.duration').innerHTML
+
+                            // change nbr tracks
+                            let nbrTracks = document.querySelector('.container-player .titres_count')
+                            nbrTracks.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.nbrTracks').innerHTML + ' titres';
+
+                            // change img src
+                            let newImg = document.querySelector('.top img')
+                            let oldImg1 = document.querySelector('.audio-player-partial .top .left img')
+                            let oldImg2 = document.querySelector('.container-player .cover')
+                            let oldImg3 = document.querySelector('.container-player .album-cover img')
+                            oldImg1.src = newImg.src
+                            oldImg2.src = newImg.src
+                            oldImg3.src = newImg.src
+
+                            // change album name
+                            let newAlbumName = e.target.parentElement.closest('.container-album').querySelector('.album_name')
+                            let oldAlbumName = document.querySelector('.container-player h2')
+                            let oldAlbumNames2 = document.querySelectorAll('.partial-player .element .album-name')
+                            let oldAlbumNames3 = document.querySelectorAll('.container-player .element .album-name')
+                            let oldAlbumName4 = document.querySelector('.container-player .album_name')
+                            setTimeout(() => {
+                                oldAlbumName.innerText = newAlbumName.innerText
+                                oldAlbumNames2.forEach(oldAlbumName2 => {
+                                    oldAlbumName2.innerHTML = newAlbumName.innerHTML
+                                });
+                                oldAlbumNames3.forEach(oldAlbumName3 => {
+                                    oldAlbumName3.innerHTML = newAlbumName.innerHTML
+                                });
+                                oldAlbumName4.innerHTML = newAlbumName.innerHTML
+                            }, "500")
+
+                            // change currentsong name
+                            let newTitreName = e.target.parentElement.closest('.container-album').querySelectorAll('.titre .track')[0].innerText
+
+                            let titreName = document.querySelector('.audio-player .titre_name')
+                            titreName.innerText = newTitreName
+
+                            let titreName2 = document.querySelector('.current-track .current-song')
+                            titreName2.innerText = newTitreName
+
+                            let titreName3 = document.querySelector('.audio-player-partial .titre_name')
+                            titreName3.innerText = newTitreName
+
+                            // change artist name
+                            let newArtistName = e.target.parentElement.closest('.container-album').querySelector('.artiste_name').innerText.replace("par", "")
+
+                            //texte défilant mini player
+                            let oldArtistNames2 = document.querySelectorAll('.audio-player-partial .textSlide2 .element .artiste_name')
+                            oldArtistNames2.forEach((oldArtistName2, index) => {
+                                oldArtistName2.innerText = newArtistName
+                            });
+                            //texte défilant big player
+                            let oldArtistNames3 = document.querySelectorAll('.audio-player .textSlide2 .element .artiste_name')
+                            oldArtistNames3.forEach((oldArtistName3, index) => {
+                                oldArtistName3.innerText = newArtistName
+                            });
+                            //texte défilant file d'attente
+                            let oldArtistName4 = document.querySelector('.container-player .textSlide .artiste_name')
+                            oldArtistName4.innerText = newArtistName
+
+
+                            let currentSong = document.querySelector('.container-player .titre_name');
+                            let trackName = currentSong.innerHTML;
+
+                            albumId = document.querySelector('.container-album input[name=album_id]').value;
+
+                            let newIds = document.querySelectorAll('input[name=album_id]')
+                            newIds.forEach(newId => {
+
+                                newId.value = albumId
+                                console.log('new id: ' + newId.value)
+                            });
+
+                            let newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track')
+                            tracks = Array.prototype.slice.call(newListTracks);
+
+                            playOnCLick();
+                            likeTitrePlaylist();
+
+                            audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
+                            audio.play()
+
+                            let playBtns = document.querySelectorAll(".toggle-play");
+                            playBtns.forEach(playBtn => {
+                                playBtn.classList.remove("play");
+                                playBtn.classList.add("pause");
+                            });
+                        });
                 })
-                .then(response => response.json())
-                .then(data => {
-                    let clickList = document.querySelector('.container-album .bottom')
-                    let container = document.querySelector('.container-player .albumTracks')
-                    container.innerHTML = clickList.innerHTML
-
-                    //change album duration
-                    let duration = document.querySelector('.container-player .duration')
-                    duration.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.duration').innerHTML
-
-                    // change nbr tracks
-                    let nbrTracks = document.querySelector('.container-player .titres_count')
-                    nbrTracks.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.nbrTracks').innerHTML + ' titres';
-
-                    // change img src
-                    let newImg = document.querySelector('.top img')
-                    let oldImg1 = document.querySelector('.audio-player-partial .top .left img')
-                    let oldImg2 = document.querySelector('.container-player .cover')
-                    let oldImg3 = document.querySelector('.container-player .album-cover img')
-                    oldImg1.src = newImg.src
-                    oldImg2.src = newImg.src
-                    oldImg3.src = newImg.src
-
-                    // change album name
-                    let newAlbumName = e.target.parentElement.closest('.container-album').querySelector('.album_name')
-                    let oldAlbumName = document.querySelector('.container-player h2')
-                    let oldAlbumNames2 = document.querySelectorAll('.partial-player .element .album-name')
-                    let oldAlbumNames3 = document.querySelectorAll('.container-player .element .album-name')
-                    let oldAlbumName4 = document.querySelector('.container-player .album_name')
-                    setTimeout(() => {
-                        oldAlbumName.innerText = newAlbumName.innerText
-                        oldAlbumNames2.forEach(oldAlbumName2 => {
-                            oldAlbumName2.innerHTML = newAlbumName.innerHTML
-                        });
-                        oldAlbumNames3.forEach(oldAlbumName3 => {
-                            oldAlbumName3.innerHTML = newAlbumName.innerHTML
-                        });
-                        oldAlbumName4.innerHTML = newAlbumName.innerHTML
-                    }, "500")
-
-                    // change currentsong name
-                    let newTitreName = e.target.parentElement.closest('.container-album').querySelectorAll('.titre .track')[0].innerText
-
-                    let titreName = document.querySelector('.audio-player .titre_name')
-                    titreName.innerText = newTitreName
-
-                    let titreName2 = document.querySelector('.current-track .current-song')
-                    titreName2.innerText = newTitreName
-
-                    let titreName3 = document.querySelector('.audio-player-partial .titre_name')
-                    titreName3.innerText = newTitreName
-
-                    // change artist name
-                        let newArtistName = e.target.parentElement.closest('.container-album').querySelector('.artiste_name').innerText.replace("par", "")
-
-                        //texte défilant mini player
-                        let oldArtistNames2 = document.querySelectorAll('.audio-player-partial .textSlide2 .element .artiste_name')
-                        oldArtistNames2.forEach((oldArtistName2, index) => {
-                            oldArtistName2.innerText = newArtistName
-                        });
-                        //texte défilant big player
-                        let oldArtistNames3 = document.querySelectorAll('.audio-player .textSlide2 .element .artiste_name')
-                        oldArtistNames3.forEach((oldArtistName3, index) => {
-                            oldArtistName3.innerText = newArtistName
-                        });
-                        //texte défilant file d'attente
-                        let oldArtistName4 = document.querySelector('.container-player .textSlide .artiste_name')
-                        oldArtistName4.innerText = newArtistName
-
-
-                        let currentSong = document.querySelector('.container-player .titre_name');
-                        let trackName = currentSong.innerHTML;
-
-                        albumId = document.querySelector('.container-album input[name=album_id]').value;
-
-                        let newIds = document.querySelectorAll('input[name=album_id]')
-                        newIds.forEach(newId => {
-
-                            newId.value = albumId
-                            console.log('new id: ' + newId.value)
-                        });
-
-                        let newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track')
-                        tracks = Array.prototype.slice.call(newListTracks);
-
-                        playOnCLick();
-                        likeTitrePlaylist();
-                    // console.log(albumId)
-                        audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
-                        audio.play()
-
-                        let playBtns = document.querySelectorAll(".toggle-play");
-                        playBtns.forEach(playBtn => {
-                            playBtn.classList.remove("play");
-                            playBtn.classList.add("pause");
-                        });
-                });
-            })
+            }
         }
 
         if(document.querySelector('.partial-player')) {
@@ -1231,20 +1209,57 @@ function init() {
         });
     }
 }
+//like sur un album
+const likeAlbum = (e) => {
+    e.preventDefault()
+
+    let likeAlbums = document.querySelectorAll('.likeAlbum')
+
+    let csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    let fd = new FormData();
+    albumId = e.currentTarget.querySelector('[name="album_id"]').value;
+    fd.append('album_id', e.target.album_id.value)
+
+    fetch(e.target.action, {
+        method: e.target.method,
+        headers: {
+            'X-CSRF-TOKEN': csrf
+        },
+        body: fd
+    })
+        .then(response => response.json())
+        .then(data => {
+            let allLikes = document.querySelectorAll('#like');
+            if (data.liked === true) {
+                allLikes.forEach(el => {
+                    el.querySelector('.wrap').classList.add('liked');
+                    el.querySelector('.likeAlbum').value = "Retirer"
+                })
+                document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
+            } else {
+                allLikes.forEach(el => {
+                    el.querySelector('.wrap').classList.remove('liked');
+                    el.querySelector('.likeAlbum').value = "Ajouter"
+                })
+                document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
+            }
+        });
+}
+
 init();
 
-// function myClick(event) {
-//     document.querySelector('.next').removeEventListener('click', myClick);
-//     document.querySelector('.prev').removeEventListener('click', myClick);
-//     document.querySelectorAll('#like').forEach(el => {
-//         el.removeEventListener('submit', myClick);
-//         console.log('reset')
-//     })
-//
-// }
+function myClick(event) {
+    document.querySelector('.next').removeEventListener('click');
+    document.querySelector('.prev').removeEventListener('click');
+    document.querySelectorAll('#like').forEach(el => {
+        el.removeEventListener('submit', likeAlbum);
+        console.log('reset')
+    })
+    // document.querySelector('#likePlaylist').removeEventListener('click', myClick);
+}
 
 swup.on('contentReplaced', e => {
-   // myClick()
+    myClick();
     init();
 })
 
@@ -1269,12 +1284,12 @@ settingsBtn.addEventListener('click', e => {
 })
 
 let close_results = () => {
-    let container= $("#autocomplete");
-    container.removeClass('active')
+    let container= document.querySelector("#autocomplete");
+    container.classList.remove('active')
     let settingsMenu = $('.settingsMenu');
-    settingsMenu.removeClass('show');
+    settingsMenu.classList.remove('show');
     let settingsBtn = $('#settings');
-    settingsBtn.removeClass('dark');
+    settingsBtn.classList.remove('dark');
 }
 
 //Header sticky
@@ -1291,7 +1306,7 @@ window.addEventListener('scroll', e => {
 //     close_results()
 // });
 // Show loading animation.
-var playPromise = audio.play();
+var playPromise = audio.pause();
 
 if (playPromise !== undefined) {
     playPromise.then(_ => {

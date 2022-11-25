@@ -336,6 +336,161 @@ exports["default"] = Plugin;
 
 /***/ }),
 
+/***/ "./node_modules/@swup/preload-plugin/lib/index.js":
+/*!********************************************************!*\
+  !*** ./node_modules/@swup/preload-plugin/lib/index.js ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _plugin = __webpack_require__(/*! @swup/plugin */ "./node_modules/@swup/plugin/lib/index.js");
+
+var _plugin2 = _interopRequireDefault(_plugin);
+
+var _delegateIt = __webpack_require__(/*! delegate-it */ "./node_modules/delegate-it/index.js");
+
+var _delegateIt2 = _interopRequireDefault(_delegateIt);
+
+var _utils = __webpack_require__(/*! swup/lib/utils */ "./node_modules/swup/lib/utils/index.js");
+
+var _helpers = __webpack_require__(/*! swup/lib/helpers */ "./node_modules/swup/lib/helpers/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PreloadPlugin = function (_Plugin) {
+    _inherits(PreloadPlugin, _Plugin);
+
+    function PreloadPlugin() {
+        var _ref;
+
+        var _temp, _this, _ret;
+
+        _classCallCheck(this, PreloadPlugin);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = PreloadPlugin.__proto__ || Object.getPrototypeOf(PreloadPlugin)).call.apply(_ref, [this].concat(args))), _this), _this.name = "PreloadPlugin", _this.onContentReplaced = function () {
+            _this.swup.preloadPages();
+        }, _this.onMouseover = function (event) {
+            var swup = _this.swup;
+
+            swup.triggerEvent('hoverLink', event);
+
+            var link = new _helpers.Link(event.delegateTarget);
+            if (link.getAddress() !== (0, _helpers.getCurrentUrl)() && !swup.cache.exists(link.getAddress()) && swup.preloadPromise == null) {
+                swup.preloadPromise = swup.preloadPage(link.getAddress());
+                swup.preloadPromise.route = link.getAddress();
+                swup.preloadPromise.finally(function () {
+                    swup.preloadPromise = null;
+                });
+            }
+        }, _this.preloadPage = function (pathname) {
+            var swup = _this.swup;
+
+            var link = new _helpers.Link(pathname);
+            return new Promise(function (resolve, reject) {
+                if (!swup.cache.exists(link.getAddress())) {
+                    (0, _helpers.fetch)({ url: link.getAddress(), headers: swup.options.requestHeaders }, function (response) {
+                        if (response.status === 500) {
+                            swup.triggerEvent('serverError');
+                            reject(link.getAddress());
+                        } else {
+                            // get json data
+                            var page = swup.getPageData(response);
+                            if (page != null) {
+                                page.url = link.getAddress();
+                                swup.cache.cacheUrl(page);
+                                swup.triggerEvent('pagePreloaded');
+                                resolve(page);
+                            } else {
+                                reject(link.getAddress());
+                                return;
+                            }
+                        }
+                    });
+                } else {
+                    resolve(swup.cache.getPage(link.getAddress()));
+                }
+            });
+        }, _this.preloadPages = function () {
+            (0, _utils.queryAll)('[data-swup-preload]').forEach(function (element) {
+                _this.swup.preloadPage(element.href);
+            });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
+    }
+
+    _createClass(PreloadPlugin, [{
+        key: 'mount',
+        value: function mount() {
+            var swup = this.swup;
+
+            if (!swup.options.cache) {
+                console.warn('PreloadPlugin: swup cache needs to be enabled for preloading');
+                return;
+            }
+
+            swup._handlers.pagePreloaded = [];
+            swup._handlers.hoverLink = [];
+
+            swup.preloadPage = this.preloadPage;
+            swup.preloadPages = this.preloadPages;
+
+            // register mouseover handler
+            swup.delegatedListeners.mouseover = (0, _delegateIt2.default)(document.body, swup.options.linkSelector, 'mouseover', this.onMouseover.bind(this));
+
+            // initial preload of links with [data-swup-preload] attr
+            swup.preloadPages();
+
+            // do the same on every content replace
+            swup.on('contentReplaced', this.onContentReplaced);
+
+            // cache unmodified dom of initial/current page
+            swup.preloadPage((0, _helpers.getCurrentUrl)());
+        }
+    }, {
+        key: 'unmount',
+        value: function unmount() {
+            var swup = this.swup;
+
+            if (!swup.options.cache) {
+                return;
+            }
+
+            swup._handlers.pagePreloaded = null;
+            swup._handlers.hoverLink = null;
+
+            swup.preloadPage = null;
+            swup.preloadPages = null;
+
+            swup.delegatedListeners.mouseover.destroy();
+
+            swup.off('contentReplaced', this.onContentReplaced);
+        }
+    }]);
+
+    return PreloadPlugin;
+}(_plugin2.default);
+
+exports["default"] = PreloadPlugin;
+
+/***/ }),
+
 /***/ "./node_modules/alpinejs/dist/module.esm.js":
 /*!**************************************************!*\
   !*** ./node_modules/alpinejs/dist/module.esm.js ***!
@@ -5675,18 +5830,18 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var swup__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! swup */ "./node_modules/swup/lib/index.js");
-/* harmony import */ var _swup_forms_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @swup/forms-plugin */ "./node_modules/@swup/forms-plugin/lib/index.js");
-/* harmony import */ var _swup_debug_plugin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @swup/debug-plugin */ "./node_modules/@swup/debug-plugin/lib/index.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _swup_preload_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @swup/preload-plugin */ "./node_modules/@swup/preload-plugin/lib/index.js");
+/* harmony import */ var _swup_forms_plugin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @swup/forms-plugin */ "./node_modules/@swup/forms-plugin/lib/index.js");
+/* harmony import */ var _swup_debug_plugin__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @swup/debug-plugin */ "./node_modules/@swup/debug-plugin/lib/index.js");
 
 
 
 
 var swup = new swup__WEBPACK_IMPORTED_MODULE_0__["default"]({
-  plugins: [new _swup_forms_plugin__WEBPACK_IMPORTED_MODULE_1__["default"]({
+  plugins: [new _swup_preload_plugin__WEBPACK_IMPORTED_MODULE_1__["default"](), new _swup_forms_plugin__WEBPACK_IMPORTED_MODULE_2__["default"]({
     formSelector: 'form[data-swup-form]'
-  }), new _swup_debug_plugin__WEBPACK_IMPORTED_MODULE_2__["default"]()]
+  }), new _swup_debug_plugin__WEBPACK_IMPORTED_MODULE_3__["default"]()],
+  cache: false
 });
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
@@ -5708,6 +5863,9 @@ var tracks = document.querySelectorAll('.container-player .track');
 var audioPlayers = document.querySelectorAll('.audio-player'); //Variables declaration for current song and track name
 
 var currentSong = document.querySelector('.container-player .titre_name');
+
+if (currentSong) {}
+
 var trackName = currentSong.innerText; //get album id to construct the track link
 
 var albumId = document.querySelector('.container-player #album_id').value;
@@ -6577,206 +6735,185 @@ function init() {
       });
       slideTextContainer2.forEach(function (text) {});
     } //like sur un album
-    // if(document.querySelector('#like')){
 
 
-    var likes = document.querySelectorAll('#like');
-    likes.forEach(function (like) {
-      like.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var likeAlbums = document.querySelectorAll('.likeAlbum');
-        var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        var fd = new FormData();
-        fd.append('album_id', e.target.album_id.value);
-        fetch(e.target.action, {
-          method: e.target.method,
-          headers: {
-            'X-CSRF-TOKEN': csrf
-          },
-          body: fd
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          var allLikes = document.querySelectorAll('#like');
-
-          if (data.liked === true) {
-            allLikes.forEach(function (el) {
-              el.querySelector('.wrap').classList.add('liked');
-              el.querySelector('.likeAlbum').value = "Retirer";
-            });
-            document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
-          } else {
-            allLikes.forEach(function (el) {
-              el.querySelector('.wrap').classList.remove('liked');
-              el.querySelector('.likeAlbum').value = "Ajouter";
-            });
-            document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
-          }
-        });
+    if (document.querySelector('#like')) {
+      var likes = document.querySelectorAll('.likeOfTheAlbum');
+      likes.forEach(function (like) {
+        like.addEventListener('submit', likeAlbum);
       });
-    }); // }
-    //like sur un artiste
+    } //like sur un artiste
+
 
     if (document.querySelector('#likeArtiste')) {
-      document.querySelector('#likeArtiste').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var nbrLike = parseInt(document.querySelector('.likeArtiste').innerHTML);
-        var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        var fd = new FormData();
-        fd.append('artiste_id', e.target.artiste_id.value);
-        fetch(e.target.action, {
-          method: e.target.method,
-          headers: {
-            'X-CSRF-TOKEN': csrf
-          },
-          body: fd
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          if (data.likedArtiste === true) {
-            e.target.lastElementChild.classList.add('liked');
-            document.querySelector('.likeArtiste').innerHTML = nbrLike + 1;
-            e.submitter.value = "Retirer";
-          } else {
-            e.target.lastElementChild.classList.remove('liked');
-            document.querySelector('.likeArtiste').innerHTML = nbrLike - 1;
-            e.submitter.value = "Ajouter";
-          }
+      if (document.querySelector('#likeArtiste').getAttribute('listener') !== 'true') {
+        document.querySelector('#likeArtiste').addEventListener('submit', function (e) {
+          e.preventDefault();
+          var nbrLike = parseInt(document.querySelector('.likeArtiste').innerHTML);
+          var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          var fd = new FormData();
+          fd.append('artiste_id', e.target.artiste_id.value);
+          fetch(e.target.action, {
+            method: e.target.method,
+            headers: {
+              'X-CSRF-TOKEN': csrf
+            },
+            body: fd
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            if (data.likedArtiste === true) {
+              e.target.lastElementChild.classList.add('liked');
+              document.querySelector('.likeArtiste').innerHTML = nbrLike + 1;
+              e.submitter.value = "Retirer";
+            } else {
+              e.target.lastElementChild.classList.remove('liked');
+              document.querySelector('.likeArtiste').innerHTML = nbrLike - 1;
+              e.submitter.value = "Ajouter";
+            }
+          });
         });
-      });
+      }
     } //like sur un album dans la playlist
 
 
     if (document.querySelector('#likePlaylist')) {
-      document.querySelector('#likePlaylist').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        var fd = new FormData();
-        fd.append('album_id', e.target.album_id.value);
-        fetch(e.target.action, {
-          method: e.target.method,
-          headers: {
-            'X-CSRF-TOKEN': csrf
-          },
-          body: fd
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          var allLikes = document.querySelectorAll('#like');
+      if (document.querySelector('#likePlaylist').getAttribute('listener') !== 'true') {
+        var playLists = document.querySelectorAll('#likePlaylist');
+        playLists.forEach(function (playList) {
+          playList.addEventListener('submit', function (e) {
+            console.log('addEvent');
+            e.preventDefault();
+            var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            var fd = new FormData();
+            fd.append('album_id', e.target.album_id.value);
+            fetch(e.target.action, {
+              method: e.target.method,
+              headers: {
+                'X-CSRF-TOKEN': csrf
+              },
+              body: fd
+            }).then(function (response) {
+              return response.json();
+            }).then(function (data) {
+              var allLikes = document.querySelectorAll('#like');
 
-          if (data.liked === true) {
-            allLikes.forEach(function (el) {
-              el.querySelector('.wrap').classList.add('liked');
-              el.querySelector('.likeAlbum').value = "Retirer";
+              if (data.liked === true) {
+                allLikes.forEach(function (el) {
+                  el.querySelector('.wrap').classList.add('liked');
+                  el.querySelector('.likeAlbum').value = "Retirer";
+                });
+                document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
+              } else {
+                allLikes.forEach(function (el) {
+                  el.querySelector('.wrap').classList.remove('liked');
+                  el.querySelector('.likeAlbum').value = "Ajouter";
+                });
+                document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
+              }
             });
-            document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
-          } else {
-            allLikes.forEach(function (el) {
-              el.querySelector('.wrap').classList.remove('liked');
-              el.querySelector('.likeAlbum').value = "Ajouter";
-            });
-            document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
-          }
+          });
         });
-      });
+      }
     }
 
     likeTitrePlaylist(); //listen and add to recent list
 
     if (document.querySelector('#listenAndAddRecent')) {
-      document.querySelector('#listenAndAddRecent').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        var fd = new FormData();
-        fd.append('album_id', e.target.querySelector('input[name=album_id]').value);
-        fd.append('artiste_id', e.target.querySelector('input[name=artiste_id]').value);
-        fetch(e.target.action, {
-          method: e.target.method,
-          headers: {
-            'X-CSRF-TOKEN': csrf
-          },
-          body: fd
-        }).then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          var clickList = document.querySelector('.container-album .bottom');
-          var container = document.querySelector('.container-player .albumTracks');
-          container.innerHTML = clickList.innerHTML; //change album duration
+      if (document.querySelector('#listenAndAddRecent').getAttribute('listener') !== 'true') {
+        document.querySelector('#listenAndAddRecent').addEventListener('submit', function (e) {
+          e.preventDefault();
+          var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          var fd = new FormData();
+          fd.append('album_id', e.target.querySelector('input[name=album_id]').value);
+          fd.append('artiste_id', e.target.querySelector('input[name=artiste_id]').value);
+          fetch(e.target.action, {
+            method: e.target.method,
+            headers: {
+              'X-CSRF-TOKEN': csrf
+            },
+            body: fd
+          }).then(function (response) {
+            return response.json();
+          }).then(function (data) {
+            var clickList = document.querySelector('.container-album .bottom');
+            var container = document.querySelector('.container-player .albumTracks');
+            container.innerHTML = clickList.innerHTML; //change album duration
 
-          var duration = document.querySelector('.container-player .duration');
-          duration.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.duration').innerHTML; // change nbr tracks
+            var duration = document.querySelector('.container-player .duration');
+            duration.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.duration').innerHTML; // change nbr tracks
 
-          var nbrTracks = document.querySelector('.container-player .titres_count');
-          nbrTracks.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.nbrTracks').innerHTML + ' titres'; // change img src
+            var nbrTracks = document.querySelector('.container-player .titres_count');
+            nbrTracks.innerHTML = e.target.parentElement.closest('.container-album').querySelector('.nbrTracks').innerHTML + ' titres'; // change img src
 
-          var newImg = document.querySelector('.top img');
-          var oldImg1 = document.querySelector('.audio-player-partial .top .left img');
-          var oldImg2 = document.querySelector('.container-player .cover');
-          var oldImg3 = document.querySelector('.container-player .album-cover img');
-          oldImg1.src = newImg.src;
-          oldImg2.src = newImg.src;
-          oldImg3.src = newImg.src; // change album name
+            var newImg = document.querySelector('.top img');
+            var oldImg1 = document.querySelector('.audio-player-partial .top .left img');
+            var oldImg2 = document.querySelector('.container-player .cover');
+            var oldImg3 = document.querySelector('.container-player .album-cover img');
+            oldImg1.src = newImg.src;
+            oldImg2.src = newImg.src;
+            oldImg3.src = newImg.src; // change album name
 
-          var newAlbumName = e.target.parentElement.closest('.container-album').querySelector('.album_name');
-          var oldAlbumName = document.querySelector('.container-player h2');
-          var oldAlbumNames2 = document.querySelectorAll('.partial-player .element .album-name');
-          var oldAlbumNames3 = document.querySelectorAll('.container-player .element .album-name');
-          var oldAlbumName4 = document.querySelector('.container-player .album_name');
-          setTimeout(function () {
-            oldAlbumName.innerText = newAlbumName.innerText;
-            oldAlbumNames2.forEach(function (oldAlbumName2) {
-              oldAlbumName2.innerHTML = newAlbumName.innerHTML;
+            var newAlbumName = e.target.parentElement.closest('.container-album').querySelector('.album_name');
+            var oldAlbumName = document.querySelector('.container-player h2');
+            var oldAlbumNames2 = document.querySelectorAll('.partial-player .element .album-name');
+            var oldAlbumNames3 = document.querySelectorAll('.container-player .element .album-name');
+            var oldAlbumName4 = document.querySelector('.container-player .album_name');
+            setTimeout(function () {
+              oldAlbumName.innerText = newAlbumName.innerText;
+              oldAlbumNames2.forEach(function (oldAlbumName2) {
+                oldAlbumName2.innerHTML = newAlbumName.innerHTML;
+              });
+              oldAlbumNames3.forEach(function (oldAlbumName3) {
+                oldAlbumName3.innerHTML = newAlbumName.innerHTML;
+              });
+              oldAlbumName4.innerHTML = newAlbumName.innerHTML;
+            }, "500"); // change currentsong name
+
+            var newTitreName = e.target.parentElement.closest('.container-album').querySelectorAll('.titre .track')[0].innerText;
+            var titreName = document.querySelector('.audio-player .titre_name');
+            titreName.innerText = newTitreName;
+            var titreName2 = document.querySelector('.current-track .current-song');
+            titreName2.innerText = newTitreName;
+            var titreName3 = document.querySelector('.audio-player-partial .titre_name');
+            titreName3.innerText = newTitreName; // change artist name
+
+            var newArtistName = e.target.parentElement.closest('.container-album').querySelector('.artiste_name').innerText.replace("par", ""); //texte défilant mini player
+
+            var oldArtistNames2 = document.querySelectorAll('.audio-player-partial .textSlide2 .element .artiste_name');
+            oldArtistNames2.forEach(function (oldArtistName2, index) {
+              oldArtistName2.innerText = newArtistName;
+            }); //texte défilant big player
+
+            var oldArtistNames3 = document.querySelectorAll('.audio-player .textSlide2 .element .artiste_name');
+            oldArtistNames3.forEach(function (oldArtistName3, index) {
+              oldArtistName3.innerText = newArtistName;
+            }); //texte défilant file d'attente
+
+            var oldArtistName4 = document.querySelector('.container-player .textSlide .artiste_name');
+            oldArtistName4.innerText = newArtistName;
+            var currentSong = document.querySelector('.container-player .titre_name');
+            var trackName = currentSong.innerHTML;
+            albumId = document.querySelector('.container-album input[name=album_id]').value;
+            var newIds = document.querySelectorAll('input[name=album_id]');
+            newIds.forEach(function (newId) {
+              newId.value = albumId;
+              console.log('new id: ' + newId.value);
             });
-            oldAlbumNames3.forEach(function (oldAlbumName3) {
-              oldAlbumName3.innerHTML = newAlbumName.innerHTML;
+            var newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track');
+            tracks = Array.prototype.slice.call(newListTracks);
+            playOnCLick();
+            likeTitrePlaylist();
+            audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
+            audio.play();
+            var playBtns = document.querySelectorAll(".toggle-play");
+            playBtns.forEach(function (playBtn) {
+              playBtn.classList.remove("play");
+              playBtn.classList.add("pause");
             });
-            oldAlbumName4.innerHTML = newAlbumName.innerHTML;
-          }, "500"); // change currentsong name
-
-          var newTitreName = e.target.parentElement.closest('.container-album').querySelectorAll('.titre .track')[0].innerText;
-          var titreName = document.querySelector('.audio-player .titre_name');
-          titreName.innerText = newTitreName;
-          var titreName2 = document.querySelector('.current-track .current-song');
-          titreName2.innerText = newTitreName;
-          var titreName3 = document.querySelector('.audio-player-partial .titre_name');
-          titreName3.innerText = newTitreName; // change artist name
-
-          var newArtistName = e.target.parentElement.closest('.container-album').querySelector('.artiste_name').innerText.replace("par", ""); //texte défilant mini player
-
-          var oldArtistNames2 = document.querySelectorAll('.audio-player-partial .textSlide2 .element .artiste_name');
-          oldArtistNames2.forEach(function (oldArtistName2, index) {
-            oldArtistName2.innerText = newArtistName;
-          }); //texte défilant big player
-
-          var oldArtistNames3 = document.querySelectorAll('.audio-player .textSlide2 .element .artiste_name');
-          oldArtistNames3.forEach(function (oldArtistName3, index) {
-            oldArtistName3.innerText = newArtistName;
-          }); //texte défilant file d'attente
-
-          var oldArtistName4 = document.querySelector('.container-player .textSlide .artiste_name');
-          oldArtistName4.innerText = newArtistName;
-          var currentSong = document.querySelector('.container-player .titre_name');
-          var trackName = currentSong.innerHTML;
-          albumId = document.querySelector('.container-album input[name=album_id]').value;
-          var newIds = document.querySelectorAll('input[name=album_id]');
-          newIds.forEach(function (newId) {
-            newId.value = albumId;
-            console.log('new id: ' + newId.value);
-          });
-          var newListTracks = e.target.parentElement.closest('.container-album').querySelectorAll('.bottom .titre .track');
-          tracks = Array.prototype.slice.call(newListTracks);
-          playOnCLick();
-          likeTitrePlaylist(); // console.log(albumId)
-
-          audio.src = '../storage/albums/titres/' + albumId + '/' + trackName + '.mp3';
-          audio.play();
-          var playBtns = document.querySelectorAll(".toggle-play");
-          playBtns.forEach(function (playBtn) {
-            playBtn.classList.remove("play");
-            playBtn.classList.add("pause");
           });
         });
-      });
+      }
     }
 
     if (document.querySelector('.partial-player')) {
@@ -6914,20 +7051,56 @@ function init() {
       });
     });
   }
+} //like sur un album
+
+
+var likeAlbum = function likeAlbum(e) {
+  e.preventDefault();
+  var likeAlbums = document.querySelectorAll('.likeAlbum');
+  var csrf = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+  var fd = new FormData();
+  albumId = e.currentTarget.querySelector('[name="album_id"]').value;
+  fd.append('album_id', e.target.album_id.value);
+  fetch(e.target.action, {
+    method: e.target.method,
+    headers: {
+      'X-CSRF-TOKEN': csrf
+    },
+    body: fd
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    var allLikes = document.querySelectorAll('#like');
+
+    if (data.liked === true) {
+      allLikes.forEach(function (el) {
+        el.querySelector('.wrap').classList.add('liked');
+        el.querySelector('.likeAlbum').value = "Retirer";
+      });
+      document.querySelector('#likePlaylist .wrapPlaylist').classList.add('liked');
+    } else {
+      allLikes.forEach(function (el) {
+        el.querySelector('.wrap').classList.remove('liked');
+        el.querySelector('.likeAlbum').value = "Ajouter";
+      });
+      document.querySelector('#likePlaylist .wrapPlaylist').classList.remove('liked');
+    }
+  });
+};
+
+init();
+
+function myClick(event) {
+  document.querySelector('.next').removeEventListener('click');
+  document.querySelector('.prev').removeEventListener('click');
+  document.querySelectorAll('#like').forEach(function (el) {
+    el.removeEventListener('submit', likeAlbum);
+    console.log('reset');
+  }); // document.querySelector('#likePlaylist').removeEventListener('click', myClick);
 }
 
-init(); // function myClick(event) {
-//     document.querySelector('.next').removeEventListener('click', myClick);
-//     document.querySelector('.prev').removeEventListener('click', myClick);
-//     document.querySelectorAll('#like').forEach(el => {
-//         el.removeEventListener('submit', myClick);
-//         console.log('reset')
-//     })
-//
-// }
-
 swup.on('contentReplaced', function (e) {
-  // myClick()
+  myClick();
   init();
 }); //Search Bar
 
@@ -6950,12 +7123,12 @@ settingsBtn.addEventListener('click', function (e) {
 });
 
 var close_results = function close_results() {
-  var container = $("#autocomplete");
-  container.removeClass('active');
+  var container = document.querySelector("#autocomplete");
+  container.classList.remove('active');
   var settingsMenu = $('.settingsMenu');
-  settingsMenu.removeClass('show');
+  settingsMenu.classList.remove('show');
   var settingsBtn = $('#settings');
-  settingsBtn.removeClass('dark');
+  settingsBtn.classList.remove('dark');
 }; //Header sticky
 
 
@@ -6971,7 +7144,7 @@ window.addEventListener('scroll', function (e) {
 // });
 // Show loading animation.
 
-var playPromise = audio.play();
+var playPromise = audio.pause();
 
 if (playPromise !== undefined) {
   playPromise.then(function (_) {// Automatic playback started!
@@ -24626,6 +24799,34 @@ exports["default"] = classify;
 
 /***/ }),
 
+/***/ "./node_modules/swup/lib/helpers/cleanupAnimationClasses.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/swup/lib/helpers/cleanupAnimationClasses.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+	value: true
+}));
+var cleanupAnimationClasses = function cleanupAnimationClasses() {
+	document.documentElement.className.split(' ').forEach(function (classItem) {
+		if (
+		// remove "to-{page}" classes
+		new RegExp('^to-').test(classItem) ||
+		// remove all other classes
+		classItem === 'is-changing' || classItem === 'is-rendering' || classItem === 'is-popstate') {
+			document.documentElement.classList.remove(classItem);
+		}
+	});
+};
+
+exports["default"] = cleanupAnimationClasses;
+
+/***/ }),
+
 /***/ "./node_modules/swup/lib/helpers/createHistoryRecord.js":
 /*!**************************************************************!*\
   !*** ./node_modules/swup/lib/helpers/createHistoryRecord.js ***!
@@ -24643,7 +24844,7 @@ var createHistoryRecord = function createHistoryRecord(url) {
 		url: url || window.location.href.split(window.location.hostname)[1],
 		random: Math.random(),
 		source: 'swup'
-	}, document.getElementsByTagName('title')[0].innerText, url || window.location.href.split(window.location.hostname)[1]);
+	}, document.title, url || window.location.href.split(window.location.hostname)[1]);
 };
 
 exports["default"] = createHistoryRecord;
@@ -24734,8 +24935,6 @@ Object.defineProperty(exports, "__esModule", ({
 	value: true
 }));
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _utils = __webpack_require__(/*! ../utils */ "./node_modules/swup/lib/utils/index.js");
 
 var getDataFromHtml = function getDataFromHtml(html, containers) {
@@ -24743,28 +24942,23 @@ var getDataFromHtml = function getDataFromHtml(html, containers) {
 	fakeDom.innerHTML = html;
 	var blocks = [];
 
-	var _loop = function _loop(i) {
-		if (fakeDom.querySelector(containers[i]) == null) {
-			// page in invalid
-			return {
-				v: null
-			};
+	containers.forEach(function (selector) {
+		if ((0, _utils.query)(selector, fakeDom) == null) {
+			console.warn('[swup] Container ' + selector + ' not found on page.');
+			return null;
 		} else {
-			(0, _utils.queryAll)(containers[i]).forEach(function (item, index) {
-				(0, _utils.queryAll)(containers[i], fakeDom)[index].setAttribute('data-swup', blocks.length); // marks element with data-swup
-				blocks.push((0, _utils.queryAll)(containers[i], fakeDom)[index].outerHTML);
+			if ((0, _utils.queryAll)(selector).length !== (0, _utils.queryAll)(selector, fakeDom).length) {
+				console.warn('[swup] Mismatched number of containers found on new page.');
+			}
+			(0, _utils.queryAll)(selector).forEach(function (item, index) {
+				(0, _utils.queryAll)(selector, fakeDom)[index].setAttribute('data-swup', blocks.length);
+				blocks.push((0, _utils.queryAll)(selector, fakeDom)[index].outerHTML);
 			});
 		}
-	};
-
-	for (var i = 0; i < containers.length; i++) {
-		var _ret = _loop(i);
-
-		if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-	}
+	});
 
 	var json = {
-		title: fakeDom.querySelector('title').innerText,
+		title: (fakeDom.querySelector('title') || {}).innerText,
 		pageClass: fakeDom.querySelector('body').className,
 		originalContent: html,
 		blocks: blocks
@@ -24793,7 +24987,7 @@ exports["default"] = getDataFromHtml;
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
-exports.Link = exports.markSwupElements = exports.getCurrentUrl = exports.transitionEnd = exports.fetch = exports.getDataFromHtml = exports.createHistoryRecord = exports.classify = undefined;
+exports.cleanupAnimationClasses = exports.Link = exports.markSwupElements = exports.normalizeUrl = exports.getCurrentUrl = exports.transitionProperty = exports.transitionEnd = exports.fetch = exports.getDataFromHtml = exports.createHistoryRecord = exports.classify = undefined;
 
 var _classify = __webpack_require__(/*! ./classify */ "./node_modules/swup/lib/helpers/classify.js");
 
@@ -24815,9 +25009,17 @@ var _transitionEnd = __webpack_require__(/*! ./transitionEnd */ "./node_modules/
 
 var _transitionEnd2 = _interopRequireDefault(_transitionEnd);
 
+var _transitionProperty = __webpack_require__(/*! ./transitionProperty */ "./node_modules/swup/lib/helpers/transitionProperty.js");
+
+var _transitionProperty2 = _interopRequireDefault(_transitionProperty);
+
 var _getCurrentUrl = __webpack_require__(/*! ./getCurrentUrl */ "./node_modules/swup/lib/helpers/getCurrentUrl.js");
 
 var _getCurrentUrl2 = _interopRequireDefault(_getCurrentUrl);
+
+var _normalizeUrl = __webpack_require__(/*! ./normalizeUrl */ "./node_modules/swup/lib/helpers/normalizeUrl.js");
+
+var _normalizeUrl2 = _interopRequireDefault(_normalizeUrl);
 
 var _markSwupElements = __webpack_require__(/*! ./markSwupElements */ "./node_modules/swup/lib/helpers/markSwupElements.js");
 
@@ -24827,6 +25029,10 @@ var _Link = __webpack_require__(/*! ./Link */ "./node_modules/swup/lib/helpers/L
 
 var _Link2 = _interopRequireDefault(_Link);
 
+var _cleanupAnimationClasses = __webpack_require__(/*! ./cleanupAnimationClasses */ "./node_modules/swup/lib/helpers/cleanupAnimationClasses.js");
+
+var _cleanupAnimationClasses2 = _interopRequireDefault(_cleanupAnimationClasses);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var classify = exports.classify = _classify2.default;
@@ -24834,9 +25040,12 @@ var createHistoryRecord = exports.createHistoryRecord = _createHistoryRecord2.de
 var getDataFromHtml = exports.getDataFromHtml = _getDataFromHtml2.default;
 var fetch = exports.fetch = _fetch2.default;
 var transitionEnd = exports.transitionEnd = _transitionEnd2.default;
+var transitionProperty = exports.transitionProperty = _transitionProperty2.default;
 var getCurrentUrl = exports.getCurrentUrl = _getCurrentUrl2.default;
+var normalizeUrl = exports.normalizeUrl = _normalizeUrl2.default;
 var markSwupElements = exports.markSwupElements = _markSwupElements2.default;
 var Link = exports.Link = _Link2.default;
+var cleanupAnimationClasses = exports.cleanupAnimationClasses = _cleanupAnimationClasses2.default;
 
 /***/ }),
 
@@ -24858,23 +25067,46 @@ var _utils = __webpack_require__(/*! ../utils */ "./node_modules/swup/lib/utils/
 var markSwupElements = function markSwupElements(element, containers) {
 	var blocks = 0;
 
-	var _loop = function _loop(i) {
-		if (element.querySelector(containers[i]) == null) {
-			console.warn('Element ' + containers[i] + ' is not in current page.');
+	containers.forEach(function (selector) {
+		if ((0, _utils.query)(selector, element) == null) {
+			console.warn('[swup] Container ' + selector + ' not found on page.');
 		} else {
-			(0, _utils.queryAll)(containers[i]).forEach(function (item, index) {
-				(0, _utils.queryAll)(containers[i], element)[index].setAttribute('data-swup', blocks);
+			(0, _utils.queryAll)(selector).forEach(function (item, index) {
+				(0, _utils.queryAll)(selector, element)[index].setAttribute('data-swup', blocks);
 				blocks++;
 			});
 		}
-	};
-
-	for (var i = 0; i < containers.length; i++) {
-		_loop(i);
-	}
+	});
 };
 
 exports["default"] = markSwupElements;
+
+/***/ }),
+
+/***/ "./node_modules/swup/lib/helpers/normalizeUrl.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/swup/lib/helpers/normalizeUrl.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+	value: true
+}));
+
+var _Link = __webpack_require__(/*! ./Link */ "./node_modules/swup/lib/helpers/Link.js");
+
+var _Link2 = _interopRequireDefault(_Link);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var normalizeUrl = function normalizeUrl(url) {
+	return new _Link2.default(url).getAddress();
+};
+
+exports["default"] = normalizeUrl;
 
 /***/ }),
 
@@ -24891,25 +25123,38 @@ Object.defineProperty(exports, "__esModule", ({
 	value: true
 }));
 var transitionEnd = function transitionEnd() {
-	var el = document.createElement('div');
-
-	var transEndEventNames = {
-		WebkitTransition: 'webkitTransitionEnd',
-		MozTransition: 'transitionend',
-		OTransition: 'oTransitionEnd otransitionend',
-		transition: 'transitionend'
-	};
-
-	for (var name in transEndEventNames) {
-		if (el.style[name] !== undefined) {
-			return transEndEventNames[name];
-		}
+	if (window.ontransitionend === undefined && window.onwebkittransitionend !== undefined) {
+		return 'webkitTransitionEnd';
+	} else {
+		return 'transitionend';
 	}
-
-	return false;
 };
 
 exports["default"] = transitionEnd;
+
+/***/ }),
+
+/***/ "./node_modules/swup/lib/helpers/transitionProperty.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/swup/lib/helpers/transitionProperty.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+	value: true
+}));
+var transitionProperty = function transitionProperty() {
+	if (window.ontransitionend === undefined && window.onwebkittransitionend !== undefined) {
+		return 'WebkitTransition';
+	} else {
+		return 'transition';
+	}
+};
+
+exports["default"] = transitionProperty;
 
 /***/ }),
 
@@ -24933,9 +25178,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 // modules
 
 
-var _delegate = __webpack_require__(/*! delegate */ "./node_modules/delegate/src/delegate.js");
+var _delegateIt = __webpack_require__(/*! delegate-it */ "./node_modules/delegate-it/index.js");
 
-var _delegate2 = _interopRequireDefault(_delegate);
+var _delegateIt2 = _interopRequireDefault(_delegateIt);
 
 var _Cache = __webpack_require__(/*! ./modules/Cache */ "./node_modules/swup/lib/modules/Cache.js");
 
@@ -24964,6 +25209,10 @@ var _off2 = _interopRequireDefault(_off);
 var _updateTransition = __webpack_require__(/*! ./modules/updateTransition */ "./node_modules/swup/lib/modules/updateTransition.js");
 
 var _updateTransition2 = _interopRequireDefault(_updateTransition);
+
+var _getAnchorElement = __webpack_require__(/*! ./modules/getAnchorElement */ "./node_modules/swup/lib/modules/getAnchorElement.js");
+
+var _getAnchorElement2 = _interopRequireDefault(_getAnchorElement);
 
 var _getAnimationPromises = __webpack_require__(/*! ./modules/getAnimationPromises */ "./node_modules/swup/lib/modules/getAnimationPromises.js");
 
@@ -25031,7 +25280,7 @@ var Swup = function () {
 			willReplaceContent: []
 		};
 
-		// variable for id of element to scroll to after render
+		// variable for anchor to scroll to after render
 		this.scrollToElement = null;
 		// variable for promise used for preload, so no new loading of the same page starts while page is loading
 		this.preloadPromise = null;
@@ -25057,10 +25306,13 @@ var Swup = function () {
 		this.updateTransition = _updateTransition2.default;
 		this.getAnimationPromises = _getAnimationPromises2.default;
 		this.getPageData = _getPageData2.default;
+		this.getAnchorElement = _getAnchorElement2.default;
 		this.log = function () {}; // here so it can be used by plugins
 		this.use = _plugins.use;
 		this.unuse = _plugins.unuse;
 		this.findPlugin = _plugins.findPlugin;
+		this.getCurrentUrl = _helpers.getCurrentUrl;
+		this.cleanupAnimationClasses = _helpers.cleanupAnimationClasses;
 
 		// enable swup
 		this.enable();
@@ -25078,15 +25330,15 @@ var Swup = function () {
 			}
 
 			// add event listeners
-			this.delegatedListeners.click = (0, _delegate2.default)(document, this.options.linkSelector, 'click', this.linkClickHandler.bind(this));
+			this.delegatedListeners.click = (0, _delegateIt2.default)(document, this.options.linkSelector, 'click', this.linkClickHandler.bind(this));
 			window.addEventListener('popstate', this.boundPopStateHandler);
 
 			// initial save to cache
-			var page = (0, _helpers.getDataFromHtml)(document.documentElement.outerHTML, this.options.containers);
-			page.url = page.responseURL = (0, _helpers.getCurrentUrl)();
-			if (this.options.cache) {
-				this.cache.cacheUrl(page);
-			}
+			if (this.options.cache) {}
+			// disabled to avoid caching modified dom state
+			// https://github.com/swup/swup/issues/475
+			// logic moved to preload plugin
+
 
 			// mark swup blocks in html
 			(0, _helpers.markSwupElements)(document.documentElement, this.options.containers);
@@ -25160,7 +25412,7 @@ var Swup = function () {
 						if (link.getHash() != '') {
 							// link to the same URL with hash
 							this.triggerEvent('samePageWithHash', event);
-							var element = document.querySelector(link.getHash());
+							var element = (0, _getAnchorElement2.default)(link.getHash());
 							if (element != null) {
 								history.replaceState({
 									url: link.getAddress() + link.getHash(),
@@ -25204,6 +25456,12 @@ var Swup = function () {
 				event.preventDefault();
 			}
 			this.triggerEvent('popState', event);
+
+			if (!this.options.animateHistoryBrowsing) {
+				document.documentElement.classList.remove('is-animating');
+				(0, _helpers.cleanupAnimationClasses)();
+			}
+
 			this.loadPage({ url: link.getAddress() }, event);
 		}
 	}]);
@@ -25219,7 +25477,7 @@ exports["default"] = Swup;
 /*!************************************************!*\
   !*** ./node_modules/swup/lib/modules/Cache.js ***!
   \************************************************/
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
@@ -25227,8 +25485,11 @@ exports["default"] = Swup;
 Object.defineProperty(exports, "__esModule", ({
 	value: true
 }));
+exports.Cache = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _helpers = __webpack_require__(/*! ../helpers */ "./node_modules/swup/lib/helpers/index.js");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -25243,6 +25504,7 @@ var Cache = exports.Cache = function () {
 	_createClass(Cache, [{
 		key: 'cacheUrl',
 		value: function cacheUrl(page) {
+			page.url = (0, _helpers.normalizeUrl)(page.url);
 			if (page.url in this.pages === false) {
 				this.pages[page.url] = page;
 			}
@@ -25252,16 +25514,18 @@ var Cache = exports.Cache = function () {
 	}, {
 		key: 'getPage',
 		value: function getPage(url) {
+			url = (0, _helpers.normalizeUrl)(url);
 			return this.pages[url];
 		}
 	}, {
 		key: 'getCurrentPage',
 		value: function getCurrentPage() {
-			return this.getPage(window.location.pathname + window.location.search);
+			return this.getPage((0, _helpers.getCurrentUrl)());
 		}
 	}, {
 		key: 'exists',
 		value: function exists(url) {
+			url = (0, _helpers.normalizeUrl)(url);
 			return url in this.pages;
 		}
 	}, {
@@ -25285,6 +25549,41 @@ exports["default"] = Cache;
 
 /***/ }),
 
+/***/ "./node_modules/swup/lib/modules/getAnchorElement.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/swup/lib/modules/getAnchorElement.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", ({
+	value: true
+}));
+
+var _utils = __webpack_require__(/*! ../utils */ "./node_modules/swup/lib/utils/index.js");
+
+var getAnchorElement = function getAnchorElement(hash) {
+	if (!hash) {
+		return null;
+	}
+
+	if (hash.charAt(0) === '#') {
+		hash = hash.substring(1);
+	}
+
+	hash = decodeURIComponent(hash);
+	hash = (0, _utils.escapeCssIdentifier)(hash);
+
+	// https://html.spec.whatwg.org/#find-a-potential-indicated-element
+	return (0, _utils.query)('#' + hash) || (0, _utils.query)('a[name=\'' + hash + '\']');
+};
+
+exports["default"] = getAnchorElement;
+
+/***/ }),
+
 /***/ "./node_modules/swup/lib/modules/getAnimationPromises.js":
 /*!***************************************************************!*\
   !*** ./node_modules/swup/lib/modules/getAnimationPromises.js ***!
@@ -25303,9 +25602,24 @@ var _utils = __webpack_require__(/*! ../utils */ "./node_modules/swup/lib/utils/
 var _helpers = __webpack_require__(/*! ../helpers */ "./node_modules/swup/lib/helpers/index.js");
 
 var getAnimationPromises = function getAnimationPromises() {
+	var selector = this.options.animationSelector;
+	var durationProperty = (0, _helpers.transitionProperty)() + 'Duration';
 	var promises = [];
-	var animatedElements = (0, _utils.queryAll)(this.options.animationSelector);
+	var animatedElements = (0, _utils.queryAll)(selector, document.body);
+
+	if (!animatedElements.length) {
+		console.warn('[swup] No animated elements found by selector ' + selector);
+		return [Promise.resolve()];
+	}
+
 	animatedElements.forEach(function (element) {
+		var transitionDuration = window.getComputedStyle(element)[durationProperty];
+		// Resolve immediately if no transition defined
+		if (!transitionDuration || transitionDuration == '0s') {
+			console.warn('[swup] No CSS transition duration defined for element of selector ' + selector);
+			promises.push(Promise.resolve());
+			return;
+		}
 		var promise = new Promise(function (resolve) {
 			element.addEventListener((0, _helpers.transitionEnd)(), function (event) {
 				if (element == event.target) {
@@ -25315,6 +25629,7 @@ var getAnimationPromises = function getAnimationPromises() {
 		});
 		promises.push(promise);
 	});
+
 	return promises;
 };
 
@@ -25347,7 +25662,7 @@ var getPageData = function getPageData(request) {
 	if (pageObject) {
 		pageObject.responseURL = request.responseURL ? request.responseURL : window.location.href;
 	} else {
-		console.warn('Received page is invalid.');
+		console.warn('[swup] Received page is invalid.');
 		return null;
 	}
 
@@ -25370,6 +25685,8 @@ exports["default"] = getPageData;
 Object.defineProperty(exports, "__esModule", ({
 	value: true
 }));
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -25433,7 +25750,7 @@ var loadPage = function loadPage(data, popstate) {
 	// start/skip loading of page
 	if (this.cache.exists(data.url)) {
 		xhrPromise = new Promise(function (resolve) {
-			resolve();
+			resolve(_this.cache.getPage(data.url));
 		});
 		this.triggerEvent('pageRetrievedFromCache');
 	} else {
@@ -25447,7 +25764,7 @@ var loadPage = function loadPage(data, popstate) {
 					} else {
 						// get json data
 						var page = _this.getPageData(response);
-						if (page != null) {
+						if (page != null && page.blocks.length > 0) {
 							page.url = data.url;
 						} else {
 							reject(data.url);
@@ -25456,8 +25773,8 @@ var loadPage = function loadPage(data, popstate) {
 						// render page
 						_this.cache.cacheUrl(page);
 						_this.triggerEvent('pageLoaded');
+						resolve(page);
 					}
-					resolve();
 				});
 			});
 		} else {
@@ -25466,9 +25783,12 @@ var loadPage = function loadPage(data, popstate) {
 	}
 
 	// when everything is ready, handle the outcome
-	Promise.all(animationPromises.concat([xhrPromise])).then(function () {
+	Promise.all([xhrPromise].concat(animationPromises)).then(function (_ref) {
+		var _ref2 = _slicedToArray(_ref, 1),
+		    pageData = _ref2[0];
+
 		// render page
-		_this.renderPage(_this.cache.getPage(data.url), popstate);
+		_this.renderPage(pageData, popstate);
 		_this.preloadPromise = null;
 	}).catch(function (errorUrl) {
 		// rewrite the skipPopStateHandling function to redirect manually when the history.go is processed
@@ -25633,8 +25953,6 @@ Object.defineProperty(exports, "__esModule", ({
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _utils = __webpack_require__(/*! ../utils */ "./node_modules/swup/lib/utils/index.js");
-
 var _helpers = __webpack_require__(/*! ../helpers */ "./node_modules/swup/lib/helpers/index.js");
 
 var renderPage = function renderPage(page, popstate) {
@@ -25642,17 +25960,20 @@ var renderPage = function renderPage(page, popstate) {
 
 	document.documentElement.classList.remove('is-leaving');
 
+	var isCurrentPage = this.getCurrentUrl() === page.url;
+	if (!isCurrentPage) return;
+
 	// replace state in case the url was redirected
-	var link = new _helpers.Link(page.responseURL);
-	if (window.location.pathname !== link.getPath()) {
+	var url = new _helpers.Link(page.responseURL).getPath();
+	if (window.location.pathname !== url) {
 		window.history.replaceState({
-			url: link.getPath(),
+			url: url,
 			random: Math.random(),
 			source: 'swup'
-		}, document.title, link.getPath());
+		}, document.title, url);
 
 		// save new record for redirected url
-		this.cache.cacheUrl(_extends({}, page, { url: link.getPath() }));
+		this.cache.cacheUrl(_extends({}, page, { url: url }));
 	}
 
 	// only add for non-popstate transitions
@@ -25661,15 +25982,12 @@ var renderPage = function renderPage(page, popstate) {
 	}
 
 	this.triggerEvent('willReplaceContent', popstate);
-
 	// replace blocks
 	for (var i = 0; i < page.blocks.length; i++) {
 		document.body.querySelector('[data-swup="' + i + '"]').outerHTML = page.blocks[i];
 	}
-
 	// set title
 	document.title = page.title;
-
 	this.triggerEvent('contentReplaced', popstate);
 	this.triggerEvent('pageView', popstate);
 
@@ -25692,12 +26010,7 @@ var renderPage = function renderPage(page, popstate) {
 		Promise.all(animationPromises).then(function () {
 			_this.triggerEvent('animationInDone');
 			_this.triggerEvent('transitionEnd', popstate);
-			// remove "to-{page}" classes
-			document.documentElement.className.split(' ').forEach(function (classItem) {
-				if (new RegExp('^to-').test(classItem) || classItem === 'is-changing' || classItem === 'is-rendering' || classItem === 'is-popstate') {
-					document.documentElement.classList.remove(classItem);
-				}
-			});
+			_this.cleanupAnimationClasses();
 		});
 	} else {
 		this.triggerEvent('transitionEnd', popstate);
@@ -25799,6 +26112,114 @@ var queryAll = exports.queryAll = function queryAll(selector) {
 	return Array.prototype.slice.call(context.querySelectorAll(selector));
 };
 
+var escapeCssIdentifier = exports.escapeCssIdentifier = function escapeCssIdentifier(ident) {
+	if (window.CSS && window.CSS.escape) {
+		return CSS.escape(ident);
+	} else {
+		return ident;
+	}
+};
+
+/***/ }),
+
+/***/ "./node_modules/delegate-it/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/delegate-it/index.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/** Keeps track of raw listeners added to the base elements to avoid duplication */
+const ledger = new WeakMap();
+function editLedger(wanted, baseElement, callback, setup) {
+    var _a, _b;
+    if (!wanted && !ledger.has(baseElement)) {
+        return false;
+    }
+    const elementMap = (_a = ledger.get(baseElement)) !== null && _a !== void 0 ? _a : new WeakMap();
+    ledger.set(baseElement, elementMap);
+    if (!wanted && !ledger.has(baseElement)) {
+        return false;
+    }
+    const setups = (_b = elementMap.get(callback)) !== null && _b !== void 0 ? _b : new Set();
+    elementMap.set(callback, setups);
+    const existed = setups.has(setup);
+    if (wanted) {
+        setups.add(setup);
+    }
+    else {
+        setups.delete(setup);
+    }
+    return existed && wanted;
+}
+function isEventTarget(elements) {
+    return typeof elements.addEventListener === 'function';
+}
+function safeClosest(event, selector) {
+    let target = event.target;
+    if (target instanceof Text) {
+        target = target.parentElement;
+    }
+    if (target instanceof Element && event.currentTarget instanceof Element) {
+        // `.closest()` may match ancestors of `currentTarget` but we only need its children
+        const closest = target.closest(selector);
+        if (closest && event.currentTarget.contains(closest)) {
+            return closest;
+        }
+    }
+}
+// This type isn't exported as a declaration, so it needs to be duplicated above
+function delegate(base, selector, type, callback, options) {
+    // Handle Selector-based usage
+    if (typeof base === 'string') {
+        base = document.querySelectorAll(base);
+    }
+    // Handle Array-like based usage
+    if (!isEventTarget(base)) {
+        const subscriptions = Array.prototype.map.call(base, (element) => delegate(element, selector, type, callback, options));
+        return {
+            destroy() {
+                for (const subscription of subscriptions) {
+                    subscription.destroy();
+                }
+            },
+        };
+    }
+    // `document` should never be the base, it's just an easy way to define "global event listeners"
+    const baseElement = base instanceof Document ? base.documentElement : base;
+    // Handle the regular Element usage
+    const capture = Boolean(typeof options === 'object' ? options.capture : options);
+    const listenerFn = (event) => {
+        const delegateTarget = safeClosest(event, selector);
+        if (delegateTarget) {
+            event.delegateTarget = delegateTarget;
+            callback.call(baseElement, event);
+        }
+    };
+    // Drop unsupported `once` option https://github.com/fregante/delegate-it/pull/28#discussion_r863467939
+    if (typeof options === 'object') {
+        delete options.once;
+    }
+    const setup = JSON.stringify({ selector, type, capture });
+    const isAlreadyListening = editLedger(true, baseElement, callback, setup);
+    const delegateSubscription = {
+        destroy() {
+            baseElement.removeEventListener(type, listenerFn, options);
+            editLedger(false, baseElement, callback, setup);
+        },
+    };
+    if (!isAlreadyListening) {
+        baseElement.addEventListener(type, listenerFn, options);
+    }
+    return delegateSubscription;
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (delegate);
+
+
 /***/ }),
 
 /***/ "./node_modules/axios/package.json":
@@ -25874,18 +26295,6 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 				}
 /******/ 			}
 /******/ 			return result;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
 /******/ 		};
 /******/ 	})();
 /******/ 	

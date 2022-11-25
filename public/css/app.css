@@ -110,9 +110,9 @@ header nav #settings.dark {
 }
 header nav .settingsMenu {
   position: absolute;
-  top: -300%;
+  top: -400%;
   right: 0;
-  z-index: 0;
+  z-index: 9000;
   padding: 3em 2em 1em;
   background: #fff;
   transition: top 0.25s ease-in-out;
@@ -524,7 +524,7 @@ header nav a:nth-child(1) {
   transform: translateY(-50%);
 }
 .container-album .top .wrap-forms form:nth-child(1) input[type=submit] {
-  margin-right: 2em;
+  margin-right: 1em;
 }
 .container-album .top .wrap-forms form:nth-child(2) .wrapListen {
   position: relative;
@@ -821,7 +821,7 @@ header nav a:nth-child(1) {
   color: white;
   font-size: 0.75em;
   display: grid;
-  grid-template-rows: 6px auto;
+  grid-template-rows: 25px auto;
   padding: 1em;
   position: absolute;
   bottom: 0;
@@ -869,7 +869,7 @@ header nav a:nth-child(1) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 1em 0;
+  margin: 1rem 0;
 }
 .container-player .audio-player .controls > * {
   display: flex;
@@ -978,7 +978,7 @@ header nav a:nth-child(1) {
   margin-right: 30px;
 }
 .container-player .audio-player .queue.margin {
-  margin-top: 3.5em;
+  margin-top: 2.5em;
 }
 .container-player .titre_name_container {
   margin: 1em auto 0.3em;
@@ -1781,7 +1781,7 @@ body.auth footer ul {
 #autocomplete .autocomplete-input {
   width: 100%;
   border-radius: 0 !important;
-  padding: 20px 42px 20px 48px;
+  padding: 10px 42px 10px 48px;
 }
 #autocomplete.active {
   top: 0;
@@ -1826,7 +1826,7 @@ body.auth footer ul {
 #autocomplete #closeBtn {
   position: absolute;
   right: 15px;
-  top: 25px;
+  top: 15px;
   width: 16px;
   height: 16px;
 }
@@ -1839,6 +1839,9 @@ header.rwd {
 
 .container-page {
   padding: 2em 1em 5rem;
+}
+.container-page .inform {
+  color: #fff;
 }
 .container-page p {
   margin-bottom: 1rem;
@@ -1983,6 +1986,40 @@ header.rwd {
 }
 .container-album.favoris .titre .track {
   font-size: 12px;
+}
+.container-album.favoris .like {
+  text-align: right;
+}
+.container-album.favoris .like form .wrapPlaylist {
+  position: relative;
+  margin-bottom: 0;
+}
+.container-album.favoris .like form .wrapPlaylist::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-inactive.svg?3b52e5ac0e1dd96b7310bb841f8c9118) no-repeat;
+  background-position: center;
+  background-size: contain;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.container-album.favoris .like form .wrapPlaylist input[type=submit] {
+  opacity: 0;
+}
+.container-album.favoris .like form .wrapPlaylist.liked::before {
+  position: absolute;
+  content: "";
+  background: url(/images/favori-active.svg?cf62ab6f4e571185bf547f7e99aa14e5) no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: 16px;
+  height: 16px;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 body {

@@ -60,7 +60,6 @@
         <div class="container">
             <a href="{{ route('page', ['name' => 'mentionsLegales'] ) }}">Mentions légales</a>
             <a href="{{ route('page', ['name' => 'cgv'] ) }}">CGV</a>
-            <a href="{{ route('contact') }}">Contact</a>
             <ul>
                 <li><a href="https://www.facebook.com" target="_blank"><img src="/img/facebook.svg" alt="logo facebook"></a></li>
                 <li><a href="https://www.instagram.com/" target="_blank"><img src="/img/instagram.svg" alt="logo instagram"></a></li>

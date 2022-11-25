@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Mail\MailtrapExample;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -29,8 +31,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 Route::get('/', [HomeController::class, 'showHomepage'])->middleware(['auth'])->name('home');
 
 Route::get('/page/{name}', [HomeController::class, 'showPage'])->name('page')->whereAlpha('name');
-Route::get('contact', [ContactController::class, 'create'])->name('contact');
-Route::post('contact', [ContactController::class, 'store'])->name('contact');
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact');
 
 Route::get('/search', [SearchController::class, 'index']);
 Route::get('/autocomplete-search', [SearchController::class, 'autocompleteSearch']);

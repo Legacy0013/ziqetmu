@@ -21,9 +21,9 @@ header {
         }
         .settingsMenu {
             position: absolute;
-            top: -300%;
+            top: -400%;
             right: 0;
-            z-index: 0;
+            z-index: 9000;
             padding: 3em 2em 1em;
             background: #fff;
             transition: top .25s ease-in-out;

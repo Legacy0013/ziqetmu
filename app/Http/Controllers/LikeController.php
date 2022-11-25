@@ -55,8 +55,11 @@ class LikeController extends Controller
         $likedTitres = Like::where('user_id', Auth::user()->id)
             ->whereNotNull('titre_id')
             ->get();
+        $likedAlbums = Like::where('user_id', Auth::user()->id)
+            ->whereNotNull('album_id')
+            ->get();
 
-        return view('pages.favoris', compact('likedTitres', 'albums', 'album', 'artistes' ));
+        return view('pages.favoris', compact('likedTitres', 'likedAlbums', 'albums', 'album', 'artistes' ));
     }
 
     /**

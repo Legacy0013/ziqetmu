@@ -30,6 +30,7 @@
         "@swup/debug-plugin": "^1.0.3",
         "@swup/forms-plugin": "^1.1.1",
         "@swup/livewire-plugin": "^1.0.0",
+        "@swup/preload-plugin": "^1.0.5",
         "@swup/scripts-plugin": "^1.1.0",
         "@trevoreyre/autocomplete-js": "^2.2.0",
         "autocompleter": "^6.1.3",

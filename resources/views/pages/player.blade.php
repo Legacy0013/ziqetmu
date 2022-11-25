@@ -6,7 +6,7 @@
         <input type="hidden" name="album_id" id="album_id" value="{{ $lastAlbum->id }}">
         <h2>{{ $lastAlbum->name }}</h2>
         <img class="cover" src="../storage/albums/covers/{{ $lastAlbum->id }}/cover.jpg" alt="">
-        <form action="{{ route('likePlayer', $lastAlbum->id) }}" method="post" id="like">
+        <form action="{{ route('likePlayer', $lastAlbum->id) }}" method="post" id="like" class="likeOfTheAlbum">
             @csrf
             @if ($liked == true)
                 <div class="wrap liked">

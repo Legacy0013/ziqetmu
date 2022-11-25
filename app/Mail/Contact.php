@@ -22,7 +22,7 @@ class Contact extends Mailable
      *
      * @return void
      */
-    public function __construct(array $contact)
+    public function __construct(Array $contact)
     {
         $this->contact = $contact;
     }
@@ -34,6 +34,7 @@ class Contact extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.contact');
+        return $this->from('webmaster@ziqetmu.fr')
+            ->view('mails.contact');
     }
 }

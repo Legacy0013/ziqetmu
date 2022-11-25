@@ -6,7 +6,10 @@ header.rwd {
 }
 .container-page {
     padding: 2em 1em 5rem;
-    p {
+    .inform {
+        color: #fff;
+    }
+     p {
         margin-bottom: 1rem;
     }
     a {
